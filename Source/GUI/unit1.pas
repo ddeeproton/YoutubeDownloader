@@ -42,6 +42,11 @@ end;
 
 procedure TForm1.ButtonDownloadClick(Sender: TObject);
 begin
+  if Edit1.Text = '' then
+  begin
+    ShowMessage('Veuillez entrer d''abord un lien Youtube avant de cliquer sur Télécharger.');
+    exit;
+  end;
   if not FileExists(Config_YoutubeDownloader) then
   begin
     ShowMessage('youtube-dl.exe est introuvable. Il doit se trouver à côté de cette application pour fonctionner.');

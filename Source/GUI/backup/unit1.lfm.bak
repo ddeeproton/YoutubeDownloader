@@ -3,7 +3,7 @@ object Form1: TForm1
   Height = 67
   Top = 128
   Width = 368
-  Caption = 'Youtube Downloader'
+  Caption = 'Youtube Downloader V 0.0.1'
   ClientHeight = 67
   ClientWidth = 368
   OnCreate = FormCreate
