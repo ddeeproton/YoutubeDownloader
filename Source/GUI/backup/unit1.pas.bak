@@ -17,7 +17,6 @@ type
     ButtonDownload: TButton;
     Edit1: TEdit;
     Label1: TLabel;
-    MenuItem1: TMenuItem;
     MenuItemHide: TMenuItem;
     MenuItemShow: TMenuItem;
     MenuItemExit: TMenuItem;

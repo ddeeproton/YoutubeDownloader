@@ -80,6 +80,7 @@ object Form1: TForm1
     Height = 25
     Top = 33
     Width = 75
+    Anchors = [akTop, akRight]
     Caption = 'Coller'
     OnClick = ButtonPasteClick
     TabOrder = 2

@@ -161,9 +161,6 @@ object Form1: TForm1
       Caption = 'Cacher'
       OnClick = MenuItemHideClick
     end
-    object MenuItem1: TMenuItem
-      Caption = '-'
-    end
     object MenuItemExit: TMenuItem
       Caption = 'Quitter'
       OnClick = MenuItemExitClick
