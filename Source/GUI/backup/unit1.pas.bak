@@ -30,6 +30,7 @@ type
     procedure MenuItemExitClick(Sender: TObject);
     procedure MenuItemHideClick(Sender: TObject);
     procedure MenuItemShowClick(Sender: TObject);
+    procedure TrayIcon1Click(Sender: TObject);
   private
     { private declarations }
   public
@@ -64,6 +65,13 @@ end;
 procedure TForm1.MenuItemShowClick(Sender: TObject);
 begin
   Show;
+end;
+
+procedure TForm1.TrayIcon1Click(Sender: TObject);
+begin
+  Show;
+  Form1.WindowState:= wsNormal;
+  BringToFront;
 end;
 
 procedure TForm1.ButtonDownloadClick(Sender: TObject);

@@ -148,6 +148,7 @@ object Form1: TForm1
       0000
     }
     Visible = True
+    OnClick = TrayIcon1Click
     left = 144
     top = 64
   end
