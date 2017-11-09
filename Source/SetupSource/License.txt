@@ -1,0 +1,22 @@
+Veuillez lire les modalités et les conditions suivantes avant l'utilisation de ces logiciels.  L'utilisation de ce logiciel indique l'acceptation des termes et conditions de la licence. 
+
+1. Déni de garantie
+
+"YoutubeDownloader" est fourni "tel-que", et aucune garantie de quelque sorte n'est exprimée ou impliquée, incluant sans limitation, toute garantie de valeur marchande ou format physique pour un but particulier. 
+
+Dans aucun cas, l'auteur de ce logiciel ne sera jugé responsable de la perte de données, des dommages, du manque à gagner ou de n'importe quel autre genre de perte par l'utilisation correcte ou non de ce logiciel. 
+
+Le logiciel peut être modifié. Le code source est fourni dans le setup d'installation.
+ 
+2. Licence
+
+"YoutubeDownloader" est fourni en tant que logiciel open source. 
+
+Dans ce cas, Vous avez le droit d'utiliser, de le modifier et de le distribuer comme vous voulez. 
+
+L'installation et l'utilisation de ce logiciel signifie l'acceptation des termes et conditions de la license.
+
+3. Fonctionnement
+
+"YoutubeDownloader" utilise "youtube-dl.exe" pour fonctionner. Veillez à ce que les deux applications soient côté à côte.
+
