@@ -78,7 +78,7 @@ object Form1: TForm1
   object ButtonPaste: TButton
     Left = 208
     Height = 25
-    Top = 33
+    Top = 32
     Width = 75
     Anchors = [akTop, akRight]
     Caption = 'Coller'
