@@ -102,7 +102,7 @@ object Form1: TForm1
     top = 64
   end
   object SaveDialog1: TSaveDialog
-    Filter = 'm4a|*.m4a'
+    Filter = '*.m4a|*.m4a'
     left = 80
     top = 64
   end
@@ -167,5 +167,10 @@ object Form1: TForm1
       Caption = 'Quitter'
       OnClick = MenuItemExitClick
     end
+  end
+  object Timer1: TTimer
+    OnTimer = Timer1Timer
+    left = 272
+    top = 64
   end
 end

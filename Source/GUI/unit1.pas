@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, process, FileUtil, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, Menus, ExtCtrls;
+  StdCtrls, Menus, ExtCtrls, clipbrd, Windows;
 
 type
 
@@ -23,6 +23,7 @@ type
     PopupMenu1: TPopupMenu;
     Process1: TProcess;
     SaveDialog1: TSaveDialog;
+    Timer1: TTimer;
     TrayIcon1: TTrayIcon;
     procedure ButtonPasteClick(Sender: TObject);
     procedure ButtonDownloadClick(Sender: TObject);
@@ -30,6 +31,7 @@ type
     procedure MenuItemExitClick(Sender: TObject);
     procedure MenuItemHideClick(Sender: TObject);
     procedure MenuItemShowClick(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
     procedure TrayIcon1Click(Sender: TObject);
   private
     { private declarations }
@@ -40,6 +42,7 @@ type
 var
   Form1: TForm1;
   Config_YoutubeDownloader: String = 'youtube-dl.exe';
+  oldClipboardValue: String = '';
 implementation
 
 {$R *.lfm}
@@ -100,6 +103,24 @@ procedure TForm1.ButtonPasteClick(Sender: TObject);
 begin
   Edit1.PasteFromClipboard;
 end;
+
+
+procedure TForm1.Timer1Timer(Sender: TObject);
+var url: string;
+begin
+  url := clipbrd.Clipboard.AsText;
+  if url = oldClipboardValue then exit;
+  oldClipboardValue := url;
+  if not url.StartsWith('http', true) then exit;
+
+  if MessageDlg('Voulez-vous télécharger?'+#13#10+url,  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then
+    Exit;
+
+  ButtonPasteClick(nil);
+  MenuItemShowClick(nil);
+  ButtonDownloadClick(nil);
+end;
+
 
 end.
 
