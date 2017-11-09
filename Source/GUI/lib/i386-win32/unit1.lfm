@@ -60,7 +60,7 @@ object Form1: TForm1
   object ButtonDownload: TButton
     Left = 285
     Height = 25
-    Top = 32
+    Top = 30
     Width = 75
     Anchors = [akTop, akRight]
     Caption = 'Télécharger'
@@ -78,7 +78,7 @@ object Form1: TForm1
   object ButtonPaste: TButton
     Left = 208
     Height = 25
-    Top = 32
+    Top = 30
     Width = 75
     Anchors = [akTop, akRight]
     Caption = 'Coller'
