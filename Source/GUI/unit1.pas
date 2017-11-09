@@ -13,6 +13,7 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
+    Button1: TButton;
     ButtonPaste: TButton;
     ButtonDownload: TButton;
     Edit1: TEdit;

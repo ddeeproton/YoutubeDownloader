@@ -2,10 +2,10 @@ object Form1: TForm1
   Left = 327
   Height = 111
   Top = 92
-  Width = 368
+  Width = 372
   Caption = 'Youtube Downloader V 0.0.3'
   ClientHeight = 111
-  ClientWidth = 368
+  ClientWidth = 372
   Icon.Data = {
     7E04000000000100010010100000010020006804000016000000280000001000
     000020000000010020000000000000040000120B0000120B0000000000000000
@@ -58,7 +58,7 @@ object Form1: TForm1
     Text = 'Edit1'
   end
   object ButtonDownload: TButton
-    Left = 285
+    Left = 264
     Height = 25
     Top = 30
     Width = 75
@@ -79,11 +79,23 @@ object Form1: TForm1
     Left = 208
     Height = 25
     Top = 30
-    Width = 75
+    Width = 51
     Anchors = [akTop, akRight]
     Caption = 'Coller'
     OnClick = ButtonPasteClick
     TabOrder = 2
+  end
+  object Button1: TButton
+    Left = 344
+    Height = 25
+    Hint = 'Masquer'
+    Top = 30
+    Width = 24
+    Caption = '_'
+    OnClick = MenuItemHideClick
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 3
   end
   object Process1: TProcess
     Active = False

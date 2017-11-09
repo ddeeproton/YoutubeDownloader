@@ -13,6 +13,7 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
+    Button1: TButton;
     ButtonPaste: TButton;
     ButtonDownload: TButton;
     Edit1: TEdit;
@@ -113,8 +114,8 @@ begin
   oldClipboardValue := url;
   if not url.StartsWith('http', true) then exit;
   MenuItemShowClick(nil);
-  if Length(url) > 50 then
-    url := url.Substring(0, 50);
+  if Length(url) > 100 then
+    url := url.Substring(0, 100)+'...';
   if MessageDlg('Voulez-vous télécharger?'+#13#10+url,  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then
     Exit;
   ButtonPasteClick(nil);
