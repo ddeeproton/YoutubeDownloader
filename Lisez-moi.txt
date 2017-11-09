@@ -1,0 +1,3 @@
+Le GUI est compilé avec Lazarus
+Le Setup avec NSIS
+L'application avec Python
