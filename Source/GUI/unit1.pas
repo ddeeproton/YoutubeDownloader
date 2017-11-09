@@ -113,12 +113,13 @@ begin
   if url = oldClipboardValue then exit;
   oldClipboardValue := url;
   if not url.StartsWith('http', true) then exit;
+  ButtonPasteClick(nil);
   MenuItemShowClick(nil);
   if Length(url) > 100 then
     url := url.Substring(0, 100)+'...';
   if MessageDlg('Voulez-vous télécharger?'+#13#10+url,  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then
     Exit;
-  ButtonPasteClick(nil);
+
   ButtonDownloadClick(nil);
 end;
 
