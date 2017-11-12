@@ -15,7 +15,10 @@ Name "Youtube Downloader ${VERSION}"
 OutFile "YoutubeDownloaderSetup_${VERSION}.exe"
 
 ; The default installation directory
+
+;InstallDir "C:\YoutubeDownloader"
 InstallDir "$PROGRAMFILES\YoutubeDownloader"
+
 InstallDirRegKey HKLM "SOFTWARE\YoutubeDownloader" ""
 
 ShowInstDetails show
@@ -86,6 +89,7 @@ Section "" ;No components page, name is not important
   ; Put file there
   File "YoutubeDownloader.exe"
   File "youtube-dl.exe"  
+  File "ffprobe.exe"  
   WriteUninstaller "uninstall_YoutubeDownloader.exe"
 
 
@@ -120,6 +124,7 @@ Section "Uninstall"
 
 	  Delete "$INSTDIR\youtube-dl.exe"
 	  Delete "$INSTDIR\YoutubeDownloader.exe"
+	  Delete "$INSTDIR\ffprobe.exe"
 	  Delete "$INSTDIR\uninstall_YoutubeDownloader.exe"
 
 	  RMDir $INSTDIR

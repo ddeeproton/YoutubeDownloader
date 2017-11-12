@@ -3,9 +3,10 @@ object Form1: TForm1
   Height = 111
   Top = 92
   Width = 372
-  Caption = 'Youtube Downloader V 0.0.4'
+  Caption = 'Youtube Downloader V 0.0.5'
   ClientHeight = 111
   ClientWidth = 372
+  FormStyle = fsStayOnTop
   Icon.Data = {
     7E04000000000100010010100000010020006804000016000000280000001000
     000020000000010020000000000000040000120B0000120B0000000000000000
@@ -114,7 +115,7 @@ object Form1: TForm1
     top = 64
   end
   object SaveDialog1: TSaveDialog
-    Filter = '*.m4a|*.m4a'
+    Filter = 'm4a|*.m4a'
     left = 80
     top = 64
   end
@@ -181,6 +182,7 @@ object Form1: TForm1
     end
   end
   object Timer1: TTimer
+    Interval = 2000
     OnTimer = Timer1Timer
     left = 272
     top = 64
