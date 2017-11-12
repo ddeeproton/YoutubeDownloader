@@ -92,6 +92,7 @@ object Form1: TForm1
     Hint = 'Masquer'
     Top = 30
     Width = 24
+    Anchors = [akTop, akRight]
     Caption = '_'
     OnClick = MenuItemHideClick
     ParentShowHint = False

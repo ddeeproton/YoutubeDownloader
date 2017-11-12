@@ -102,6 +102,7 @@ end;
 
 procedure TForm1.ButtonPasteClick(Sender: TObject);
 begin
+  Edit1.Text:= '';
   Edit1.PasteFromClipboard;
 end;
 
