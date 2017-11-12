@@ -90,6 +90,8 @@ Section "" ;No components page, name is not important
   File "YoutubeDownloader.exe"
   File "youtube-dl.exe"  
   File "ffprobe.exe"  
+  File "ffmpeg.exe"  
+  File "ffplay.exe"  
   WriteUninstaller "uninstall_YoutubeDownloader.exe"
 
 
@@ -125,6 +127,8 @@ Section "Uninstall"
 	  Delete "$INSTDIR\youtube-dl.exe"
 	  Delete "$INSTDIR\YoutubeDownloader.exe"
 	  Delete "$INSTDIR\ffprobe.exe"
+	  Delete "$INSTDIR\ffmpeg.exe"
+	  Delete "$INSTDIR\ffplay.exe"
 	  Delete "$INSTDIR\uninstall_YoutubeDownloader.exe"
 
 	  RMDir $INSTDIR

@@ -3,7 +3,7 @@ object Form1: TForm1
   Height = 111
   Top = 92
   Width = 372
-  Caption = 'Youtube Downloader V 0.0.5'
+  Caption = 'Youtube Downloader V 0.0.7'
   ClientHeight = 111
   ClientWidth = 372
   FormStyle = fsStayOnTop
