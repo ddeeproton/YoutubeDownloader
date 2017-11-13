@@ -22,6 +22,9 @@ Système d'exploitation:
 
 Changements:
 
+ 0.0.8
+  Ne demande plus d'écrire le titre de la vidéo. Il demande seulement le dossier de destination.
+
  0.0.9
   Permet de choisir la méthode de compression
 
