@@ -14,8 +14,8 @@ type
 
   TForm1 = class(TForm)
     Button1: TButton;
-    ButtonPaste: TButton;
-    ButtonDownload: TButton;
+    ButtonDownloadWAV: TButton;
+    ButtonDownloadMP3: TButton;
     Edit1: TEdit;
     Label1: TLabel;
     MenuItemHide: TMenuItem;
@@ -26,14 +26,16 @@ type
     SelectDirectoryDialog1: TSelectDirectoryDialog;
     Timer1: TTimer;
     TrayIcon1: TTrayIcon;
+    procedure ButtonDownloadWAVClick(Sender: TObject);
     procedure ButtonPasteClick(Sender: TObject);
-    procedure ButtonDownloadClick(Sender: TObject);
+    procedure ButtonDownloadMP3Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuItemExitClick(Sender: TObject);
     procedure MenuItemHideClick(Sender: TObject);
     procedure MenuItemShowClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure TrayIcon1Click(Sender: TObject);
+    procedure DoDownload(DoConvert:Boolean);
   private
     { private declarations }
   public
@@ -78,9 +80,8 @@ begin
   MenuItemShowClick(nil);
 end;
 
-procedure TForm1.ButtonDownloadClick(Sender: TObject);
+procedure TForm1.DoDownload(DoConvert:Boolean);
 begin
-
   if Edit1.Text = '' then
   begin
     ShowMessage('Veuillez entrer d''abord un lien Youtube avant de cliquer sur Télécharger.');
@@ -96,16 +97,29 @@ begin
   if not SelectDirectoryDialog1.Execute then exit;
 
   Process1.ApplicationName := Config_YoutubeDownloader;
-  Process1.CommandLine:= '-q --extract-audio --audio-format mp3 --audio-quality 128K --write-thumbnail --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" "'+Edit1.Text+'"';
+  if DoConvert then
+     Process1.CommandLine:= '-q --extract-audio --audio-format mp3 --audio-quality 128K --write-thumbnail --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" "'+Edit1.Text+'"'
+  else
+     Process1.CommandLine:= '-q --extract-audio --audio-format wav --write-thumbnail --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" "'+Edit1.Text+'"';
   process1.Execute;
+end;
+
+procedure TForm1.ButtonDownloadMP3Click(Sender: TObject);
+begin
+  DoDownload(True);
+end;
+
+
+procedure TForm1.ButtonDownloadWAVClick(Sender: TObject);
+begin
+  DoDownload(False);
 end;
 
 procedure TForm1.ButtonPasteClick(Sender: TObject);
 begin
-  Edit1.Text:= '';
+  Edit1.Clear;
   Edit1.PasteFromClipboard;
 end;
-
 
 procedure TForm1.Timer1Timer(Sender: TObject);
 var url: string;
@@ -117,10 +131,15 @@ begin
   MenuItemShowClick(nil);
   if Length(url) > 100 then
     url := url.Substring(0, 100)+'...';
-  if MessageDlg('Voulez-vous télécharger?'+#13#10+url,  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then
+  if MessageDlg('Voulez-vous télécharger?'+#13#10#13#10+url,  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then
     Exit;
   ButtonPasteClick(nil);
-  ButtonDownloadClick(nil);
+  if MessageDlg('Compresser l''audio? (Réponse oui => MP3, non => WAV)',  mtConfirmation, [mbYes, mbNo], 0) = IDYES then
+    ButtonDownloadMP3Click(nil)
+  else
+    ButtonDownloadWAVClick(nil);
+
+
 end;
 
 

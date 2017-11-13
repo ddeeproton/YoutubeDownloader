@@ -2,10 +2,10 @@ object Form1: TForm1
   Left = 327
   Height = 111
   Top = 92
-  Width = 372
-  Caption = 'Youtube Downloader V 0.0.8'
+  Width = 468
+  Caption = 'Youtube Downloader V 0.0.9'
   ClientHeight = 111
-  ClientWidth = 372
+  ClientWidth = 468
   FormStyle = fsStayOnTop
   Icon.Data = {
     7E04000000000100010010100000010020006804000016000000280000001000
@@ -53,19 +53,19 @@ object Form1: TForm1
     Left = 8
     Height = 21
     Top = 32
-    Width = 192
+    Width = 224
     Anchors = [akTop, akLeft, akRight]
     TabOrder = 0
     Text = 'Edit1'
   end
-  object ButtonDownload: TButton
-    Left = 264
+  object ButtonDownloadMP3: TButton
+    Left = 242
     Height = 25
     Top = 30
-    Width = 75
+    Width = 91
     Anchors = [akTop, akRight]
-    Caption = 'Télécharger'
-    OnClick = ButtonDownloadClick
+    Caption = 'Télécharger MP3'
+    OnClick = ButtonDownloadMP3Click
     TabOrder = 1
   end
   object Label1: TLabel
@@ -76,18 +76,8 @@ object Form1: TForm1
     Caption = 'Coller le lien Youtube (ou autre) ici et cliquer sur télécharger:'
     ParentColor = False
   end
-  object ButtonPaste: TButton
-    Left = 208
-    Height = 25
-    Top = 30
-    Width = 51
-    Anchors = [akTop, akRight]
-    Caption = 'Coller'
-    OnClick = ButtonPasteClick
-    TabOrder = 2
-  end
   object Button1: TButton
-    Left = 344
+    Left = 440
     Height = 25
     Hint = 'Masquer'
     Top = 30
@@ -97,6 +87,16 @@ object Form1: TForm1
     OnClick = MenuItemHideClick
     ParentShowHint = False
     ShowHint = True
+    TabOrder = 2
+  end
+  object ButtonDownloadWAV: TButton
+    Left = 338
+    Height = 25
+    Top = 30
+    Width = 96
+    Anchors = [akTop, akRight]
+    Caption = 'Télécharger WAV'
+    OnClick = ButtonDownloadWAVClick
     TabOrder = 3
   end
   object Process1: TProcess
