@@ -27,3 +27,7 @@ Changements:
 
  0.0.10
   Ne pas télécharger une seconde fois la même vidéo (valeur stoquée dans "archive.txt")
+
+
+Autre Documentation:	
+  https://github.com/rg3/youtube-dl/blob/master/README.md
