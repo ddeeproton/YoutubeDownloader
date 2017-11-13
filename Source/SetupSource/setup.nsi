@@ -16,8 +16,8 @@ OutFile "YoutubeDownloaderSetup_${VERSION}.exe"
 
 ; The default installation directory
 
-;InstallDir "C:\YoutubeDownloader"
-InstallDir "$PROGRAMFILES\YoutubeDownloader"
+;InstallDir "$PROGRAMFILES\YoutubeDownloader"
+InstallDir "C:\YoutubeDownloader"
 
 InstallDirRegKey HKLM "SOFTWARE\YoutubeDownloader" ""
 

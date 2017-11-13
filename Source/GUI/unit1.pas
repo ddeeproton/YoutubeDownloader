@@ -98,9 +98,9 @@ begin
 
   Process1.ApplicationName := Config_YoutubeDownloader;
   if DoConvert then
-     Process1.CommandLine:= '-q --extract-audio --audio-format mp3 --audio-quality 128K --write-thumbnail --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" "'+Edit1.Text+'"'
+     Process1.CommandLine:= '-q --download-archive archive.txt --extract-audio --audio-format mp3 --audio-quality 128K --write-thumbnail --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" "'+Edit1.Text+'"'
   else
-     Process1.CommandLine:= '-q --extract-audio --audio-format wav --write-thumbnail --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" "'+Edit1.Text+'"';
+     Process1.CommandLine:= '-q --download-archive archive.txt --extract-audio --audio-format wav --write-thumbnail --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" "'+Edit1.Text+'"';
   process1.Execute;
 end;
 

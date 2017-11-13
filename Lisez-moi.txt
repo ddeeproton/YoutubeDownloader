@@ -1,13 +1,29 @@
 Youtube Downloader
 
+
 Description:
-Ce programme télécharge l'audio des vidéos de Youtube, Dailymotion et autres.
+ Ce programme télécharge l'audio des vidéos de Youtube, Dailymotion et autres.
+
 
 Fonctionnement:
-Ce programme, une fois lancé, surveille votre presse papier. 
-Dès qu'un lien http est copié, le programme vous propose de télécharger l'audio.
+ Ce programme, une fois lancé, surveille votre presse papier. 
+ Dès qu'un lien http est copié, le programme vous propose de télécharger l'audio.
+
 
 Compilation:
-Le GUI est compilé avec Lazarus
-Le Setup avec NSIS
-L'application avec Python
+ Le GUI est compilé avec Lazarus
+ Le Setup avec NSIS
+ L'application avec Python
+ Tous sont gratuits
+
+Système d'exploitation:
+ Windows
+ Pour fonctionner sur Linux ou Mac, le code devra d'abord être adapté (chemin en "/" à la place de "\", etc.)
+
+Changements:
+
+ 0.0.9
+  Permet de choisir la méthode de compression
+
+ 0.0.10
+  Ne pas télécharger une seconde fois la même vidéo (valeur stoquée dans "archive.txt")
