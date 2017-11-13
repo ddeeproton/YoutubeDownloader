@@ -96,7 +96,7 @@ begin
   if not SelectDirectoryDialog1.Execute then exit;
 
   Process1.ApplicationName := Config_YoutubeDownloader;
-  Process1.CommandLine:= '-q --extract-audio --audio-format mp3 --audio-quality 0 --write-thumbnail --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" "'+Edit1.Text+'"';
+  Process1.CommandLine:= '-q --extract-audio --audio-format mp3 --audio-quality 128K --write-thumbnail --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" "'+Edit1.Text+'"';
   process1.Execute;
 end;
 
