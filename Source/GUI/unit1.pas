@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, process, FileUtil, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, Menus, ExtCtrls, clipbrd, Windows;
+  StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf;
 
 type
 
@@ -19,6 +19,8 @@ type
     Edit1: TEdit;
     Label1: TLabel;
     MenuItem1: TMenuItem;
+    MenuItemAbout: TMenuItem;
+    MenuItemUpdate: TMenuItem;
     MenuItemCacheHelp: TMenuItem;
     MenuItemCacheClear: TMenuItem;
     MenuItemCacheOpen: TMenuItem;
@@ -34,15 +36,18 @@ type
     procedure ButtonPasteClick(Sender: TObject);
     procedure ButtonDownloadMP3Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure MenuItemAboutClick(Sender: TObject);
     procedure MenuItemCacheClearClick(Sender: TObject);
     procedure MenuItemCacheHelpClick(Sender: TObject);
     procedure MenuItemCacheOpenClick(Sender: TObject);
     procedure MenuItemExitClick(Sender: TObject);
     procedure MenuItemHideClick(Sender: TObject);
     procedure MenuItemShowClick(Sender: TObject);
+    procedure MenuItemUpdateClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure DoDownload(DoConvert:Boolean);
     function GetWinDir: string;
+    procedure ExecuteProcess(cmd: String);
   private
     { private declarations }
   public
@@ -84,6 +89,10 @@ begin
   ShowMessage('Ce cache mémorise les vidéos téléchargées pour ne pas les télécharger une seconde fois.');
 end;
 
+procedure TForm1.MenuItemAboutClick(Sender: TObject);
+begin
+  ShowMessage('Source: https://github.com/ddeeproton/YoutubeDownloader');
+end;
 
 function TForm1.GetWinDir: string;
 var
@@ -93,13 +102,18 @@ begin
   Result := StrPas(dir);
 end;
 
-procedure TForm1.MenuItemCacheOpenClick(Sender: TObject);
+procedure TForm1.ExecuteProcess(cmd: String);
 var p: TProcess;
 begin
   p := TProcess.Create(nil);
   p.ApplicationName:= '';
-  p.CommandLine:= '"'+GetWinDir+'\notepad.exe" "'+ExtractFileDir(Application.ExeName) + '\archive.txt"';
+  p.CommandLine:= cmd;
   p.Execute;
+end;
+
+procedure TForm1.MenuItemCacheOpenClick(Sender: TObject);
+begin
+  ExecuteProcess('"'+GetWinDir+'\notepad.exe" "'+ExtractFileDir(Application.ExeName) + '\archive.txt"');
 end;
 
 procedure TForm1.MenuItemExitClick(Sender: TObject);
@@ -112,6 +126,11 @@ begin
   Show;
   Form1.WindowState:= wsNormal;
   BringToFront;
+end;
+
+procedure TForm1.MenuItemUpdateClick(Sender: TObject);
+begin
+  OpenURL('https://github.com/ddeeproton/YoutubeDownloader/tree/master/Setup%20installation');
 end;
 
 procedure TForm1.MenuItemHideClick(Sender: TObject);
@@ -153,9 +172,9 @@ begin
 
   Process1.ApplicationName := Config_YoutubeDownloader;
   if DoConvert then
-     Process1.CommandLine := '-q --download-archive archive.txt --extract-audio --audio-format mp3 --audio-quality 128K --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" "'+Edit1.Text+'"'
+     Process1.CommandLine := '-q --download-archive archive.txt --ignore-errors --extract-audio --audio-format mp3 --audio-quality 128K --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" "'+Edit1.Text+'"'
   else
-     Process1.CommandLine := '-q --download-archive archive.txt --extract-audio --audio-format wav --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" "'+Edit1.Text+'"';
+     Process1.CommandLine := '-q --download-archive archive.txt --ignore-errors --extract-audio --audio-format wav --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" "'+Edit1.Text+'"';
   Process1.Execute;
 end;
 

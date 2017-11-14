@@ -3,7 +3,7 @@ object Form1: TForm1
   Height = 111
   Top = 92
   Width = 476
-  Caption = 'Youtube Downloader V 0.0.11'
+  Caption = 'Youtube Downloader V 0.0.12'
   ClientHeight = 111
   ClientWidth = 476
   FormStyle = fsStayOnTop
@@ -186,6 +186,14 @@ object Form1: TForm1
         Caption = 'Effacer le cache'
         OnClick = MenuItemCacheClearClick
       end
+    end
+    object MenuItemUpdate: TMenuItem
+      Caption = 'Mise à jour'
+      OnClick = MenuItemUpdateClick
+    end
+    object MenuItemAbout: TMenuItem
+      Caption = 'A propos'
+      OnClick = MenuItemAboutClick
     end
     object MenuItemExit: TMenuItem
       Caption = 'Quitter'

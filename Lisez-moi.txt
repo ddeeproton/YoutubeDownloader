@@ -37,4 +37,7 @@ Changements:
   Ne pas télécharger une seconde fois la même vidéo (valeur stoquée dans "archive.txt")
 
  0.0.11
-  Ajour d'un gestionnaire de cache pour l'utilisateur dans le menu de l'icone systray.
+  Ajour d'un gestionnaire de cache dans le menu du systray.
+
+ 0.0.12
+  Ignore les erreurs lors d'un téléchargement de playlist.

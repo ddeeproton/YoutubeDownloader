@@ -56,3 +56,6 @@ Changements:
 
  0.0.11
   Ajour d'un gestionnaire de cache pour l'utilisateur dans le menu de l'icone systray.
+
+ 0.0.12
+  Ignore les erreurs lors d'un téléchargement de playlist.
