@@ -10,11 +10,16 @@ Fonctionnement:
  Dès qu'un lien http est copié, le programme vous propose de télécharger l'audio.
 
 
+Autre Documentation:	
+  https://github.com/rg3/youtube-dl/blob/master/README.md
+
+
 Compilation:
  Le GUI est compilé avec Lazarus
  Le Setup avec NSIS
  L'application avec Python
- Tous sont gratuits
+ (Tous sont gratuits)
+
 
 Système d'exploitation:
  Windows
@@ -31,6 +36,5 @@ Changements:
  0.0.10
   Ne pas télécharger une seconde fois la même vidéo (valeur stoquée dans "archive.txt")
 
-
-Autre Documentation:	
-  https://github.com/rg3/youtube-dl/blob/master/README.md
+ 0.0.11
+  Ajour d'un gestionnaire de cache pour l'utilisateur dans le menu de l'icone systray.

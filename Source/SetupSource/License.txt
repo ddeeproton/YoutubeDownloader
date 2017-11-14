@@ -19,4 +19,40 @@ L'installation et l'utilisation de ce logiciel signifie l'acceptation des termes
 3. Fonctionnement
 
 "YoutubeDownloader" utilise "youtube-dl.exe" pour fonctionner. Veillez à ce que les deux applications soient côté à côte.
+ Ce programme, une fois lancé, surveille votre presse papier. 
+ Dès qu'un lien http est copié, le programme vous propose de télécharger l'audio.
 
+
+Autre Documentation:	
+  https://github.com/rg3/youtube-dl/blob/master/README.md
+
+
+Compilation:
+ Le GUI est compilé avec Lazarus
+ Le Setup avec NSIS
+ L'application avec Python
+ (Tous sont gratuits)
+
+
+Système d'exploitation:
+ Windows
+ Pour fonctionner sur Linux ou Mac, le code source devra d'abord être adapté (chemin en "/" à la place de "\", etc.) puis recompilé.
+
+
+Mises à jour:
+ https://github.com/ddeeproton/YoutubeDownloader
+
+
+Changements:
+
+ 0.0.8
+  Ne demande plus à l'utilisateur d'écrire le titre de la vidéo. Il demande seulement le dossier de destination.
+
+ 0.0.9
+  Permet de choisir la méthode de compression
+
+ 0.0.10
+  Ne pas télécharger une seconde fois la même vidéo (valeur stoquée dans "archive.txt")
+
+ 0.0.11
+  Ajour d'un gestionnaire de cache pour l'utilisateur dans le menu de l'icone systray.

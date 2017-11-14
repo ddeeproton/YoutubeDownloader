@@ -18,10 +18,14 @@ type
     ButtonDownloadMP3: TButton;
     Edit1: TEdit;
     Label1: TLabel;
+    MenuItem1: TMenuItem;
+    MenuItemCacheHelp: TMenuItem;
+    MenuItemCacheClear: TMenuItem;
+    MenuItemCacheOpen: TMenuItem;
     MenuItemHide: TMenuItem;
     MenuItemShow: TMenuItem;
     MenuItemExit: TMenuItem;
-    PopupMenu1: TPopupMenu;
+    PopupMenuTray: TPopupMenu;
     Process1: TProcess;
     SelectDirectoryDialog1: TSelectDirectoryDialog;
     Timer1: TTimer;
@@ -30,11 +34,13 @@ type
     procedure ButtonPasteClick(Sender: TObject);
     procedure ButtonDownloadMP3Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure MenuItemCacheClearClick(Sender: TObject);
+    procedure MenuItemCacheHelpClick(Sender: TObject);
+    procedure MenuItemCacheOpenClick(Sender: TObject);
     procedure MenuItemExitClick(Sender: TObject);
     procedure MenuItemHideClick(Sender: TObject);
     procedure MenuItemShowClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
-    procedure TrayIcon1Click(Sender: TObject);
     procedure DoDownload(DoConvert:Boolean);
   private
     { private declarations }
@@ -46,6 +52,7 @@ var
   Form1: TForm1;
   Config_YoutubeDownloader: String = 'youtube-dl.exe';
   oldClipboardValue: String = '';
+
 implementation
 
 {$R *.lfm}
@@ -58,14 +65,44 @@ begin
   Edit1.Text:= '';
 end;
 
+procedure TForm1.MenuItemCacheClearClick(Sender: TObject);
+begin
+  if MessageDlg('Voulez-vous effacer le cache?',  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
+  DeleteFile('archive.txt');
+  if FileExists('archive.txt') then
+    ShowMessage('Il y a eu un problème avec l''effacement du cache. '
+      +'Peut-être le fichier est utilisé. '
+      +'Veuillez fermer tous les programmes et recommencer, '
+      +'ou effacer à la main le fichier "archive.txt"')
+  else
+    ShowMessage('Cache effacé :)');
+end;
+
+procedure TForm1.MenuItemCacheHelpClick(Sender: TObject);
+begin
+  ShowMessage('Ce cache mémorise les vidéos téléchargées pour ne pas les télécharger une seconde fois.');
+end;
+
+function GetWinDir: string;
+var
+  dir: array [0..MAX_PATH] of Char;
+begin
+  GetWindowsDirectory(dir, MAX_PATH);
+  Result := StrPas(dir);
+end;
+
+procedure TForm1.MenuItemCacheOpenClick(Sender: TObject);
+var p: TProcess;
+begin
+  p := TProcess.Create(nil);
+  p.ApplicationName:= '';
+  p.CommandLine:= '"'+GetWinDir+'\notepad.exe" "'+ExtractFileDir(Application.ExeName) + '\archive.txt"';
+  p.Execute;
+end;
+
 procedure TForm1.MenuItemExitClick(Sender: TObject);
 begin
   Application.Terminate;
-end;
-
-procedure TForm1.MenuItemHideClick(Sender: TObject);
-begin
-  Hide;
 end;
 
 procedure TForm1.MenuItemShowClick(Sender: TObject);
@@ -75,9 +112,25 @@ begin
   BringToFront;
 end;
 
-procedure TForm1.TrayIcon1Click(Sender: TObject);
+procedure TForm1.MenuItemHideClick(Sender: TObject);
 begin
-  MenuItemShowClick(nil);
+  Hide;
+end;
+
+procedure TForm1.ButtonPasteClick(Sender: TObject);
+begin
+  Edit1.Clear;
+  Edit1.PasteFromClipboard;
+end;
+
+procedure TForm1.ButtonDownloadMP3Click(Sender: TObject);
+begin
+  DoDownload(True);
+end;
+
+procedure TForm1.ButtonDownloadWAVClick(Sender: TObject);
+begin
+  DoDownload(False);
 end;
 
 procedure TForm1.DoDownload(DoConvert:Boolean);
@@ -98,27 +151,10 @@ begin
 
   Process1.ApplicationName := Config_YoutubeDownloader;
   if DoConvert then
-     Process1.CommandLine:= '-q --download-archive archive.txt --extract-audio --audio-format mp3 --audio-quality 128K --write-thumbnail --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" "'+Edit1.Text+'"'
+     Process1.CommandLine := '-q --download-archive archive.txt --extract-audio --audio-format mp3 --audio-quality 128K --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" "'+Edit1.Text+'"'
   else
-     Process1.CommandLine:= '-q --download-archive archive.txt --extract-audio --audio-format wav --write-thumbnail --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" "'+Edit1.Text+'"';
-  process1.Execute;
-end;
-
-procedure TForm1.ButtonDownloadMP3Click(Sender: TObject);
-begin
-  DoDownload(True);
-end;
-
-
-procedure TForm1.ButtonDownloadWAVClick(Sender: TObject);
-begin
-  DoDownload(False);
-end;
-
-procedure TForm1.ButtonPasteClick(Sender: TObject);
-begin
-  Edit1.Clear;
-  Edit1.PasteFromClipboard;
+     Process1.CommandLine := '-q --download-archive archive.txt --extract-audio --audio-format wav --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" "'+Edit1.Text+'"';
+  Process1.Execute;
 end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
@@ -129,17 +165,13 @@ begin
   oldClipboardValue := url;
   if not url.StartsWith('http', true) then exit;
   MenuItemShowClick(nil);
-  if Length(url) > 100 then
-    url := url.Substring(0, 100)+'...';
-  if MessageDlg('Voulez-vous télécharger?'+#13#10#13#10+url,  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then
-    Exit;
+  if Length(url) > 100 then url := url.Substring(0, 100)+'...';
+  if MessageDlg('Voulez-vous télécharger?'+#13#10#13#10+url,  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
   ButtonPasteClick(nil);
   if MessageDlg('Compresser l''audio? (Réponse oui => MP3, non => WAV)',  mtConfirmation, [mbYes, mbNo], 0) = IDYES then
     ButtonDownloadMP3Click(nil)
   else
     ButtonDownloadWAVClick(nil);
-
-
 end;
 
 
