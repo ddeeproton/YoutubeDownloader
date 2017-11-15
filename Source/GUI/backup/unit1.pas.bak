@@ -9,7 +9,7 @@ uses
   Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf;
 
 var
-  CurrentVersion : String = '0.0.13';
+  CurrentVersion : String = '0.0.12';
 
 type
 
@@ -84,6 +84,7 @@ begin
   Form1.Height:= 66;
   Edit1.Text:= '';
   ConfigLoad;
+  Caption := 'Youtube Downloader V '+CurrentVersion;
 end;
 
 procedure TForm1.ConfigLoad;
@@ -241,7 +242,7 @@ begin
     exit;
   end;
 
-  ExecuteProcess('YoutubeDownloaderSetup_'+lastVersion+'.exe');
+  ExecuteProcess('"YoutubeDownloaderSetup_'+lastVersion+'.exe" /S');
   Application.Terminate;
 
 end;

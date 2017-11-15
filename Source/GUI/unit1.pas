@@ -84,6 +84,7 @@ begin
   Form1.Height:= 66;
   Edit1.Text:= '';
   ConfigLoad;
+  Caption := 'Youtube Downloader V '+CurrentVersion;
 end;
 
 procedure TForm1.ConfigLoad;
