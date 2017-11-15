@@ -5,54 +5,68 @@ unit Unit1;
 interface
 
 uses
-  Classes, SysUtils, process, FileUtil, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf;
+  Classes, SysUtils, process, XMLConf, FileUtil, Forms, Controls, Graphics,
+  Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf;
+
+var
+  CurrentVersion : String = '0.0.13';
 
 type
 
   { TForm1 }
 
   TForm1 = class(TForm)
-    Button1: TButton;
+    ButtonMenu: TButton;
     ButtonDownloadWAV: TButton;
-    ButtonDownloadMP3: TButton;
+    ComboBoxEncoding: TComboBox;
     Edit1: TEdit;
     Label1: TLabel;
     MenuItem1: TMenuItem;
+    MenuItemCacheToggle: TMenuItem;
     MenuItemAbout: TMenuItem;
     MenuItemUpdate: TMenuItem;
     MenuItemCacheHelp: TMenuItem;
     MenuItemCacheClear: TMenuItem;
     MenuItemCacheOpen: TMenuItem;
     MenuItemHide: TMenuItem;
-    MenuItemShow: TMenuItem;
     MenuItemExit: TMenuItem;
     PopupMenuTray: TPopupMenu;
     Process1: TProcess;
     SelectDirectoryDialog1: TSelectDirectoryDialog;
     Timer1: TTimer;
     TrayIcon1: TTrayIcon;
-    procedure ButtonDownloadWAVClick(Sender: TObject);
+    XMLConfig1: TXMLConfig;
+    procedure ButtonMenuClick(Sender: TObject);
+    procedure ButtonDownloadClick(Sender: TObject);
     procedure ButtonPasteClick(Sender: TObject);
-    procedure ButtonDownloadMP3Click(Sender: TObject);
+    procedure ComboBoxEncodingChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuItemAboutClick(Sender: TObject);
     procedure MenuItemCacheClearClick(Sender: TObject);
     procedure MenuItemCacheHelpClick(Sender: TObject);
     procedure MenuItemCacheOpenClick(Sender: TObject);
+    procedure MenuItemCacheToggleClick(Sender: TObject);
     procedure MenuItemExitClick(Sender: TObject);
     procedure MenuItemHideClick(Sender: TObject);
     procedure MenuItemShowClick(Sender: TObject);
     procedure MenuItemUpdateClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
-    procedure DoDownload(DoConvert:Boolean);
+    procedure DoDownload();
     function GetWinDir: string;
     procedure ExecuteProcess(cmd: String);
+    procedure ExecuteProcessAndWait(cmd: String);
+    function getEncoding(): String;
+    procedure ConfigSave;
+    procedure ConfigLoad;
+    procedure WriteFile(Filename, Content : String);
+    function ReadFile(Filename: String):String;
+    procedure DownloadFile(http, filename: String);
   private
     { private declarations }
   public
     { public declarations }
   end;
+
 
 var
   Form1: TForm1;
@@ -69,6 +83,81 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   Form1.Height:= 66;
   Edit1.Text:= '';
+  ConfigLoad;
+end;
+
+procedure TForm1.ConfigLoad;
+begin
+  if not FileExists('config.xml') then exit;
+  XMLConfig1 := TXMLConfig.Create(nil);
+  XMLConfig1.LoadFromFile('config.xml');
+  ComboBoxEncoding.ItemIndex := XMLConfig1.GetValue('Encoding', 4);
+  MenuItemCacheToggle.Checked := XMLConfig1.GetValue('UseCache', True);
+  XMLConfig1.Free;
+end;
+
+procedure TForm1.ConfigSave;
+begin
+  XMLConfig1 := TXMLConfig.Create(nil);
+  XMLConfig1.SetValue('Encoding', ComboBoxEncoding.ItemIndex);
+  XMLConfig1.SetValue('UseCache', MenuItemCacheToggle.Checked);
+  XMLConfig1.SaveToFile('config.xml');
+  XMLConfig1.Free;
+end;
+
+
+function TForm1.ReadFile(Filename: String):String;
+var
+  Fichier        : textfile;
+  texte          : string;
+begin
+  result:= '';
+  assignFile(Fichier, Filename);
+  reset(Fichier);
+  while not eof(Fichier) do begin
+    read(Fichier, texte);
+    result := result + texte;
+  end;
+  closefile(Fichier);
+end;
+
+procedure TForm1.WriteFile(Filename, Content : String);
+var
+  Fp : textfile;
+begin
+  assignFile(Fp, Filename);
+  reWrite(Fp);
+  Writeln(Fp, Content);
+  closefile(Fp);
+end;
+
+
+function TForm1.GetWinDir: string;
+var
+  dir: array [0..MAX_PATH] of Char;
+begin
+  GetWindowsDirectory(dir, MAX_PATH);
+  Result := StrPas(dir);
+end;
+
+procedure TForm1.ExecuteProcess(cmd: String);
+var p: TProcess;
+begin
+  p := TProcess.Create(nil);
+  p.ApplicationName:= '';
+  p.CommandLine:= cmd;
+  p.Execute;
+end;
+
+
+procedure TForm1.ExecuteProcessAndWait(cmd: String);
+var p: TProcess;
+begin
+  p := TProcess.Create(nil);
+  p.ApplicationName:= '';
+  p.CommandLine:= cmd;
+  p.Execute;
+  p.WaitOnExit;
 end;
 
 procedure TForm1.MenuItemCacheClearClick(Sender: TObject);
@@ -94,26 +183,22 @@ begin
   ShowMessage('Source: https://github.com/ddeeproton/YoutubeDownloader');
 end;
 
-function TForm1.GetWinDir: string;
-var
-  dir: array [0..MAX_PATH] of Char;
-begin
-  GetWindowsDirectory(dir, MAX_PATH);
-  Result := StrPas(dir);
-end;
 
-procedure TForm1.ExecuteProcess(cmd: String);
-var p: TProcess;
+procedure TForm1.DownloadFile(http, filename: String);
 begin
-  p := TProcess.Create(nil);
-  p.ApplicationName:= '';
-  p.CommandLine:= cmd;
-  p.Execute;
+  if FileExists(filename) then DeleteFile(PChar(filename));
+  ExecuteProcessAndWait('wget.exe -O "'+filename+'" "'+http+'" --no-check-certificate');
 end;
 
 procedure TForm1.MenuItemCacheOpenClick(Sender: TObject);
 begin
   ExecuteProcess('"'+GetWinDir+'\notepad.exe" "'+ExtractFileDir(Application.ExeName) + '\archive.txt"');
+end;
+
+procedure TForm1.MenuItemCacheToggleClick(Sender: TObject);
+begin
+  TMenuItem(Sender).Checked := not TMenuItem(Sender).Checked;
+  ConfigSave;
 end;
 
 procedure TForm1.MenuItemExitClick(Sender: TObject);
@@ -129,8 +214,36 @@ begin
 end;
 
 procedure TForm1.MenuItemUpdateClick(Sender: TObject);
+var lastVersion: String;
 begin
-  OpenURL('https://github.com/ddeeproton/YoutubeDownloader/tree/master/Setup%20installation');
+  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/lastversion.txt','lastversion.txt');
+
+  if not FileExists('lastversion.txt') then
+  begin
+    ShowMessage('Vous ne semblez pas connecté à Internet');
+    exit;
+  end;
+
+  lastVersion := ReadFile('lastversion.txt');
+  DeleteFile(PChar('lastversion.txt'));
+
+  if CurrentVersion = lastVersion then
+  begin
+    ShowMessage('Vous êtes à jour :)');
+    exit;
+  end;
+
+  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_'+lastVersion+'.exe','YoutubeDownloaderSetup_'+lastVersion+'.exe');
+
+  if not FileExists('YoutubeDownloaderSetup_'+lastVersion+'.exe') then
+  begin
+    ShowMessage('Erreur lors du téléchargement de la mise à jour');
+    exit;
+  end;
+
+  ExecuteProcess('YoutubeDownloaderSetup_'+lastVersion+'.exe');
+  Application.Terminate;
+
 end;
 
 procedure TForm1.MenuItemHideClick(Sender: TObject);
@@ -144,17 +257,47 @@ begin
   Edit1.PasteFromClipboard;
 end;
 
-procedure TForm1.ButtonDownloadMP3Click(Sender: TObject);
+procedure TForm1.ComboBoxEncodingChange(Sender: TObject);
 begin
-  DoDownload(True);
+  ConfigSave;
 end;
 
-procedure TForm1.ButtonDownloadWAVClick(Sender: TObject);
+
+procedure TForm1.ButtonDownloadClick(Sender: TObject);
 begin
-  DoDownload(False);
+  DoDownload();
 end;
 
-procedure TForm1.DoDownload(DoConvert:Boolean);
+procedure TForm1.ButtonMenuClick(Sender: TObject);
+begin
+  PopupMenuTray.PopUp;
+end;
+
+function TForm1.getEncoding(): String;
+var
+  i:integer;
+  audio_format, audio_quality: String;
+begin
+  i := Pos(' ', ComboBoxEncoding.Text);
+  if i = 0 then
+  begin
+    audio_format := ComboBoxEncoding.Text;
+    audio_quality := '';
+  end else
+  begin
+    audio_format := Copy(ComboBoxEncoding.Text, 0, i);
+    audio_quality := Copy(ComboBoxEncoding.Text, i+1);
+  end;
+  if audio_format = 'ogg' then audio_format := 'vorbis';
+
+  if audio_format <> '' then audio_format := ' --audio-format '+audio_format;
+  if audio_quality <> '' then audio_quality := ' --audio-quality '+audio_quality;
+
+  result := audio_format + audio_quality;
+end;
+
+procedure TForm1.DoDownload();
+var UseCache: String;
 begin
   if Edit1.Text = '' then
   begin
@@ -170,11 +313,14 @@ begin
 
   if not SelectDirectoryDialog1.Execute then exit;
 
+  UseCache := '';
+  if MenuItemCacheToggle.Checked then
+    UseCache := '--download-archive "archive.txt"';
+
   Process1.ApplicationName := Config_YoutubeDownloader;
-  if DoConvert then
-     Process1.CommandLine := '-q --download-archive archive.txt --extract-audio --audio-format mp3 --audio-quality 128K --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" "'+Edit1.Text+'"'
-  else
-     Process1.CommandLine := '-q --download-archive archive.txt --extract-audio --audio-format wav --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" "'+Edit1.Text+'"';
+  Process1.CommandLine := ' -q '+UseCache+' --ignore-errors --extract-audio '+getEncoding()
+                       +' --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" '
+                       +'"'+Edit1.Text+'"';
   Process1.Execute;
 end;
 
@@ -187,12 +333,9 @@ begin
   if not url.StartsWith('http', true) then exit;
   MenuItemShowClick(nil);
   if Length(url) > 100 then url := url.Substring(0, 100)+'...';
-  if MessageDlg('Voulez-vous télécharger?'+#13#10#13#10+url,  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
+  if MessageDlg('Voulez-vous télécharger en format "'+ComboBoxEncoding.Text+'"?'+#13#10#13#10+url,  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
   ButtonPasteClick(nil);
-  if MessageDlg('Compresser l''audio? (Réponse oui => MP3, non => WAV)',  mtConfirmation, [mbYes, mbNo], 0) = IDYES then
-    ButtonDownloadMP3Click(nil)
-  else
-    ButtonDownloadWAVClick(nil);
+  ButtonDownloadClick(nil);
 end;
 
 
