@@ -41,3 +41,8 @@ Changements:
 
  0.0.12
   Ignore les erreurs lors d'un téléchargement de playlist.
+
+ 0.0.13
+  Ajout de l'encodage ogg.
+  Choix du débit.
+  Ajout d'un système de mise à jour.
