@@ -9,7 +9,7 @@ uses
   Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf;
 
 var
-  CurrentVersion : String = '0.0.16';
+  CurrentVersion : String = '0.0.17';
 
 type
 
@@ -399,7 +399,7 @@ begin
 end;
 
 procedure TForm1.TimerClipboardTimer(Sender: TObject);
-var url: string;
+var url, message: string;
 begin
   url := clipbrd.Clipboard.AsText;
   if url = oldClipboardValue then exit;
@@ -409,9 +409,12 @@ begin
   if Length(url) > 100 then url := url.Substring(0, 100)+'...';
 
   if url.Contains('https://www.mixcloud.com/') then
-    if MessageDlg('Voulez-vous télécharger en format "m4a"? (pas d''autre choix de compression possible)'+#13#10#13#10+url,  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit
+    message := 'Voulez-vous télécharger en format "m4a"? (pas d''autre choix de compression possible)'
   else
-    if MessageDlg('Voulez-vous télécharger en format "'+ComboBoxEncoding.Text+'"?'+#13#10#13#10+url,  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
+    message := 'Voulez-vous télécharger en format "'+ComboBoxEncoding.Text+'"?';
+
+  if MessageDlg(message+#13#10#13#10+url,  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
+
   ButtonPasteClick(nil);
   ButtonDownloadClick(nil);
 end;

@@ -73,3 +73,7 @@ Changements:
 
  0.0.16
   Affiche plus de détails lors du téléchargement
+
+ 0.0.17
+  Bug fix: Ne posait pas la question pour télécharger.
+
