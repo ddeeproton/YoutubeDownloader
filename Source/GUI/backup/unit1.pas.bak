@@ -9,7 +9,7 @@ uses
   Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf;
 
 var
-  CurrentVersion : String = '0.0.14';
+  CurrentVersion : String = '0.0.15';
 
 type
 
@@ -62,8 +62,10 @@ type
     procedure ConfigLoad;
     procedure WriteFile(Filename, Content : String);
     function ReadFile(Filename: String):String;
-    procedure DownloadFile(http, filename: String; pshow: Boolean);
+    procedure DownloadFile(http, filename: String; wait, pshow: Boolean);
     procedure CheckUpdate();
+    procedure DoDownloadWithMixcloud();
+    procedure DoDownloadWithYoutubeDl();
   private
     { private declarations }
   public
@@ -190,10 +192,10 @@ begin
 end;
 
 
-procedure TForm1.DownloadFile(http, filename: String; pshow: Boolean);
+procedure TForm1.DownloadFile(http, filename: String; wait, pshow: Boolean);
 begin
   if FileExists(filename) then DeleteFile(PChar(filename));
-  ExecuteProcess('wget.exe -O "'+filename+'" "'+http+'" --no-check-certificate', true, pshow);
+  ExecuteProcess('wget.exe -O "'+filename+'" "'+http+'" --no-check-certificate', wait, pshow);
 end;
 
 procedure TForm1.MenuItemCacheOpenClick(Sender: TObject);
@@ -225,7 +227,7 @@ procedure TForm1.CheckUpdate();
 var lastVersion: String;
 begin
   if not FileExists('wget.exe') then exit;
-  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/lastversion.txt','lastversion.txt', False);
+  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/lastversion.txt','lastversion.txt', True, False);
   if not FileExists('lastversion.txt') then exit;
   lastVersion := ReadFile('lastversion.txt');
   DeleteFile(PChar('lastversion.txt'));
@@ -242,7 +244,7 @@ begin
     ShowMessage('Il manque l''application wget.exe à côté de cette application pour la mise à jour. Essayez d''installer l''application manuellement à la place.');
     exit;
   end;
-  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/lastversion.txt','lastversion.txt', False);
+  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/lastversion.txt','lastversion.txt', True, False);
 
   if not FileExists('lastversion.txt') then
   begin
@@ -259,7 +261,7 @@ begin
     exit;
   end;
 
-  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_'+lastVersion+'.exe','YoutubeDownloaderSetup_'+lastVersion+'.exe', True);
+  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_'+lastVersion+'.exe','YoutubeDownloaderSetup_'+lastVersion+'.exe', True, True);
 
   if not FileExists('YoutubeDownloaderSetup_'+lastVersion+'.exe') then
   begin
@@ -276,7 +278,6 @@ procedure TForm1.TimerAfterLoadTimer(Sender: TObject);
 begin
   TimerAfterLoad.Enabled := False;
   CheckUpdate();
-  //Unit1.TAppUpdate.Create(False);
 end;
 
 procedure TForm1.MenuItemHideClick(Sender: TObject);
@@ -330,11 +331,30 @@ begin
 end;
 
 procedure TForm1.DoDownload();
+var UseCache, url: String;
+begin
+  url := Edit1.Text;
+  if url = '' then
+  begin
+    ShowMessage('Veuillez entrer d''abord un lien avant de cliquer sur Télécharger.');
+    exit;
+  end;
+
+  if url.Contains('https://www.mixcloud.com/') then
+    DoDownloadWithMixcloud
+  else
+    DoDownloadWithYoutubeDl;
+
+end;
+
+
+
+procedure TForm1.DoDownloadWithYoutubeDl();
 var UseCache: String;
 begin
   if Edit1.Text = '' then
   begin
-    ShowMessage('Veuillez entrer d''abord un lien Youtube avant de cliquer sur Télécharger.');
+    ShowMessage('Veuillez entrer d''abord un lien avant de cliquer sur Télécharger.');
     exit;
   end;
 
@@ -357,6 +377,27 @@ begin
   Process1.Execute;
 end;
 
+procedure TForm1.DoDownloadWithMixcloud();
+var
+  url, filename: String;
+  i: Integer;
+begin
+  url := Edit1.Text;
+  if url = '' then
+  begin
+    ShowMessage('Veuillez entrer d''abord un lien avant de cliquer sur Télécharger.');
+    exit;
+  end;
+  if not SelectDirectoryDialog1.Execute then exit;
+  i := url.LastIndexOf('/');
+  if i = Length(url)-1 then
+    url := Copy(url, 0, Length(url)-1);
+  i := url.LastIndexOf('/');
+  filename := Copy(url, i+2);
+  url := url.Replace('https://www.mixcloud.com/', 'http://download.mixcloud-downloader.com/d/mixcloud/');
+  DownloadFile(url, SelectDirectoryDialog1.FileName+'\'+filename+'.m4a', False, True);
+end;
+
 procedure TForm1.TimerClipboardTimer(Sender: TObject);
 var url: string;
 begin
@@ -366,7 +407,11 @@ begin
   if not url.StartsWith('http', true) then exit;
   MenuItemShowClick(nil);
   if Length(url) > 100 then url := url.Substring(0, 100)+'...';
-  if MessageDlg('Voulez-vous télécharger en format "'+ComboBoxEncoding.Text+'"?'+#13#10#13#10+url,  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
+
+  if url.Contains('https://www.mixcloud.com/') then
+    if MessageDlg('Voulez-vous télécharger en format "m4a"? (pas d''autre choix de compression possible)'+#13#10#13#10+url,  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit
+  else
+    if MessageDlg('Voulez-vous télécharger en format "'+ComboBoxEncoding.Text+'"?'+#13#10#13#10+url,  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
   ButtonPasteClick(nil);
   ButtonDownloadClick(nil);
 end;

@@ -50,3 +50,7 @@ Changements:
  0.0.14
   Vérifie Mise à jour au démarrage.
 
+ 0.0.15
+  Compatible avec mixcloud
+
+
