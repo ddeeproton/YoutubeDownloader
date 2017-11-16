@@ -53,4 +53,6 @@ Changements:
  0.0.15
   Compatible avec mixcloud
 
+ 0.0.16
+  Affiche plus de détails lors du téléchargement
 

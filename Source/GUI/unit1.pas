@@ -9,7 +9,7 @@ uses
   Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf;
 
 var
-  CurrentVersion : String = '0.0.15';
+  CurrentVersion : String = '0.0.16';
 
 type
 
@@ -371,7 +371,7 @@ begin
     UseCache := '--download-archive "archive.txt"';
 
   Process1.ApplicationName := Config_YoutubeDownloader;
-  Process1.CommandLine := ' -q '+UseCache+' --ignore-errors --extract-audio '+getEncoding()
+  Process1.CommandLine := ' '+UseCache+' --ignore-errors --extract-audio '+getEncoding()
                        +' --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" '
                        +'"'+Edit1.Text+'"';
   Process1.Execute;
