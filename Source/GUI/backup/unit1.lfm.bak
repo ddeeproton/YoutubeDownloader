@@ -3,6 +3,8 @@ object Form1: TForm1
   Height = 111
   Top = 127
   Width = 510
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
   Caption = 'Youtube Downloader'
   ClientHeight = 111
   ClientWidth = 510
@@ -47,7 +49,6 @@ object Form1: TForm1
     0000
   }
   OnCreate = FormCreate
-  Position = poScreenCenter
   LCLVersion = '1.6.4.0'
   object Edit1: TEdit
     Left = 8

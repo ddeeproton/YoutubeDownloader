@@ -9,7 +9,7 @@ uses
   Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf;
 
 var
-  CurrentVersion : String = '0.0.16';
+  CurrentVersion : String = '0.0.17';
 
 type
 
@@ -66,6 +66,7 @@ type
     procedure CheckUpdate();
     procedure DoDownloadWithMixcloud();
     procedure DoDownloadWithYoutubeDl();
+    function FindWindowByTitle(WindowTitle: string): Hwnd;
   private
     { private declarations }
   public
@@ -87,8 +88,10 @@ implementation
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  Form1.Height:= 66;
-  Edit1.Text:= '';
+  Form1.Height:= 55;
+  Form1.Top := Screen.WorkAreaHeight - Form1.Height - 32;
+  Form1.Left := Screen.WorkAreaWidth - Form1.Width - 6;
+  Edit1.Clear;
   ConfigLoad;
   Caption := 'Youtube Downloader V '+CurrentVersion;
 end;
@@ -145,6 +148,31 @@ var
 begin
   GetWindowsDirectory(dir, MAX_PATH);
   Result := StrPas(dir);
+end;
+
+function TForm1.FindWindowByTitle(WindowTitle: string): Hwnd;
+var
+  NextHandle: Hwnd;
+  NextTitle: array[0..260] of char;
+  ProcessId: Cardinal;
+begin
+  // Get the first window
+  NextHandle := GetWindow(Self.Handle, GW_HWNDFIRST);
+  while NextHandle > 0 do
+  begin
+    // retrieve its text
+    GetWindowText(NextHandle, NextTitle, 255);
+    GetWindowThreadProcessId(NextHandle ,@ProcessId);
+    if (Pos(LowerCase(WindowTitle), LowerCase(StrPas(NextTitle))) <> 0) then
+    begin
+      Result := NextHandle;
+      Exit;
+    end
+    else
+      // Get the next window
+      NextHandle := GetWindow(NextHandle, GW_HWNDNEXT);
+  end;
+  Result := 0;
 end;
 
 procedure TForm1.ExecuteProcess(cmd: String);
@@ -350,7 +378,11 @@ end;
 
 
 procedure TForm1.DoDownloadWithYoutubeDl();
-var UseCache: String;
+var
+  UseCache: String;
+  WindRect: TRect;
+  CmdHandle: Handle;
+  VolumeWidth, VolumeHeight, VolumeTop, VolumeLeft: Integer;
 begin
   if Edit1.Text = '' then
   begin
@@ -375,6 +407,20 @@ begin
                        +' --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" '
                        +'"'+Edit1.Text+'"';
   Process1.Execute;
+  Application.ProcessMessages;
+  Sleep(100);
+
+
+  CmdHandle := FindWindowByTitle(Config_YoutubeDownloader);
+  // Récupère les informations de la fenêtre (largeur, hauteur)
+  GetWindowRect(CmdHandle, WindRect);
+  // Mémorise les dimensions de la fenêtre du volume
+  VolumeWidth := WindRect.Right - WindRect.Left;
+  VolumeHeight := WindRect.Bottom - WindRect.Top;
+  VolumeTop := Screen.WorkAreaHeight - VolumeHeight;
+  VolumeLeft := Screen.WorkAreaWidth - VolumeWidth;
+  // Déplace la fenêtre en bas de l'écran
+  MoveWindow(CmdHandle, VolumeLeft, VolumeTop, VolumeWidth, VolumeHeight, true);
 end;
 
 procedure TForm1.DoDownloadWithMixcloud();

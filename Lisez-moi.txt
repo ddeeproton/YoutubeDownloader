@@ -59,3 +59,5 @@ Changements:
  0.0.17
   Bug fix: Ne posait pas la question pour télécharger.
 
+ 0.0.18
+  Arrange les fenêtres sur le bas de l'écran.
