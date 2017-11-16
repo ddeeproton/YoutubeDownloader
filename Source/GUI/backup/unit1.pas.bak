@@ -9,7 +9,7 @@ uses
   Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf;
 
 var
-  CurrentVersion : String = '0.0.12';
+  CurrentVersion : String = '0.0.14';
 
 type
 
@@ -33,7 +33,8 @@ type
     PopupMenuTray: TPopupMenu;
     Process1: TProcess;
     SelectDirectoryDialog1: TSelectDirectoryDialog;
-    Timer1: TTimer;
+    TimerAfterLoad: TTimer;
+    TimerClipboard: TTimer;
     TrayIcon1: TTrayIcon;
     XMLConfig1: TXMLConfig;
     procedure ButtonMenuClick(Sender: TObject);
@@ -50,17 +51,19 @@ type
     procedure MenuItemHideClick(Sender: TObject);
     procedure MenuItemShowClick(Sender: TObject);
     procedure MenuItemUpdateClick(Sender: TObject);
-    procedure Timer1Timer(Sender: TObject);
+    procedure TimerAfterLoadTimer(Sender: TObject);
+    procedure TimerClipboardTimer(Sender: TObject);
     procedure DoDownload();
     function GetWinDir: string;
     procedure ExecuteProcess(cmd: String);
-    procedure ExecuteProcessAndWait(cmd: String);
+    procedure ExecuteProcess(cmd: String; pwait, pshow: Boolean);
     function getEncoding(): String;
     procedure ConfigSave;
     procedure ConfigLoad;
     procedure WriteFile(Filename, Content : String);
     function ReadFile(Filename: String):String;
-    procedure DownloadFile(http, filename: String);
+    procedure DownloadFile(http, filename: String; pshow: Boolean);
+    procedure CheckUpdate();
   private
     { private declarations }
   public
@@ -78,6 +81,7 @@ implementation
 {$R *.lfm}
 
 { TForm1 }
+
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
@@ -151,14 +155,15 @@ begin
 end;
 
 
-procedure TForm1.ExecuteProcessAndWait(cmd: String);
+procedure TForm1.ExecuteProcess(cmd: String; pwait, pshow: Boolean);
 var p: TProcess;
 begin
   p := TProcess.Create(nil);
   p.ApplicationName:= '';
   p.CommandLine:= cmd;
+  if not pshow then p.ShowWindow:= swoHIDE;
   p.Execute;
-  p.WaitOnExit;
+  if pwait then p.WaitOnExit;
 end;
 
 procedure TForm1.MenuItemCacheClearClick(Sender: TObject);
@@ -185,10 +190,10 @@ begin
 end;
 
 
-procedure TForm1.DownloadFile(http, filename: String);
+procedure TForm1.DownloadFile(http, filename: String; pshow: Boolean);
 begin
   if FileExists(filename) then DeleteFile(PChar(filename));
-  ExecuteProcessAndWait('wget.exe -O "'+filename+'" "'+http+'" --no-check-certificate');
+  ExecuteProcess('wget.exe -O "'+filename+'" "'+http+'" --no-check-certificate', true, pshow);
 end;
 
 procedure TForm1.MenuItemCacheOpenClick(Sender: TObject);
@@ -214,10 +219,30 @@ begin
   BringToFront;
 end;
 
+
+
+procedure TForm1.CheckUpdate();
+var lastVersion: String;
+begin
+  if not FileExists('wget.exe') then exit;
+  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/lastversion.txt','lastversion.txt', False);
+  if not FileExists('lastversion.txt') then exit;
+  lastVersion := ReadFile('lastversion.txt');
+  DeleteFile(PChar('lastversion.txt'));
+  if CurrentVersion = lastVersion then exit;
+  if MessageDlg('Une mise à jour est disponible. Télécharger?',  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
+  MenuItemUpdateClick(nil);
+end;
+
 procedure TForm1.MenuItemUpdateClick(Sender: TObject);
 var lastVersion: String;
 begin
-  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/lastversion.txt','lastversion.txt');
+  if not FileExists('wget.exe') then
+  begin
+    ShowMessage('Il manque l''application wget.exe à côté de cette application pour la mise à jour. Essayez d''installer l''application manuellement à la place.');
+    exit;
+  end;
+  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/lastversion.txt','lastversion.txt', False);
 
   if not FileExists('lastversion.txt') then
   begin
@@ -234,7 +259,7 @@ begin
     exit;
   end;
 
-  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_'+lastVersion+'.exe','YoutubeDownloaderSetup_'+lastVersion+'.exe');
+  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_'+lastVersion+'.exe','YoutubeDownloaderSetup_'+lastVersion+'.exe', True);
 
   if not FileExists('YoutubeDownloaderSetup_'+lastVersion+'.exe') then
   begin
@@ -245,6 +270,13 @@ begin
   ExecuteProcess('"YoutubeDownloaderSetup_'+lastVersion+'.exe" /S');
   Application.Terminate;
 
+end;
+
+procedure TForm1.TimerAfterLoadTimer(Sender: TObject);
+begin
+  TimerAfterLoad.Enabled := False;
+  CheckUpdate();
+  //Unit1.TAppUpdate.Create(False);
 end;
 
 procedure TForm1.MenuItemHideClick(Sender: TObject);
@@ -325,7 +357,7 @@ begin
   Process1.Execute;
 end;
 
-procedure TForm1.Timer1Timer(Sender: TObject);
+procedure TForm1.TimerClipboardTimer(Sender: TObject);
 var url: string;
 begin
   url := clipbrd.Clipboard.AsText;

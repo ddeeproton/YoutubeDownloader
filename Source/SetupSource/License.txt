@@ -64,3 +64,10 @@ Changements:
   Ajout de l'encodage ogg.
   Choix du débit.
   Ajout d'un système de mise à jour.
+
+ 0.0.14
+  Vérifie Mise à jour au démarrage.
+
+
+
+

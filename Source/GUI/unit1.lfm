@@ -3,7 +3,7 @@ object Form1: TForm1
   Height = 111
   Top = 127
   Width = 510
-  Caption = 'Youtube Downloader V 0.0.13'
+  Caption = 'Youtube Downloader'
   ClientHeight = 111
   ClientWidth = 510
   FormStyle = fsStayOnTop
@@ -219,9 +219,9 @@ object Form1: TForm1
       OnClick = MenuItemExitClick
     end
   end
-  object Timer1: TTimer
+  object TimerClipboard: TTimer
     Interval = 2000
-    OnTimer = Timer1Timer
+    OnTimer = TimerClipboardTimer
     left = 328
     top = 64
   end
@@ -235,5 +235,10 @@ object Form1: TForm1
     ReadOnly = False
     left = 385
     top = 66
+  end
+  object TimerAfterLoad: TTimer
+    OnTimer = TimerAfterLoadTimer
+    left = 442
+    top = 68
   end
 end
