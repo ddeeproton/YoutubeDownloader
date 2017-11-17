@@ -6,10 +6,10 @@ interface
 
 uses
   Classes, SysUtils, process, XMLConf, FileUtil, Forms, Controls, Graphics,
-  Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf;
+  Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf, Registry;
 
 var
-  CurrentVersion : String = '0.0.18';
+  CurrentVersion : String = '0.0.20';
 
 type
 
@@ -22,9 +22,12 @@ type
     Edit1: TEdit;
     Label1: TLabel;
     MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
+    MenuItemUpdateOnBoot: TMenuItem;
+    MenuItem4: TMenuItem;
+    MenuItemStartOnBoot: TMenuItem;
     MenuItemCacheToggle: TMenuItem;
     MenuItemAbout: TMenuItem;
-    MenuItemUpdate: TMenuItem;
     MenuItemCacheHelp: TMenuItem;
     MenuItemCacheClear: TMenuItem;
     MenuItemCacheOpen: TMenuItem;
@@ -50,7 +53,9 @@ type
     procedure MenuItemExitClick(Sender: TObject);
     procedure MenuItemHideClick(Sender: TObject);
     procedure MenuItemShowClick(Sender: TObject);
+    procedure MenuItemStartOnBootClick(Sender: TObject);
     procedure MenuItemUpdateClick(Sender: TObject);
+    procedure MenuItemUpdateOnBootClick(Sender: TObject);
     procedure TimerAfterLoadTimer(Sender: TObject);
     procedure TimerClipboardTimer(Sender: TObject);
     procedure DoDownload();
@@ -67,6 +72,8 @@ type
     procedure DoDownloadWithMixcloud();
     procedure DoDownloadWithYoutubeDl();
     function FindWindowByTitle(WindowTitle: string): Hwnd;
+    procedure StartWithWindows(doStart: Boolean);
+    function isStartWithWindows(): Boolean;
   private
     { private declarations }
   public
@@ -93,16 +100,17 @@ begin
   Form1.Left := Screen.WorkAreaWidth - Form1.Width - 6;
   Edit1.Clear;
   ConfigLoad;
+  TMenuItem(Sender).Checked := isStartWithWindows;
   Caption := 'Youtube Downloader V '+CurrentVersion;
 end;
 
 procedure TForm1.ConfigLoad;
 begin
-  if not FileExists('config.xml') then exit;
   XMLConfig1 := TXMLConfig.Create(nil);
-  XMLConfig1.LoadFromFile('config.xml');
+  if FileExists('config.xml') then XMLConfig1.LoadFromFile('config.xml');
   ComboBoxEncoding.ItemIndex := XMLConfig1.GetValue('Encoding', 4);
   MenuItemCacheToggle.Checked := XMLConfig1.GetValue('UseCache', True);
+  MenuItemUpdateOnBoot.Checked := XMLConfig1.GetValue('UpdateOnBoot', True);
   XMLConfig1.Free;
 end;
 
@@ -111,6 +119,7 @@ begin
   XMLConfig1 := TXMLConfig.Create(nil);
   XMLConfig1.SetValue('Encoding', ComboBoxEncoding.ItemIndex);
   XMLConfig1.SetValue('UseCache', MenuItemCacheToggle.Checked);
+  XMLConfig1.SetValue('UpdateOnBoot', MenuItemUpdateOnBoot.Checked);
   XMLConfig1.SaveToFile('config.xml');
   XMLConfig1.Free;
 end;
@@ -196,6 +205,43 @@ begin
   if pwait then p.WaitOnExit;
 end;
 
+
+procedure TForm1.StartWithWindows(doStart: Boolean);
+var
+  Reg: TRegistry;
+begin
+  Reg := TRegistry.Create;
+  Reg.RootKey := HKEY_CURRENT_USER;
+  try
+  if Reg.OpenKey('\Software\Microsoft\Windows\CurrentVersion\Run', True) then
+  begin
+    if doStart then
+      Reg.WriteString(ExtractFileName(Application.ExeName), '"'+Application.ExeName+'" /background')
+    else
+      Reg.DeleteValue(ExtractFileName(Application.ExeName));
+    Reg.CloseKey;
+  end;
+  finally
+    Reg.Free;
+  end;
+end;
+
+
+function TForm1.isStartWithWindows(): Boolean;
+var
+  Reg: TRegistry;
+begin
+  result := False;
+  Reg := TRegistry.Create;
+  Reg.RootKey := HKEY_CURRENT_USER;
+  if Reg.OpenKey('\Software\Microsoft\Windows\CurrentVersion\Run', True) then
+  begin
+    result := Reg.ValueExists(ExtractFileName(Application.ExeName));
+    Reg.CloseKey;
+  end;
+  Reg.Free;
+end;
+
 procedure TForm1.MenuItemCacheClearClick(Sender: TObject);
 begin
   if MessageDlg('Voulez-vous effacer le cache?',  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
@@ -249,7 +295,11 @@ begin
   BringToFront;
 end;
 
-
+procedure TForm1.MenuItemStartOnBootClick(Sender: TObject);
+begin
+  TMenuItem(Sender).Checked := not TMenuItem(Sender).Checked;
+  StartWithWindows(TMenuItem(Sender).Checked);
+end;
 
 procedure TForm1.CheckUpdate();
 var lastVersion: String;
@@ -302,10 +352,23 @@ begin
 
 end;
 
+procedure TForm1.MenuItemUpdateOnBootClick(Sender: TObject);
+begin
+  TMenuItem(Sender).Checked := not TMenuItem(Sender).Checked;
+  ConfigSave;
+end;
+
 procedure TForm1.TimerAfterLoadTimer(Sender: TObject);
+var i: integer;
 begin
   TimerAfterLoad.Enabled := False;
-  CheckUpdate();
+  if MenuItemUpdateOnBoot.Checked then CheckUpdate();
+
+  for i:=0 to ParamCount() do
+  begin
+    if ParamStr(i) = '/background' then hide;
+  end;
+
 end;
 
 procedure TForm1.MenuItemHideClick(Sender: TObject);

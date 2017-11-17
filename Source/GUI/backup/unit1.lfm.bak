@@ -184,36 +184,47 @@ object Form1: TForm1
   object PopupMenuTray: TPopupMenu
     left = 264
     top = 64
+    object MenuItem2: TMenuItem
+      Caption = 'Options'
+      object MenuItem1: TMenuItem
+        Caption = 'Cache'
+        object MenuItemCacheToggle: TMenuItem
+          Caption = 'Activer'
+          OnClick = MenuItemCacheToggleClick
+        end
+        object MenuItemCacheOpen: TMenuItem
+          Caption = 'Voir le cache'
+          OnClick = MenuItemCacheOpenClick
+        end
+        object MenuItemCacheClear: TMenuItem
+          Caption = 'Effacer le cache'
+          OnClick = MenuItemCacheClearClick
+        end
+        object MenuItemCacheHelp: TMenuItem
+          Caption = 'C''est quoi?'
+          OnClick = MenuItemCacheHelpClick
+        end
+      end
+      object MenuItem4: TMenuItem
+        Caption = 'Mettre à jour'
+        OnClick = MenuItemUpdateClick
+      end
+      object MenuItemUpdateOnBoot: TMenuItem
+        Caption = 'Mise à jour au démarrage'
+        OnClick = MenuItemUpdateOnBootClick
+      end
+      object MenuItemStartOnBoot: TMenuItem
+        Caption = 'Lancer l''aplication au démarrage'
+        OnClick = MenuItemStartOnBootClick
+      end
+      object MenuItemAbout: TMenuItem
+        Caption = 'A propos'
+        OnClick = MenuItemAboutClick
+      end
+    end
     object MenuItemHide: TMenuItem
       Caption = 'Masquer'
       OnClick = MenuItemHideClick
-    end
-    object MenuItem1: TMenuItem
-      Caption = 'Cache'
-      object MenuItemCacheToggle: TMenuItem
-        Caption = 'Activer'
-        OnClick = MenuItemCacheToggleClick
-      end
-      object MenuItemCacheOpen: TMenuItem
-        Caption = 'Voir le cache'
-        OnClick = MenuItemCacheOpenClick
-      end
-      object MenuItemCacheClear: TMenuItem
-        Caption = 'Effacer le cache'
-        OnClick = MenuItemCacheClearClick
-      end
-      object MenuItemCacheHelp: TMenuItem
-        Caption = 'C''est quoi?'
-        OnClick = MenuItemCacheHelpClick
-      end
-    end
-    object MenuItemUpdate: TMenuItem
-      Caption = 'Mise à jour'
-      OnClick = MenuItemUpdateClick
-    end
-    object MenuItemAbout: TMenuItem
-      Caption = 'A propos'
-      OnClick = MenuItemAboutClick
     end
     object MenuItemExit: TMenuItem
       Caption = 'Quitter'

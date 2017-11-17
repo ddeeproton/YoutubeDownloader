@@ -83,3 +83,8 @@ Changements:
  0.0.19
   Bug fix: Arrange les fenêtres sur le bas de l'écran.
 
+ 0.0.20
+  Ajout option Démarrage avec Windows"
+  Ajout option "vérifier mise à jour au démarrage"
+
+
