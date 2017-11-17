@@ -61,3 +61,7 @@ Changements:
 
  0.0.18
   Arrange les fenêtres sur le bas de l'écran.
+
+ 0.0.19
+  Bug fix: Arrange les fenêtres sur le bas de l'écran.
+

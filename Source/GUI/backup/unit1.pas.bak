@@ -9,7 +9,7 @@ uses
   Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf;
 
 var
-  CurrentVersion : String = '0.0.17';
+  CurrentVersion : String = '0.0.18';
 
 type
 
@@ -408,7 +408,7 @@ begin
                        +'"'+Edit1.Text+'"';
   Process1.Execute;
   Application.ProcessMessages;
-  Sleep(100);
+  Sleep(1000);
 
 
   CmdHandle := FindWindowByTitle(Config_YoutubeDownloader);
