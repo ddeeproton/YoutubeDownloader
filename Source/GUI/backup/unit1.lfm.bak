@@ -1,13 +1,13 @@
 object Form1: TForm1
-  Left = 321
-  Height = 111
-  Top = 127
-  Width = 510
-  BorderIcons = [biSystemMenu, biMinimize]
-  BorderStyle = bsSingle
+  Left = 319
+  Height = 107
+  Top = 114
+  Width = 558
   Caption = 'Youtube Downloader'
-  ClientHeight = 111
-  ClientWidth = 510
+  ClientHeight = 107
+  ClientWidth = 558
+  Constraints.MaxHeight = 107
+  Constraints.MinHeight = 107
   FormStyle = fsStayOnTop
   Icon.Data = {
     7E04000000000100010010100000010020006804000016000000280000001000
@@ -50,25 +50,27 @@ object Form1: TForm1
   }
   OnCreate = FormCreate
   LCLVersion = '1.6.4.0'
-  object Edit1: TEdit
+  object EditHTTP: TEdit
     Left = 8
     Height = 21
     Top = 30
-    Width = 296
+    Width = 344
     Anchors = [akTop, akLeft, akRight]
     TabOrder = 0
-    Text = 'Edit1'
+    Text = 'EditHTTP'
   end
   object Label1: TLabel
     Left = 8
     Height = 13
-    Top = 8
-    Width = 291
-    Caption = 'Coller le lien Youtube (ou autre) ici et cliquer sur télécharger:'
+    Top = 12
+    Width = 343
+    Caption = 'Coller ici le lien Youtube (ou autre) et cliquer sur télécharger:'
+    Font.Style = [fsBold]
     ParentColor = False
+    ParentFont = False
   end
   object ButtonDownloadWAV: TButton
-    Left = 396
+    Left = 444
     Height = 25
     Top = 28
     Width = 77
@@ -78,7 +80,7 @@ object Form1: TForm1
     TabOrder = 1
   end
   object ComboBoxEncoding: TComboBox
-    Left = 312
+    Left = 360
     Height = 21
     Top = 30
     Width = 78
@@ -110,7 +112,7 @@ object Form1: TForm1
     Text = 'mp3 128K'
   end
   object ButtonMenu: TButton
-    Left = 480
+    Left = 528
     Height = 25
     Top = 28
     Width = 27
@@ -118,6 +120,33 @@ object Form1: TForm1
     Caption = '+'
     OnClick = ButtonMenuClick
     TabOrder = 3
+  end
+  object Label2: TLabel
+    Left = 8
+    Height = 13
+    Top = 61
+    Width = 128
+    Caption = 'Chemin de téléchargement'
+    ParentColor = False
+  end
+  object EditPath: TEdit
+    Left = 8
+    Height = 21
+    Top = 80
+    Width = 513
+    Anchors = [akTop, akLeft, akRight]
+    TabOrder = 4
+    Text = 'EditPath'
+  end
+  object ButtonSetDownloadPath: TButton
+    Left = 528
+    Height = 25
+    Top = 77
+    Width = 27
+    Anchors = [akTop, akRight]
+    Caption = '...'
+    OnClick = ButtonSetDownloadPathClick
+    TabOrder = 5
   end
   object Process1: TProcess
     Active = False
@@ -132,8 +161,8 @@ object Form1: TForm1
     WindowTop = 0
     WindowWidth = 0
     FillAttribute = 0
-    left = 24
-    top = 64
+    left = 64
+    top = 80
   end
   object TrayIcon1: TTrayIcon
     PopUpMenu = PopupMenuTray
@@ -178,12 +207,16 @@ object Form1: TForm1
     }
     Visible = True
     OnClick = MenuItemShowClick
-    left = 200
-    top = 64
+    left = 144
+    top = 80
   end
   object PopupMenuTray: TPopupMenu
-    left = 264
-    top = 64
+    left = 184
+    top = 80
+    object MenuItemHide: TMenuItem
+      Caption = 'Masquer'
+      OnClick = MenuItemHideClick
+    end
     object MenuItem2: TMenuItem
       Caption = 'Options'
       object MenuItem1: TMenuItem
@@ -222,10 +255,6 @@ object Form1: TForm1
         OnClick = MenuItemAboutClick
       end
     end
-    object MenuItemHide: TMenuItem
-      Caption = 'Masquer'
-      OnClick = MenuItemHideClick
-    end
     object MenuItemExit: TMenuItem
       Caption = 'Quitter'
       OnClick = MenuItemExitClick
@@ -234,23 +263,23 @@ object Form1: TForm1
   object TimerClipboard: TTimer
     Interval = 2000
     OnTimer = TimerClipboardTimer
-    left = 328
-    top = 64
+    left = 224
+    top = 80
   end
   object SelectDirectoryDialog1: TSelectDirectoryDialog
-    left = 112
-    top = 64
+    left = 104
+    top = 80
   end
   object XMLConfig1: TXMLConfig
     StartEmpty = False
     RootName = 'CONFIG'
     ReadOnly = False
-    left = 385
-    top = 66
+    left = 264
+    top = 80
   end
   object TimerAfterLoad: TTimer
     OnTimer = TimerAfterLoadTimer
-    left = 442
-    top = 68
+    left = 304
+    top = 80
   end
 end

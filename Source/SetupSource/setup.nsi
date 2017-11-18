@@ -16,8 +16,8 @@ OutFile "YoutubeDownloaderSetup_${VERSION}.exe"
 
 ; The default installation directory
 
-;InstallDir "$PROGRAMFILES\YoutubeDownloader"
-InstallDir "C:\YoutubeDownloader"
+InstallDir "$PROGRAMFILES\YoutubeDownloader"
+;InstallDir "C:\YoutubeDownloader"
 
 InstallDirRegKey HKLM "SOFTWARE\YoutubeDownloader" ""
 
@@ -94,13 +94,15 @@ Section "" ;No components page, name is not important
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
   
-  ; Put file there
-  File "YoutubeDownloader.exe"
+
+  SetOverwrite off
   File "youtube-dl.exe"  
   File "ffprobe.exe"  
   File "ffmpeg.exe"  
   File "ffplay.exe"  
   File "wget.exe"
+  SetOverwrite on
+  
   WriteUninstaller "uninstall_YoutubeDownloader.exe"
 
 
@@ -117,6 +119,20 @@ Section "" ;No components page, name is not important
   CreateShortCut "$SMPROGRAMS\YoutubeDownloader\Uninstall.lnk" "$INSTDIR\uninstall_YoutubeDownloader.exe" "" "$INSTDIR\uninstall_YoutubeDownloader.exe" 0
 
   
+  IfFileExists "$INSTDIR\YoutubeDownloader.exe" CloseProcess FSkip
+  CloseProcess:
+    ClearErrors
+    FileOpen $0 "$INSTDIR\closeYoutube.vbs" w
+    IfErrors FSkip
+    FileWrite $0 "const ProcessusATuer = $\"YoutubeDownloader.exe$\"$\r$\n   const TempsPauseEntreChaquesVerifs = 200$\r$\n   const NbrMaximumVerifications = 2000$\r$\n  strComputer = $\".$\"$\r$\n  Set objWMIService = GetObject($\"winmgmts:$\" & $\"{impersonationLevel=impersonate}!\\$\" & strComputer & $\"\root\cimv2$\")$\r$\n  Set colProcessList = objWMIService.ExecQuery($\"Select * from Win32_Process Where Name = '$\" & ProcessusATuer & $\"'$\")$\r$\n  dim i$\r$\n  i = 0$\r$\n  do while i <= NbrMaximumVerifications$\r$\n    i = i + 1$\r$\n    For Each objProcess in colProcessList$\r$\n       objProcess.Terminate()$\r$\n       wscript.quit$\r$\n    Next$\r$\n    wscript.sleep TempsPauseEntreChaquesVerifs$\r$\n  loop"
+    FileClose $0
+    Exec "wscript.exe closeYoutube.vbs" 
+    Sleep 2000
+    Delete "$INSTDIR\closeYoutube.vbs"
+  FSkip:
+
+  ; Put file there
+  File "YoutubeDownloader.exe"
   Exec "YoutubeDownloader.exe" 
   Quit
 SectionEnd ; end the section

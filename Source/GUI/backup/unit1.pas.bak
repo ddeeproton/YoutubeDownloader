@@ -9,7 +9,7 @@ uses
   Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf, Registry;
 
 var
-  CurrentVersion : String = '0.0.20';
+  CurrentVersion : String = '0.0.21';
 
 type
 
@@ -18,9 +18,12 @@ type
   TForm1 = class(TForm)
     ButtonMenu: TButton;
     ButtonDownloadWAV: TButton;
+    ButtonSetDownloadPath: TButton;
     ComboBoxEncoding: TComboBox;
-    Edit1: TEdit;
+    EditHTTP: TEdit;
+    EditPath: TEdit;
     Label1: TLabel;
+    Label2: TLabel;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItemUpdateOnBoot: TMenuItem;
@@ -40,6 +43,7 @@ type
     TimerClipboard: TTimer;
     TrayIcon1: TTrayIcon;
     XMLConfig1: TXMLConfig;
+    procedure ButtonSetDownloadPathClick(Sender: TObject);
     procedure ButtonMenuClick(Sender: TObject);
     procedure ButtonDownloadClick(Sender: TObject);
     procedure ButtonPasteClick(Sender: TObject);
@@ -62,6 +66,7 @@ type
     function GetWinDir: string;
     procedure ExecuteProcess(cmd: String);
     procedure ExecuteProcess(cmd: String; pwait, pshow: Boolean);
+    function CloseProcess(const windowName: PChar): Boolean;
     function getEncoding(): String;
     procedure ConfigSave;
     procedure ConfigLoad;
@@ -95,13 +100,31 @@ implementation
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  Form1.Height:= 55;
+  Form1.Height:= 107;
   Form1.Top := Screen.WorkAreaHeight - Form1.Height - 32;
   Form1.Left := Screen.WorkAreaWidth - Form1.Width - 6;
-  Edit1.Clear;
+  EditHTTP.Clear;
+  EditPath.Clear;
   ConfigLoad;
-  TMenuItem(Sender).Checked := isStartWithWindows;
-  Caption := 'Youtube Downloader V '+CurrentVersion;
+  MenuItemUpdateOnBoot.Checked := isStartWithWindows;
+end;
+
+procedure TForm1.TimerAfterLoadTimer(Sender: TObject);
+var i: integer;
+begin
+  TimerAfterLoad.Enabled := False;
+  if MenuItemUpdateOnBoot.Checked then CheckUpdate();
+
+  for i:=0 to ParamCount() do
+  begin
+    if ParamStr(i) = '/background' then hide;
+    if ParamStr(i) = '/close' then
+    begin
+      CloseProcess(PChar(Self.Caption));
+      Application.Terminate;
+    end;
+  end;
+
 end;
 
 procedure TForm1.ConfigLoad;
@@ -111,6 +134,7 @@ begin
   ComboBoxEncoding.ItemIndex := XMLConfig1.GetValue('Encoding', 4);
   MenuItemCacheToggle.Checked := XMLConfig1.GetValue('UseCache', True);
   MenuItemUpdateOnBoot.Checked := XMLConfig1.GetValue('UpdateOnBoot', True);
+  EditPath.Text := XMLConfig1.GetValue('Path', ExtractFileDir(Application.ExeName));
   XMLConfig1.Free;
 end;
 
@@ -120,6 +144,7 @@ begin
   XMLConfig1.SetValue('Encoding', ComboBoxEncoding.ItemIndex);
   XMLConfig1.SetValue('UseCache', MenuItemCacheToggle.Checked);
   XMLConfig1.SetValue('UpdateOnBoot', MenuItemUpdateOnBoot.Checked);
+  XMLConfig1.SetValue('Path', EditPath.Text);
   XMLConfig1.SaveToFile('config.xml');
   XMLConfig1.Free;
 end;
@@ -184,13 +209,20 @@ begin
   Result := 0;
 end;
 
-procedure TForm1.ExecuteProcess(cmd: String);
-var p: TProcess;
+
+
+function TForm1.CloseProcess(const windowName: PChar): Boolean;
+var AppHandle: THandle;
 begin
-  p := TProcess.Create(nil);
-  p.ApplicationName:= '';
-  p.CommandLine:= cmd;
-  p.Execute;
+  AppHandle:=FindWindow(Nil, windowName);
+  Result:=PostMessage(AppHandle, WM_QUIT, 0, 0);
+end;
+
+
+
+procedure TForm1.ExecuteProcess(cmd: String);
+begin
+  ExecuteProcess(cmd, False, True);
 end;
 
 
@@ -262,7 +294,8 @@ end;
 
 procedure TForm1.MenuItemAboutClick(Sender: TObject);
 begin
-  ShowMessage('Source: https://github.com/ddeeproton/YoutubeDownloader');
+  ShowMessage('Youtube Downlader version: '+CurrentVersion+#13#10+
+  'Source: https://github.com/ddeeproton/YoutubeDownloader');
 end;
 
 
@@ -358,18 +391,6 @@ begin
   ConfigSave;
 end;
 
-procedure TForm1.TimerAfterLoadTimer(Sender: TObject);
-var i: integer;
-begin
-  TimerAfterLoad.Enabled := False;
-  if MenuItemUpdateOnBoot.Checked then CheckUpdate();
-
-  for i:=0 to ParamCount() do
-  begin
-    if ParamStr(i) = '/background' then hide;
-  end;
-
-end;
 
 procedure TForm1.MenuItemHideClick(Sender: TObject);
 begin
@@ -378,8 +399,8 @@ end;
 
 procedure TForm1.ButtonPasteClick(Sender: TObject);
 begin
-  Edit1.Clear;
-  Edit1.PasteFromClipboard;
+  EditHTTP.Clear;
+  EditHTTP.PasteFromClipboard;
 end;
 
 procedure TForm1.ComboBoxEncodingChange(Sender: TObject);
@@ -396,6 +417,13 @@ end;
 procedure TForm1.ButtonMenuClick(Sender: TObject);
 begin
   PopupMenuTray.PopUp;
+end;
+
+procedure TForm1.ButtonSetDownloadPathClick(Sender: TObject);
+begin
+  if not SelectDirectoryDialog1.Execute then exit;
+  EditPath.Text := SelectDirectoryDialog1.FileName;
+  ConfigSave;
 end;
 
 function TForm1.getEncoding(): String;
@@ -424,7 +452,7 @@ end;
 procedure TForm1.DoDownload();
 var UseCache, url: String;
 begin
-  url := Edit1.Text;
+  url := EditHTTP.Text;
   if url = '' then
   begin
     ShowMessage('Veuillez entrer d''abord un lien avant de cliquer sur Télécharger.');
@@ -447,11 +475,6 @@ var
   CmdHandle: Handle;
   VolumeWidth, VolumeHeight, VolumeTop, VolumeLeft: Integer;
 begin
-  if Edit1.Text = '' then
-  begin
-    ShowMessage('Veuillez entrer d''abord un lien avant de cliquer sur Télécharger.');
-    exit;
-  end;
 
   if not FileExists(Config_YoutubeDownloader) then
   begin
@@ -459,7 +482,20 @@ begin
     exit;
   end;
 
-  if not SelectDirectoryDialog1.Execute then exit;
+  if EditHTTP.Text = '' then
+  begin
+    ShowMessage('Veuillez entrer d''abord un lien avant de cliquer sur Télécharger.');
+    exit;
+  end;
+
+
+
+  if not DirectoryExists(EditPath.Text) then
+  begin
+    if not SelectDirectoryDialog1.Execute then exit;
+    EditPath.Text := SelectDirectoryDialog1.FileName;
+    ConfigSave;
+  end;
 
   UseCache := '';
   if MenuItemCacheToggle.Checked then
@@ -467,8 +503,8 @@ begin
 
   Process1.ApplicationName := Config_YoutubeDownloader;
   Process1.CommandLine := ' '+UseCache+' --ignore-errors --extract-audio '+getEncoding()
-                       +' --restrict-filenames -o "'+SelectDirectoryDialog1.FileName+'\%(title)s.%(ext)s" '
-                       +'"'+Edit1.Text+'"';
+                       +' --restrict-filenames -o "'+EditPath.Text+'\%(title)s.%(ext)s" '
+                       +'"'+EditHTTP.Text+'"';
   Process1.Execute;
   Application.ProcessMessages;
   Sleep(1000);
@@ -486,18 +522,20 @@ begin
   MoveWindow(CmdHandle, VolumeLeft, VolumeTop, VolumeWidth, VolumeHeight, true);
 end;
 
+
 procedure TForm1.DoDownloadWithMixcloud();
 var
   url, filename: String;
   i: Integer;
 begin
-  url := Edit1.Text;
+  url := EditHTTP.Text;
   if url = '' then
   begin
     ShowMessage('Veuillez entrer d''abord un lien avant de cliquer sur Télécharger.');
     exit;
   end;
   if not SelectDirectoryDialog1.Execute then exit;
+  // Get the filename in last position of url
   i := url.LastIndexOf('/');
   if i = Length(url)-1 then
     url := Copy(url, 0, Length(url)-1);
@@ -515,17 +553,16 @@ begin
   oldClipboardValue := url;
   if not url.StartsWith('http', true) then exit;
   MenuItemShowClick(nil);
+  ButtonPasteClick(nil);
+  {
   if Length(url) > 100 then url := url.Substring(0, 100)+'...';
-
   if url.Contains('https://www.mixcloud.com/') then
     message := 'Voulez-vous télécharger en format "m4a"? (pas d''autre choix de compression possible)'
   else
     message := 'Voulez-vous télécharger en format "'+ComboBoxEncoding.Text+'"?';
-
   if MessageDlg(message+#13#10#13#10+url,  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
-
-  ButtonPasteClick(nil);
   ButtonDownloadClick(nil);
+  }
 end;
 
 
