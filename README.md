@@ -4,7 +4,8 @@
 ### Description:
  Ce programme télécharge l'audio des vidéos de Youtube, Dailymotion et autres.
 
- Pour voir la liste des sites supportés:
+ Liste des sites supportés:
+ 
  https://github.com/rg3/youtube-dl/blob/master/docs/supportedsites.md
 
 ### Fonctionnement:
@@ -18,8 +19,17 @@
 
 ### Compilation:
  Le GUI est compilé avec Lazarus
+ 
+ http://www.lazarus-ide.org/
+ 
  Le Setup avec NSIS
+ 
+ http://nsis.sourceforge.net/Main_Page
+ 
  L'application avec Python
+ 
+ https://www.python.org/
+ 
  (Tous sont gratuits)
 
 
