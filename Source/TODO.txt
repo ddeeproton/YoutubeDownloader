@@ -1,1 +1,2 @@
-rien de prévu
+Désactiver la surveillance du presse papier
+Ajouter le téléchargement des vidéos
