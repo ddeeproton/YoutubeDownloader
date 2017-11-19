@@ -9,7 +9,7 @@ uses
   Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf, Registry;
 
 var
-  CurrentVersion : String = '0.0.21';
+  CurrentVersion : String = '0.0.22';
 
 type
 
@@ -22,6 +22,7 @@ type
     ComboBoxEncoding: TComboBox;
     EditHTTP: TEdit;
     EditPath: TEdit;
+    Image1: TImage;
     Label1: TLabel;
     Label2: TLabel;
     MenuItem1: TMenuItem;
@@ -103,6 +104,8 @@ begin
   Form1.Height:= 107;
   Form1.Top := Screen.WorkAreaHeight - Form1.Height - 32;
   Form1.Left := Screen.WorkAreaWidth - Form1.Width - 6;
+  Image1.Align:= alClient;
+  TrayIcon1.Icon := Self.Icon;
   EditHTTP.Clear;
   EditPath.Clear;
   ConfigLoad;
