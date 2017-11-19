@@ -71,8 +71,11 @@ Ajout option "vérifier mise à jour au démarrage"
 
 #### 0.0.21
 Bug fix: "vérifier mise à jour au démarrage
+
 Mémoriser le chemin du dossier de téléchargement et ne plus le demander
+
 Setup: Fermeture automatique lors d'un update manuel
+
 Setup: N'écrase pas les fichiers déjà existants (plus rapide)
   
 #### 0.0.22
