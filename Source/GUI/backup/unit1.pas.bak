@@ -74,12 +74,14 @@ type
     procedure WriteFile(Filename, Content : String);
     function ReadFile(Filename: String):String;
     procedure DownloadFile(http, filename: String; wait, pshow: Boolean);
+    procedure DownloadFileToDir(http, dir: String; wait, pshow: Boolean);
     procedure CheckUpdate();
     procedure DoDownloadWithMixcloud();
     procedure DoDownloadWithYoutubeDl();
     function FindWindowByTitle(WindowTitle: string): Hwnd;
     procedure StartWithWindows(doStart: Boolean);
     function isStartWithWindows(): Boolean;
+    procedure SplitStr(const Source, Delimiter: String; var DelimitedList: TStringList);
   private
     { private declarations }
   public
@@ -105,6 +107,7 @@ begin
   Form1.Top := Screen.WorkAreaHeight - Form1.Height - 32;
   Form1.Left := Screen.WorkAreaWidth - Form1.Width - 6;
   Image1.Align:= alClient;
+  TrayIcon1.Icon := Self.Icon;
   EditHTTP.Clear;
   EditPath.Clear;
   ConfigLoad;
@@ -150,6 +153,7 @@ begin
   XMLConfig1.SaveToFile('config.xml');
   XMLConfig1.Free;
 end;
+
 
 
 function TForm1.ReadFile(Filename: String):String;
@@ -303,9 +307,35 @@ end;
 
 procedure TForm1.DownloadFile(http, filename: String; wait, pshow: Boolean);
 begin
+  if not FileExists('wget.exe') then
+  begin
+    ShowMessage('wget.exe est introuvable. Il doit se trouver à côté de cette application pour fonctionner.');
+    exit;
+  end;
   if FileExists(filename) then DeleteFile(PChar(filename));
   ExecuteProcess('wget.exe -O "'+filename+'" "'+http+'" --no-check-certificate', wait, pshow);
 end;
+
+
+procedure TForm1.DownloadFileToDir(http, dir: String; wait, pshow: Boolean);
+begin
+  if not FileExists('wget.exe') then
+  begin
+    ShowMessage('wget.exe est introuvable. Il doit se trouver à côté de cette application pour fonctionner.');
+    exit;
+  end;
+  if not DirectoryExists(dir) then
+  begin
+    if not SelectDirectoryDialog1.Execute then exit;
+    EditPath.Text := SelectDirectoryDialog1.FileName;
+    ConfigSave;
+    dir := EditPath.Text;
+  end;
+  SetCurrentDirectory(PChar(dir));
+  ExecuteProcess(ExtractFileDir(Application.Exename)+'\wget.exe "'+http+'" --no-check-certificate', wait, pshow);
+  SetCurrentDirectory(PChar(ExtractFileDir(Application.Exename)));
+end;
+
 
 procedure TForm1.MenuItemCacheOpenClick(Sender: TObject);
 begin
@@ -428,31 +458,66 @@ begin
   ConfigSave;
 end;
 
+procedure TForm1.SplitStr(const Source, Delimiter: String; var DelimitedList: TStringList);
+var
+  s: PChar;
+  DelimiterIndex: Integer;
+  Item: String;
+begin
+  s:=PChar(Source);
+  repeat
+    DelimiterIndex:=Pos(Delimiter, s);
+    if DelimiterIndex=0 then Break;
+    Item:=Copy(s, 1, DelimiterIndex-1);
+    DelimitedList.Add(Item);
+    inc(s, DelimiterIndex + Length(Delimiter)-1);
+  until DelimiterIndex = 0;
+  DelimitedList.Add(s);
+end;
+
 function TForm1.getEncoding(): String;
 var
   i:integer;
-  audio_format, audio_quality: String;
+  media_type, media_format, media_quality: String;
+  data: TStringList;
 begin
-  i := Pos(' ', ComboBoxEncoding.Text);
-  if i = 0 then
+  data := TStringList.Create;
+  SplitStr(ComboBoxEncoding.Text,' ',data);
+
+  if data.Count = 1 then
   begin
-    audio_format := ComboBoxEncoding.Text;
-    audio_quality := '';
+    media_format := ComboBoxEncoding.Text;
+    media_quality := '';
+    media_type := '';
+  end;
+  if data.Count = 2 then
+  begin
+    media_type := data.Strings[0];
+    media_format := data.Strings[1];
+    media_quality := '';
+  end;
+  if data.Count = 3 then
+  begin
+    media_type := data.Strings[0];
+    media_format := data.Strings[1];
+    media_quality := data.Strings[2];
+  end;
+  if media_type = 'audio' then
+  begin
+    media_type := '--extract-audio ';
+    if media_format = 'ogg' then media_format := 'vorbis';
+    if media_format <> '' then media_format := ' --audio-format '+media_format;
+    if media_quality <> '' then media_quality := ' --audio-quality '+media_quality;
+    result := media_type + media_format + media_quality;
   end else
   begin
-    audio_format := Copy(ComboBoxEncoding.Text, 0, i);
-    audio_quality := Copy(ComboBoxEncoding.Text, i+1);
+    result := '-f '+media_format;
   end;
-  if audio_format = 'ogg' then audio_format := 'vorbis';
 
-  if audio_format <> '' then audio_format := ' --audio-format '+audio_format;
-  if audio_quality <> '' then audio_quality := ' --audio-quality '+audio_quality;
-
-  result := audio_format + audio_quality;
 end;
 
 procedure TForm1.DoDownload();
-var UseCache, url: String;
+var url: String;
 begin
   url := EditHTTP.Text;
   if url = '' then
@@ -461,10 +526,18 @@ begin
     exit;
   end;
 
-  if url.Contains('https://www.mixcloud.com/') then
-    DoDownloadWithMixcloud
-  else
-    DoDownloadWithYoutubeDl;
+  if ComboBoxEncoding.Text = 'fichier brut' then
+  begin
+    DownloadFile(url, EditPath.Text, False, True);
+  end else
+  begin
+    if url.Contains('https://www.mixcloud.com/') then
+      DoDownloadWithMixcloud
+    else
+      DoDownloadWithYoutubeDl;
+  end;
+
+
 
 end;
 
@@ -502,9 +575,12 @@ begin
     UseCache := '--download-archive "archive.txt"';
 
   Process1.ApplicationName := Config_YoutubeDownloader;
-  Process1.CommandLine := ' '+UseCache+' --ignore-errors --extract-audio '+getEncoding()
+  Process1.CommandLine := ' '+UseCache
+                       +' --ignore-errors '
+                       +getEncoding()
                        +' --restrict-filenames -o "'+EditPath.Text+'\%(title)s.%(ext)s" '
                        +'"'+EditHTTP.Text+'"';
+
   Process1.Execute;
   Application.ProcessMessages;
   Sleep(1000);
