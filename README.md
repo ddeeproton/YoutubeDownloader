@@ -4,6 +4,8 @@
 ### Description:
  Ce programme télécharge l'audio des vidéos de Youtube, Dailymotion et autres.
 
+ Pour voir la liste des sites supportés:
+ https://github.com/rg3/youtube-dl/blob/master/docs/supportedsites.md
 
 ### Fonctionnement:
  Ce programme, une fois lancé, surveille votre presse papier. 
