@@ -27,58 +27,58 @@
 
 ### Changements:
 
-0.0.8
+#### 0.0.8
 Ne demande plus à l'utilisateur d'écrire le titre de la vidéo. Il demande seulement le dossier de destination.
 
-0.0.9
+#### 0.0.9
 Permet de choisir la méthode de compression
 
-0.0.10
+#### 0.0.10
 Ne pas télécharger une seconde fois la même vidéo (valeur stoquée dans "archive.txt")
 
-0.0.11
+#### 0.0.11
 Ajour d'un gestionnaire de cache dans le menu du systray.
 
-0.0.12
+#### 0.0.12
 Ignore les erreurs lors d'un téléchargement de playlist.
 
-0.0.13
+#### 0.0.13
 Ajout de l'encodage ogg.
 Choix du débit.
 Ajout d'un système de mise à jour.
 
-0.0.14
+#### 0.0.14
 Vérifie Mise à jour au démarrage.
 
-0.0.15
+#### 0.0.15
 Compatible avec mixcloud
 
-0.0.16
+#### 0.0.16
 Affiche plus de détails lors du téléchargement
 
-0.0.17
+#### 0.0.17
 Bug fix: Ne posait pas la question pour télécharger.
 
-0.0.18
+#### 0.0.18
 Arrange les fenêtres sur le bas de l'écran.
 
-0.0.19
+#### 0.0.19
 Bug fix: Arrange les fenêtres sur le bas de l'écran.
 
-0.0.20
+#### 0.0.20
 Ajout option Démarrage avec Windows"
 Ajout option "vérifier mise à jour au démarrage"
 
-0.0.21
+#### 0.0.21
 Bug fix: "vérifier mise à jour au démarrage
 Mémoriser le chemin du dossier de téléchargement et ne plus le demander
 Setup: Fermeture automatique lors d'un update manuel
 Setup: N'écrase pas les fichiers déjà existants (plus rapide)
   
-0.0.22
+#### 0.0.22
 Nouveau design
  
-0.0.23
+#### 0.0.23
 Téléchargement de video et de fichiers bruts maintenant possible
 
   
