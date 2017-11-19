@@ -528,7 +528,7 @@ begin
 
   if ComboBoxEncoding.Text = 'fichier brut' then
   begin
-    DownloadFile(url, EditPath.Text, False, True);
+    DownloadFileToDir(url, EditPath.Text, False, True);
   end else
   begin
     if url.Contains('https://www.mixcloud.com/') then

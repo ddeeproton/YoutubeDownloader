@@ -9,7 +9,7 @@ uses
   Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf, Registry;
 
 var
-  CurrentVersion : String = '0.0.22';
+  CurrentVersion : String = '0.0.23';
 
 type
 
