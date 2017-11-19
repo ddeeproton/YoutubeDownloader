@@ -4,7 +4,7 @@
 ### Description:
  Ce programme télécharge l'audio des vidéos de Youtube, Dailymotion et autres.
 
- Liste des sites supportés:
+### Liste des sites supportés:
  
  https://github.com/rg3/youtube-dl/blob/master/docs/supportedsites.md
 
