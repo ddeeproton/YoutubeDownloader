@@ -57,7 +57,9 @@ Ignore les erreurs lors d'un téléchargement de playlist.
 
 #### 0.0.13
 Ajout de l'encodage ogg.
+
 Choix du débit.
+
 Ajout d'un système de mise à jour.
 
 #### 0.0.14
@@ -80,6 +82,7 @@ Bug fix: Arrange les fenêtres sur le bas de l'écran.
 
 #### 0.0.20
 Ajout option Démarrage avec Windows"
+
 Ajout option "vérifier mise à jour au démarrage"
 
 #### 0.0.21
