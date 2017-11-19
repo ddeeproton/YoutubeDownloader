@@ -10,7 +10,7 @@
 
 ### Fonctionnement:
  Ce programme, une fois lancé, surveille votre presse papier. 
- Dès qu'un lien http est copié, le programme vous propose de télécharger l'audio.
+ Dès qu'un lien http est copié, le programme vous propose de télécharger l'audio, la vidéo ou le fichier brut.
 
 
 ### Autre Documentation:	
