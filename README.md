@@ -104,3 +104,7 @@ Téléchargement de video et de fichiers bruts maintenant possible
 
 #### 0.0.24
 Ajout du skin "White"
+
+#### 0.0.25
+Ajout option "Surveiller le presse-papier"
+

@@ -9,7 +9,7 @@ uses
   Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf, Registry;
 
 var
-  CurrentVersion : String = '0.0.24';
+  CurrentVersion : String = '0.0.25';
 
 type
 
@@ -29,6 +29,7 @@ type
     Label2: TLabel;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuItemCheckClipboard: TMenuItem;
     MenuItemSkinWhite: TMenuItem;
     MenuItemSkinBlue: TMenuItem;
     MenuItemSkin: TMenuItem;
@@ -61,6 +62,7 @@ type
     procedure MenuItemCacheHelpClick(Sender: TObject);
     procedure MenuItemCacheOpenClick(Sender: TObject);
     procedure MenuItemCacheToggleClick(Sender: TObject);
+    procedure MenuItemCheckClipboardClick(Sender: TObject);
     procedure MenuItemExitClick(Sender: TObject);
     procedure MenuItemHideClick(Sender: TObject);
     procedure MenuItemShowClick(Sender: TObject);
@@ -121,6 +123,7 @@ begin
   MenuItemUpdateOnBoot.Checked := isStartWithWindows;
   if currentSkin = 0 then MenuItemSkinBlueClick(nil);
   if currentSkin = 1 then MenuItemSkinWhiteClick(nil);
+  TimerClipboard.Enabled := MenuItemCheckClipboard.Checked;
 end;
 
 procedure TForm1.Image1Click(Sender: TObject);
@@ -155,6 +158,7 @@ begin
   MenuItemUpdateOnBoot.Checked := XMLConfig1.GetValue('UpdateOnBoot', True);
   EditPath.Text := XMLConfig1.GetValue('Path', ExtractFileDir(Application.ExeName));
   currentSkin := XMLConfig1.GetValue('Skin', 0);
+  MenuItemCheckClipboard.Checked := XMLConfig1.GetValue('CheckClipboard', True);
   XMLConfig1.Free;
 end;
 
@@ -166,6 +170,7 @@ begin
   XMLConfig1.SetValue('UpdateOnBoot', MenuItemUpdateOnBoot.Checked);
   XMLConfig1.SetValue('Path', EditPath.Text);
   XMLConfig1.SetValue('Skin', currentSkin);
+  XMLConfig1.SetValue('CheckClipboard', MenuItemCheckClipboard.Checked);
   XMLConfig1.SaveToFile('config.xml');
   XMLConfig1.Free;
 end;
@@ -361,6 +366,13 @@ end;
 procedure TForm1.MenuItemCacheToggleClick(Sender: TObject);
 begin
   TMenuItem(Sender).Checked := not TMenuItem(Sender).Checked;
+  ConfigSave;
+end;
+
+procedure TForm1.MenuItemCheckClipboardClick(Sender: TObject);
+begin
+  TMenuItem(Sender).Checked := not TMenuItem(Sender).Checked;
+  TimerClipboard.Enabled := TMenuItem(Sender).Checked;
   ConfigSave;
 end;
 
