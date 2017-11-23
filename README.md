@@ -102,5 +102,5 @@ Nouveau design
 #### 0.0.23
 Téléchargement de video et de fichiers bruts maintenant possible
 
-  
-  
+#### 0.0.24
+Ajout du skin "White"

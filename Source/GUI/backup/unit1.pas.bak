@@ -9,7 +9,7 @@ uses
   Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf, Registry;
 
 var
-  CurrentVersion : String = '0.0.22';
+  CurrentVersion : String = '0.0.24';
 
 type
 
@@ -23,10 +23,15 @@ type
     EditHTTP: TEdit;
     EditPath: TEdit;
     Image1: TImage;
+    ImageList1: TImageList;
+    ImageList2: TImageList;
     Label1: TLabel;
     Label2: TLabel;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuItemSkinWhite: TMenuItem;
+    MenuItemSkinBlue: TMenuItem;
+    MenuItemSkin: TMenuItem;
     MenuItemUpdateOnBoot: TMenuItem;
     MenuItem4: TMenuItem;
     MenuItemStartOnBoot: TMenuItem;
@@ -50,6 +55,7 @@ type
     procedure ButtonPasteClick(Sender: TObject);
     procedure ComboBoxEncodingChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure Image1Click(Sender: TObject);
     procedure MenuItemAboutClick(Sender: TObject);
     procedure MenuItemCacheClearClick(Sender: TObject);
     procedure MenuItemCacheHelpClick(Sender: TObject);
@@ -58,6 +64,8 @@ type
     procedure MenuItemExitClick(Sender: TObject);
     procedure MenuItemHideClick(Sender: TObject);
     procedure MenuItemShowClick(Sender: TObject);
+    procedure MenuItemSkinBlueClick(Sender: TObject);
+    procedure MenuItemSkinWhiteClick(Sender: TObject);
     procedure MenuItemStartOnBootClick(Sender: TObject);
     procedure MenuItemUpdateClick(Sender: TObject);
     procedure MenuItemUpdateOnBootClick(Sender: TObject);
@@ -93,7 +101,7 @@ var
   Form1: TForm1;
   Config_YoutubeDownloader: String = 'youtube-dl.exe';
   oldClipboardValue: String = '';
-
+  currentSkin: Integer = 0;
 implementation
 
 {$R *.lfm}
@@ -107,11 +115,17 @@ begin
   Form1.Top := Screen.WorkAreaHeight - Form1.Height - 32;
   Form1.Left := Screen.WorkAreaWidth - Form1.Width - 6;
   Image1.Align:= alClient;
-  TrayIcon1.Icon := Self.Icon;
   EditHTTP.Clear;
   EditPath.Clear;
   ConfigLoad;
   MenuItemUpdateOnBoot.Checked := isStartWithWindows;
+  if currentSkin = 0 then MenuItemSkinBlueClick(nil);
+  if currentSkin = 1 then MenuItemSkinWhiteClick(nil);
+end;
+
+procedure TForm1.Image1Click(Sender: TObject);
+begin
+
 end;
 
 procedure TForm1.TimerAfterLoadTimer(Sender: TObject);
@@ -140,6 +154,7 @@ begin
   MenuItemCacheToggle.Checked := XMLConfig1.GetValue('UseCache', True);
   MenuItemUpdateOnBoot.Checked := XMLConfig1.GetValue('UpdateOnBoot', True);
   EditPath.Text := XMLConfig1.GetValue('Path', ExtractFileDir(Application.ExeName));
+  currentSkin := XMLConfig1.GetValue('Skin', 0);
   XMLConfig1.Free;
 end;
 
@@ -150,6 +165,7 @@ begin
   XMLConfig1.SetValue('UseCache', MenuItemCacheToggle.Checked);
   XMLConfig1.SetValue('UpdateOnBoot', MenuItemUpdateOnBoot.Checked);
   XMLConfig1.SetValue('Path', EditPath.Text);
+  XMLConfig1.SetValue('Skin', currentSkin);
   XMLConfig1.SaveToFile('config.xml');
   XMLConfig1.Free;
 end;
@@ -358,6 +374,28 @@ begin
   Show;
   Form1.WindowState:= wsNormal;
   BringToFront;
+end;
+
+procedure TForm1.MenuItemSkinBlueClick(Sender: TObject);
+begin
+  currentSkin := 0;
+  ImageList1.GetIcon(currentSkin, Image1.Picture.Icon);
+  ImageList2.GetIcon(currentSkin, Self.Icon);
+  ImageList2.GetIcon(currentSkin, TrayIcon1.Icon);
+  Label1.Font.Color := clWhite;
+  Label2.Font.Color := clWhite;
+  ConfigSave;
+end;
+
+procedure TForm1.MenuItemSkinWhiteClick(Sender: TObject);
+begin
+  currentSkin := 1;
+  ImageList1.GetIcon(currentSkin, Image1.Picture.Icon);
+  ImageList2.GetIcon(currentSkin, Self.Icon);
+  ImageList2.GetIcon(currentSkin, TrayIcon1.Icon);
+  Label1.Font.Color := clBlack;
+  Label2.Font.Color := clBlack;
+  ConfigSave;
 end;
 
 procedure TForm1.MenuItemStartOnBootClick(Sender: TObject);
