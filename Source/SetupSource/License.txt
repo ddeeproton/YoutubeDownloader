@@ -117,3 +117,6 @@ Changements:
  0.0.29
   Compatibilité Vista et + pour le setup d'installation
   
+ 0.0.30
+  Ajout option "Masquer la fenêtre après clique sur Télécharger"
+  

@@ -38,7 +38,7 @@
 ### Système d'exploitation:
  Windows
  
- Pour fonctionner sur Linux ou Mac, le code devra d'abord être adapté (chemin en "/" à la place de "\", etc.)
+ Pour fonctionner sur Linux ou Mac, le code devra d'abord être adapté (chemin en "/" à la place de "\\", etc.)
 
 ### Changements:
 
@@ -119,3 +119,6 @@ Masque la zone "Chemin de téléchargement"
 
 #### 0.0.29
 Compatibilité Vista et + pour le setup d'installation
+
+#### 0.0.30
+Ajout option "Masquer la fenêtre après clique sur Télécharger"

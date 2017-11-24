@@ -9,7 +9,7 @@ uses
   Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.29';
+  CurrentVersion : String = '0.0.30';
 
 type
 
@@ -29,6 +29,7 @@ type
     Label2: TLabel;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuItemHideOnDownload: TMenuItem;
     MenuItemPathDL: TMenuItem;
     MenuItemSkinBlack: TMenuItem;
     MenuItemCheckClipboard: TMenuItem;
@@ -58,6 +59,7 @@ type
     procedure ButtonPasteClick(Sender: TObject);
     procedure ComboBoxEncodingChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure MenuItemHideOnDownloadClick(Sender: TObject);
     procedure MenuItemPathDLClick(Sender: TObject);
     procedure MenuItemAboutClick(Sender: TObject);
     procedure MenuItemCacheClearClick(Sender: TObject);
@@ -138,6 +140,7 @@ begin
   MenuItemUpdateOnBoot.Checked := isStartWithWindows;
 end;
 
+
 procedure TForm1.MenuItemPathDLClick(Sender: TObject);
 begin
   setFormHeight(110);
@@ -179,6 +182,7 @@ begin
   EditPath.Text := XMLConfig1.GetValue('Path', ExtractFileDir(Application.ExeName));
   currentSkin := XMLConfig1.GetValue('Skin', 0);
   MenuItemCheckClipboard.Checked := XMLConfig1.GetValue('CheckClipboard', True);
+  MenuItemHideOnDownload.Checked := XMLConfig1.GetValue('HideOnDownload', False);
   XMLConfig1.Free;
 end;
 
@@ -191,6 +195,7 @@ begin
   XMLConfig1.SetValue('Path', EditPath.Text);
   XMLConfig1.SetValue('Skin', currentSkin);
   XMLConfig1.SetValue('CheckClipboard', MenuItemCheckClipboard.Checked);
+  XMLConfig1.SetValue('HideOnDownload', MenuItemHideOnDownload.Checked);
   XMLConfig1.SaveToFile(Config_Dir+'config.xml');
   XMLConfig1.Free;
 end;
@@ -405,6 +410,13 @@ begin
   ConfigSave;
 end;
 
+
+procedure TForm1.MenuItemHideOnDownloadClick(Sender: TObject);
+begin
+  TMenuItem(Sender).Checked := not TMenuItem(Sender).Checked;
+  ConfigSave;
+end;
+
 procedure TForm1.MenuItemExitClick(Sender: TObject);
 begin
   Application.Terminate;
@@ -543,6 +555,8 @@ end;
 procedure TForm1.ButtonDownloadClick(Sender: TObject);
 begin
   DoDownload();
+  if MenuItemHideOnDownload.Checked then
+    MenuItemHideClick(nil);
 end;
 
 procedure TForm1.ButtonMenuClick(Sender: TObject);
