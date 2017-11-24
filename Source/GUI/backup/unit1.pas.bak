@@ -349,7 +349,7 @@ end;
 
 procedure TForm1.MenuItemAboutClick(Sender: TObject);
 begin
-  ShowMessage('Youtube Downlader version: '+CurrentVersion+#13#10+
+  ShowMessage('Youtube Downlader version: '+CurrentVersion+#13#10#13#10+
   'Source: https://github.com/ddeeproton/YoutubeDownloader');
 end;
 

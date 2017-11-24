@@ -106,11 +106,14 @@ Changements:
   Ajout option "Surveiller le presse-papier"
 
  0.0.26
-  Compatibilité Vista et +
+  Compatibilité Vista et + pour le fichier de configuration
   
  0.0.27
   Ajout du skin "Black"
   
  0.0.28
   Masque la zone "Chemin de téléchargement"
+  
+ 0.0.29
+  Compatibilité Vista et + pour le setup d'installation
   

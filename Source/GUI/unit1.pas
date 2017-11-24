@@ -9,7 +9,7 @@ uses
   Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.28';
+  CurrentVersion : String = '0.0.29';
 
 type
 
@@ -125,6 +125,7 @@ begin
   Image1.Align:= alClient;
   EditHTTP.Clear;
   EditPath.Clear;
+
   Config_Dir := getUserPath + '\YoutubeDownloader\';
   if not DirectoryExists(Config_Dir) then MkDir(Config_Dir);
 

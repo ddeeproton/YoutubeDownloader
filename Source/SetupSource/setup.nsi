@@ -16,8 +16,8 @@ OutFile "YoutubeDownloaderSetup_${VERSION}.exe"
 
 ; The default installation directory
 
-InstallDir "$PROGRAMFILES\YoutubeDownloader"
-;InstallDir "C:\YoutubeDownloader"
+;InstallDir "$PROGRAMFILES\YoutubeDownloader"
+InstallDir "C:\YoutubeDownloader"
 
 InstallDirRegKey HKLM "SOFTWARE\YoutubeDownloader" ""
 
@@ -36,8 +36,8 @@ BGGradient 000000 000080 FFFFFF
 InstallColors 8080FF 000030 
 XPStyle on
 
-;SetCompressor bzip2
-SetCompressor /SOLID lzma
+SetCompressor bzip2
+;SetCompressor /SOLID lzma
 
 ;--------------------------------
 ;Interface Settings
@@ -81,6 +81,7 @@ SetCompressor /SOLID lzma
 
 ;--------------------------------
 
+
 ; The stuff to install
 Section "" ;No components page, name is not important
   ; Slow down install if is silent
@@ -90,7 +91,7 @@ Section "" ;No components page, name is not important
   goSilent1:
   Sleep 5000
   goNotSilent1:
-
+  
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
   
@@ -118,22 +119,11 @@ Section "" ;No components page, name is not important
   CreateShortCut "$DESKTOP\YoutubeDownloader.lnk" "$INSTDIR\YoutubeDownloader.exe" "" "$INSTDIR\YoutubeDownloader.exe" 0
   CreateShortCut "$SMPROGRAMS\YoutubeDownloader\Uninstall.lnk" "$INSTDIR\uninstall_YoutubeDownloader.exe" "" "$INSTDIR\uninstall_YoutubeDownloader.exe" 0
 
-  
-  IfFileExists "$INSTDIR\YoutubeDownloader.exe" CloseProcess FSkip
-  CloseProcess:
-    ClearErrors
-    FileOpen $0 "$INSTDIR\closeYoutube.vbs" w
-    IfErrors FSkip
-    FileWrite $0 "const ProcessusATuer = $\"YoutubeDownloader.exe$\"$\r$\n   const TempsPauseEntreChaquesVerifs = 200$\r$\n   const NbrMaximumVerifications = 2000$\r$\n  strComputer = $\".$\"$\r$\n  Set objWMIService = GetObject($\"winmgmts:$\" & $\"{impersonationLevel=impersonate}!\\$\" & strComputer & $\"\root\cimv2$\")$\r$\n  Set colProcessList = objWMIService.ExecQuery($\"Select * from Win32_Process Where Name = '$\" & ProcessusATuer & $\"'$\")$\r$\n  dim i$\r$\n  i = 0$\r$\n  do while i <= NbrMaximumVerifications$\r$\n    i = i + 1$\r$\n    For Each objProcess in colProcessList$\r$\n       objProcess.Terminate()$\r$\n       wscript.quit$\r$\n    Next$\r$\n    wscript.sleep TempsPauseEntreChaquesVerifs$\r$\n  loop"
-    FileClose $0
-    Exec "wscript.exe closeYoutube.vbs" 
-    Sleep 2000
-    Delete "$INSTDIR\closeYoutube.vbs"
-  FSkip:
 
   ; Put file there
   File "YoutubeDownloader.exe"
-  Exec "YoutubeDownloader.exe" 
+  Exec "YoutubeDownloader.exe"   
+
   Quit
 SectionEnd ; end the section
 
@@ -161,12 +151,30 @@ Section "Uninstall"
 SectionEnd
 
 
-
+Function "CloseProcessYoutube"
+    ClearErrors
+    FileOpen $0 "closeYoutube.vbs" w
+    IfErrors FSkip
+    FileWrite $0 "const ProcessusATuer = $\"YoutubeDownloader.exe$\"$\r$\n   const TempsPauseEntreChaquesVerifs = 200$\r$\n   const NbrMaximumVerifications = 2000$\r$\n  strComputer = $\".$\"$\r$\n  Set objWMIService = GetObject($\"winmgmts:$\" & $\"{impersonationLevel=impersonate}!\\$\" & strComputer & $\"\root\cimv2$\")$\r$\n  Set colProcessList = objWMIService.ExecQuery($\"Select * from Win32_Process Where Name = '$\" & ProcessusATuer & $\"'$\")$\r$\n  dim i$\r$\n  i = 0$\r$\n  do while i <= NbrMaximumVerifications$\r$\n    i = i + 1$\r$\n    For Each objProcess in colProcessList$\r$\n       objProcess.Terminate()$\r$\n       wscript.quit$\r$\n    Next$\r$\n    wscript.sleep TempsPauseEntreChaquesVerifs$\r$\n  loop"
+    FileClose $0
+    Exec "wscript.exe closeYoutube.vbs" 
+    Sleep 2000
+    Delete "closeYoutube.vbs"
+    FSkip:
+FunctionEnd
 
 Function .onInit
 
   !insertmacro MUI_LANGDLL_DISPLAY
 
+  Call CloseProcessYoutube
+  
+    IfFileExists "$PROGRAMFILES\YoutubeDownloader\uninstall_YoutubeDownloader.exe" 0 +3
+      MessageBox MB_OK "Avant d'installer, il est conseillé de désinstaller la version courante."
+      Exec "$PROGRAMFILES\YoutubeDownloader\uninstall_YoutubeDownloader.exe" 
+      StrCpy $INSTDIR "C:\YoutubeDownloader"
+      ;Exec "YoutubeDownloaderSetup_${VERSION}.exe"
+      ;Quit
 FunctionEnd
 
 
