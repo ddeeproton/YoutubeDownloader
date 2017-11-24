@@ -113,3 +113,6 @@ Compatibilité Vista et +
 
 #### 0.0.27
 Ajout du skin "Black"
+
+#### 0.0.28
+Masque la zone "Chemin de téléchargement"

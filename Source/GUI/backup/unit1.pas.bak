@@ -9,7 +9,7 @@ uses
   Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.27';
+  CurrentVersion : String = '0.0.28';
 
 type
 
@@ -29,6 +29,7 @@ type
     Label2: TLabel;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuItemPathDL: TMenuItem;
     MenuItemSkinBlack: TMenuItem;
     MenuItemCheckClipboard: TMenuItem;
     MenuItemSkinWhite: TMenuItem;
@@ -57,7 +58,7 @@ type
     procedure ButtonPasteClick(Sender: TObject);
     procedure ComboBoxEncodingChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure Image1Click(Sender: TObject);
+    procedure MenuItemPathDLClick(Sender: TObject);
     procedure MenuItemAboutClick(Sender: TObject);
     procedure MenuItemCacheClearClick(Sender: TObject);
     procedure MenuItemCacheHelpClick(Sender: TObject);
@@ -95,6 +96,8 @@ type
     function isStartWithWindows(): Boolean;
     procedure SplitStr(const Source, Delimiter: String; var DelimitedList: TStringList);
     function getUserPath:string;
+    procedure setFormHeight(h: Integer);
+    procedure setFormAtBottomRight;
   private
     { private declarations }
   public
@@ -115,11 +118,10 @@ implementation
 { TForm1 }
 
 
+
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  Form1.Height:= 107;
-  Form1.Top := Screen.WorkAreaHeight - Form1.Height - 32;
-  Form1.Left := Screen.WorkAreaWidth - Form1.Width - 6;
+  setFormHeight(60);
   Image1.Align:= alClient;
   EditHTTP.Clear;
   EditPath.Clear;
@@ -130,14 +132,22 @@ begin
 
   if currentSkin = 0 then MenuItemSkinBlueClick(nil);
   if currentSkin = 1 then MenuItemSkinWhiteClick(nil);
-  if currentSkin = 3 then MenuItemSkinBlackClick(nil);
+  if currentSkin = 2 then MenuItemSkinBlackClick(nil);
   TimerClipboard.Enabled := MenuItemCheckClipboard.Checked;
   MenuItemUpdateOnBoot.Checked := isStartWithWindows;
 end;
 
-procedure TForm1.Image1Click(Sender: TObject);
+procedure TForm1.MenuItemPathDLClick(Sender: TObject);
 begin
+  setFormHeight(110);
+end;
 
+procedure TForm1.setFormHeight(h: Integer);
+begin
+  Self.Height:= h;
+  Self.Constraints.MaxHeight := h;
+  Self.Constraints.MinHeight:= h;
+  setFormAtBottomRight;
 end;
 
 procedure TForm1.TimerAfterLoadTimer(Sender: TObject);
@@ -415,7 +425,7 @@ begin
   ImageList2.GetIcon(currentSkin, TrayIcon1.Icon);
   Label1.Font.Color := clWhite;
   Label2.Font.Color := clWhite;
-  ConfigSave;
+  if Sender <> nil then ConfigSave;
 end;
 
 procedure TForm1.MenuItemSkinWhiteClick(Sender: TObject);
@@ -426,7 +436,7 @@ begin
   ImageList2.GetIcon(currentSkin, TrayIcon1.Icon);
   Label1.Font.Color := clBlack;
   Label2.Font.Color := clBlack;
-  ConfigSave;
+  if Sender <> nil then ConfigSave;
 end;
 
 procedure TForm1.MenuItemSkinBlackClick(Sender: TObject);
@@ -437,7 +447,7 @@ begin
   ImageList2.GetIcon(currentSkin, TrayIcon1.Icon);
   Label1.Font.Color := clWhite;
   Label2.Font.Color := clWhite;
-  ConfigSave;
+  if Sender <> nil then ConfigSave;
 end;
 
 procedure TForm1.MenuItemStartOnBootClick(Sender: TObject);
@@ -507,6 +517,14 @@ end;
 procedure TForm1.MenuItemHideClick(Sender: TObject);
 begin
   Hide;
+  setFormHeight(60);
+end;
+
+procedure TForm1.setFormAtBottomRight;
+var x,y: Integer;
+begin
+  Left := Screen.WorkAreaWidth - Form1.Width - 6;
+  Top := Screen.WorkAreaHeight - Form1.Height - 32;
 end;
 
 procedure TForm1.ButtonPasteClick(Sender: TObject);
