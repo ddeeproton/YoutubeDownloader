@@ -122,3 +122,10 @@ Compatibilité Vista et + pour le setup d'installation
 
 #### 0.0.30
 Ajout option "Masquer la fenêtre après clique sur Télécharger"
+
+#### 0.0.31
+Nouveau design (plus de bordures)
+
+Bouton "Enter" lance le téléchargement
+
+Bouton "Esc" masque la fenêtre

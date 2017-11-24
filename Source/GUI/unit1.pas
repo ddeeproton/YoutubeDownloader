@@ -6,18 +6,20 @@ interface
 
 uses
   Classes, SysUtils, process, XMLConf, FileUtil, Forms, Controls, Graphics,
-  Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf, Registry, ShlObj;
+  Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf, Buttons,
+  Registry, ShlObj, LCLType;
 
 var
-  CurrentVersion : String = '0.0.30';
+  CurrentVersion : String = '0.0.31';
 
 type
 
   { TForm1 }
 
   TForm1 = class(TForm)
+    ButtonHide: TButton;
     ButtonMenu: TButton;
-    ButtonDownloadWAV: TButton;
+    ButtonDownload: TButton;
     ButtonSetDownloadPath: TButton;
     ComboBoxEncoding: TComboBox;
     EditHTTP: TEdit;
@@ -44,7 +46,6 @@ type
     MenuItemCacheHelp: TMenuItem;
     MenuItemCacheClear: TMenuItem;
     MenuItemCacheOpen: TMenuItem;
-    MenuItemHide: TMenuItem;
     MenuItemExit: TMenuItem;
     PopupMenuTray: TPopupMenu;
     Process1: TProcess;
@@ -53,6 +54,7 @@ type
     TimerClipboard: TTimer;
     TrayIcon1: TTrayIcon;
     XMLConfig1: TXMLConfig;
+    procedure ButtonDownloadKeyPress(Sender: TObject; var Key: char);
     procedure ButtonSetDownloadPathClick(Sender: TObject);
     procedure ButtonMenuClick(Sender: TObject);
     procedure ButtonDownloadClick(Sender: TObject);
@@ -100,6 +102,7 @@ type
     function getUserPath:string;
     procedure setFormHeight(h: Integer);
     procedure setFormAtBottomRight;
+    procedure SetSkin(skinIdImage: Integer; skinColor:TColor);
   private
     { private declarations }
   public
@@ -127,6 +130,8 @@ begin
   Image1.Align:= alClient;
   EditHTTP.Clear;
   EditPath.Clear;
+  EditPath.TabStop := False;
+  ButtonSetDownloadPath.TabStop := False;
 
   Config_Dir := getUserPath + '\YoutubeDownloader\';
   if not DirectoryExists(Config_Dir) then MkDir(Config_Dir);
@@ -141,9 +146,12 @@ begin
 end;
 
 
+
 procedure TForm1.MenuItemPathDLClick(Sender: TObject);
 begin
   setFormHeight(110);
+  EditPath.TabStop := True;
+  ButtonSetDownloadPath.TabStop := True;
 end;
 
 procedure TForm1.setFormHeight(h: Integer);
@@ -430,36 +438,35 @@ begin
 end;
 
 
-procedure TForm1.MenuItemSkinBlueClick(Sender: TObject);
+procedure TForm1.SetSkin(skinIdImage: Integer; skinColor:TColor);
 begin
-  currentSkin := 0;
+  currentSkin := skinIdImage;
   ImageList1.GetIcon(currentSkin, Image1.Picture.Icon);
   ImageList2.GetIcon(currentSkin, Self.Icon);
   ImageList2.GetIcon(currentSkin, TrayIcon1.Icon);
-  Label1.Font.Color := clWhite;
-  Label2.Font.Color := clWhite;
+  Label1.Font.Color := skinColor;
+  Label2.Font.Color := skinColor;
+  ButtonDownload.Font.Color := skinColor;
+  ButtonHide.Font.Color := skinColor;
+  ButtonMenu.Font.Color := skinColor;
+  ButtonSetDownloadPath.Font.Color := skinColor;
+end;
+
+procedure TForm1.MenuItemSkinBlueClick(Sender: TObject);
+begin
+  SetSkin(0, clWhite);
   if Sender <> nil then ConfigSave;
 end;
 
 procedure TForm1.MenuItemSkinWhiteClick(Sender: TObject);
 begin
-  currentSkin := 1;
-  ImageList1.GetIcon(currentSkin, Image1.Picture.Icon);
-  ImageList2.GetIcon(currentSkin, Self.Icon);
-  ImageList2.GetIcon(currentSkin, TrayIcon1.Icon);
-  Label1.Font.Color := clBlack;
-  Label2.Font.Color := clBlack;
+  SetSkin(1, RGB(80, 70, 70));
   if Sender <> nil then ConfigSave;
 end;
 
 procedure TForm1.MenuItemSkinBlackClick(Sender: TObject);
 begin
-  currentSkin := 2;
-  ImageList1.GetIcon(currentSkin, Image1.Picture.Icon);
-  ImageList2.GetIcon(currentSkin, Self.Icon);
-  ImageList2.GetIcon(currentSkin, TrayIcon1.Icon);
-  Label1.Font.Color := clWhite;
-  Label2.Font.Color := clWhite;
+  SetSkin(2, RGB(200, 200, 200));
   if Sender <> nil then ConfigSave;
 end;
 
@@ -536,8 +543,8 @@ end;
 procedure TForm1.setFormAtBottomRight;
 var x,y: Integer;
 begin
-  Left := Screen.WorkAreaWidth - Form1.Width - 6;
-  Top := Screen.WorkAreaHeight - Form1.Height - 32;
+  Left := Screen.WorkAreaWidth - Form1.Width; // - 6;
+  Top := Screen.WorkAreaHeight - Form1.Height; // - 32;
 end;
 
 procedure TForm1.ButtonPasteClick(Sender: TObject);
@@ -569,6 +576,12 @@ begin
   if not SelectDirectoryDialog1.Execute then exit;
   EditPath.Text := SelectDirectoryDialog1.FileName;
   ConfigSave;
+end;
+
+procedure TForm1.ButtonDownloadKeyPress(Sender: TObject; var Key: char);
+begin
+  if ord(Key) = 27 then MenuItemHideClick(nil);
+  if ord(Key) = 13 then ButtonDownloadClick(nil);
 end;
 
 procedure TForm1.SplitStr(const Source, Delimiter: String; var DelimitedList: TStringList);
@@ -743,6 +756,14 @@ begin
   if not url.StartsWith('http', true) then exit;
   MenuItemShowClick(nil);
   ButtonPasteClick(nil);
+  Application.ProcessMessages;
+  Application.Restore;
+  Application.RestoreStayOnTop(True);
+  LCLIntf.SetForegroundWindow(Form1.Handle);
+  LCLIntf.SetFocus(Form1.Handle);
+  Application.ProcessMessages;
+  ButtonDownload.SetFocus;
+
   {
   if Length(url) > 100 then url := url.Substring(0, 100)+'...';
   if url.Contains('https://www.mixcloud.com/') then
