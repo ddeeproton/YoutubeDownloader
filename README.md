@@ -108,3 +108,6 @@ Ajout du skin "White"
 #### 0.0.25
 Ajout option "Surveiller le presse-papier"
 
+#### 0.0.26
+Compatibilité Vista et +
+

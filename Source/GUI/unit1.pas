@@ -6,10 +6,10 @@ interface
 
 uses
   Classes, SysUtils, process, XMLConf, FileUtil, Forms, Controls, Graphics,
-  Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf, Registry;
+  Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.25';
+  CurrentVersion : String = '0.0.26';
 
 type
 
@@ -92,6 +92,7 @@ type
     procedure StartWithWindows(doStart: Boolean);
     function isStartWithWindows(): Boolean;
     procedure SplitStr(const Source, Delimiter: String; var DelimitedList: TStringList);
+    function getUserPath:string;
   private
     { private declarations }
   public
@@ -104,6 +105,7 @@ var
   Config_YoutubeDownloader: String = 'youtube-dl.exe';
   oldClipboardValue: String = '';
   currentSkin: Integer = 0;
+  Config_Dir: String = '';
 implementation
 
 {$R *.lfm}
@@ -119,11 +121,15 @@ begin
   Image1.Align:= alClient;
   EditHTTP.Clear;
   EditPath.Clear;
+  Config_Dir := getUserPath + '\YoutubeDownloader\';
+  if not DirectoryExists(Config_Dir) then MkDir(Config_Dir);
+
   ConfigLoad;
   MenuItemUpdateOnBoot.Checked := isStartWithWindows;
   if currentSkin = 0 then MenuItemSkinBlueClick(nil);
   if currentSkin = 1 then MenuItemSkinWhiteClick(nil);
   TimerClipboard.Enabled := MenuItemCheckClipboard.Checked;
+
 end;
 
 procedure TForm1.Image1Click(Sender: TObject);
@@ -152,7 +158,7 @@ end;
 procedure TForm1.ConfigLoad;
 begin
   XMLConfig1 := TXMLConfig.Create(nil);
-  if FileExists('config.xml') then XMLConfig1.LoadFromFile('config.xml');
+  if FileExists(Config_Dir+'config.xml') then XMLConfig1.LoadFromFile(Config_Dir+'config.xml');
   ComboBoxEncoding.ItemIndex := XMLConfig1.GetValue('Encoding', 4);
   MenuItemCacheToggle.Checked := XMLConfig1.GetValue('UseCache', True);
   MenuItemUpdateOnBoot.Checked := XMLConfig1.GetValue('UpdateOnBoot', True);
@@ -171,7 +177,7 @@ begin
   XMLConfig1.SetValue('Path', EditPath.Text);
   XMLConfig1.SetValue('Skin', currentSkin);
   XMLConfig1.SetValue('CheckClipboard', MenuItemCheckClipboard.Checked);
-  XMLConfig1.SaveToFile('config.xml');
+  XMLConfig1.SaveToFile(Config_Dir+'config.xml');
   XMLConfig1.Free;
 end;
 
@@ -210,6 +216,15 @@ begin
   GetWindowsDirectory(dir, MAX_PATH);
   Result := StrPas(dir);
 end;
+
+
+function TForm1.getUserPath:string;
+var pathString:array[0..1023] of char;
+begin
+   ShGetSpecialFolderPath(0,PChar(@pathString),CSIDL_APPDATA,false);
+   result:=pathString;
+end;
+
 
 function TForm1.FindWindowByTitle(WindowTitle: string): Hwnd;
 var
