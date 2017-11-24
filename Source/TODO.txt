@@ -1,3 +1,2 @@
-Pouvoir désactiver la surveillance du presse papier dans les options
 Pouvoir indiquer un proxy ou détecter le proxy du système automatiquement
 Pouvoir limiter la vitesse de téléchargement

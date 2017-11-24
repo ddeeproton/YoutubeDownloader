@@ -111,3 +111,5 @@ Ajout option "Surveiller le presse-papier"
 #### 0.0.26
 Compatibilité Vista et +
 
+#### 0.0.27
+Ajout du skin "Black"

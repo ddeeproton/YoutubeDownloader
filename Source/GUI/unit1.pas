@@ -9,7 +9,7 @@ uses
   Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.26';
+  CurrentVersion : String = '0.0.27';
 
 type
 
@@ -29,6 +29,7 @@ type
     Label2: TLabel;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuItemSkinBlack: TMenuItem;
     MenuItemCheckClipboard: TMenuItem;
     MenuItemSkinWhite: TMenuItem;
     MenuItemSkinBlue: TMenuItem;
@@ -66,6 +67,7 @@ type
     procedure MenuItemExitClick(Sender: TObject);
     procedure MenuItemHideClick(Sender: TObject);
     procedure MenuItemShowClick(Sender: TObject);
+    procedure MenuItemSkinBlackClick(Sender: TObject);
     procedure MenuItemSkinBlueClick(Sender: TObject);
     procedure MenuItemSkinWhiteClick(Sender: TObject);
     procedure MenuItemStartOnBootClick(Sender: TObject);
@@ -125,11 +127,12 @@ begin
   if not DirectoryExists(Config_Dir) then MkDir(Config_Dir);
 
   ConfigLoad;
-  MenuItemUpdateOnBoot.Checked := isStartWithWindows;
+
   if currentSkin = 0 then MenuItemSkinBlueClick(nil);
   if currentSkin = 1 then MenuItemSkinWhiteClick(nil);
+  if currentSkin = 2 then MenuItemSkinBlackClick(nil);
   TimerClipboard.Enabled := MenuItemCheckClipboard.Checked;
-
+  MenuItemUpdateOnBoot.Checked := isStartWithWindows;
 end;
 
 procedure TForm1.Image1Click(Sender: TObject);
@@ -403,6 +406,7 @@ begin
   BringToFront;
 end;
 
+
 procedure TForm1.MenuItemSkinBlueClick(Sender: TObject);
 begin
   currentSkin := 0;
@@ -422,6 +426,17 @@ begin
   ImageList2.GetIcon(currentSkin, TrayIcon1.Icon);
   Label1.Font.Color := clBlack;
   Label2.Font.Color := clBlack;
+  ConfigSave;
+end;
+
+procedure TForm1.MenuItemSkinBlackClick(Sender: TObject);
+begin
+  currentSkin := 2;
+  ImageList1.GetIcon(currentSkin, Image1.Picture.Icon);
+  ImageList2.GetIcon(currentSkin, Self.Icon);
+  ImageList2.GetIcon(currentSkin, TrayIcon1.Icon);
+  Label1.Font.Color := clWhite;
+  Label2.Font.Color := clWhite;
   ConfigSave;
 end;
 
