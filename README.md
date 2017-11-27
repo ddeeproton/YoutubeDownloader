@@ -129,3 +129,6 @@ Nouveau design (plus de bordures)
 Bouton "Enter" lance le téléchargement
 
 Bouton "Esc" masque la fenêtre
+
+#### 0.0.32
+Déplacement de la fenêtre avec la souris

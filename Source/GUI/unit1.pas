@@ -10,7 +10,7 @@ uses
   Registry, ShlObj, LCLType;
 
 var
-  CurrentVersion : String = '0.0.31';
+  CurrentVersion : String = '0.0.32';
 
 type
 
@@ -61,6 +61,7 @@ type
     procedure ButtonPasteClick(Sender: TObject);
     procedure ComboBoxEncodingChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure MenuItemHideOnDownloadClick(Sender: TObject);
     procedure MenuItemPathDLClick(Sender: TObject);
     procedure MenuItemAboutClick(Sender: TObject);
@@ -105,6 +106,8 @@ type
     procedure SetSkin(skinIdImage: Integer; skinColor:TColor);
   private
     { private declarations }
+  protected
+    procedure WMNCHitTest(var Message: TWMNCHitTest); message WM_NCHITTEST;
   public
     { public declarations }
   end;
@@ -143,6 +146,12 @@ begin
   if currentSkin = 2 then MenuItemSkinBlackClick(nil);
   TimerClipboard.Enabled := MenuItemCheckClipboard.Checked;
   MenuItemUpdateOnBoot.Checked := isStartWithWindows;
+end;
+
+procedure TForm1.FormMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+
+begin
+
 end;
 
 
@@ -187,7 +196,7 @@ begin
   ComboBoxEncoding.ItemIndex := XMLConfig1.GetValue('Encoding', 4);
   MenuItemCacheToggle.Checked := XMLConfig1.GetValue('UseCache', True);
   MenuItemUpdateOnBoot.Checked := XMLConfig1.GetValue('UpdateOnBoot', True);
-  EditPath.Text := XMLConfig1.GetValue('Path', ExtractFileDir(Application.ExeName));
+  EditPath.Text := XMLConfig1.GetValue('Path', String(ExtractFileDir(Application.ExeName)));
   currentSkin := XMLConfig1.GetValue('Skin', 0);
   MenuItemCheckClipboard.Checked := XMLConfig1.GetValue('CheckClipboard', True);
   MenuItemHideOnDownload.Checked := XMLConfig1.GetValue('HideOnDownload', False);
@@ -209,6 +218,10 @@ begin
 end;
 
 
+procedure TForm1.WMNCHitTest(var Message: TWMNCHitTest);
+begin
+  Message.Result := HTCAPTION; // Move window on drag
+end;
 
 function TForm1.ReadFile(Filename: String):String;
 var
