@@ -5,21 +5,22 @@ unit Unit1;
 interface
 
 uses
-  Classes, SysUtils, process, XMLConf, FileUtil, Forms, Controls, Graphics,
-  Dialogs, StdCtrls, Menus, ExtCtrls, clipbrd, Windows, lclintf, Buttons,
-  Registry, ShlObj, LCLType;
+  Classes, SysUtils, process, XMLConf, FileUtil, BGRASpeedButton, BCButton,
+  BCButtonFocus, BCMaterialDesignButton, BCImageButton, BCDefaultThemeManager,
+  BCLabel, BGRACustomDrawn, Forms, Controls, Graphics, Dialogs, StdCtrls, Menus,
+  ExtCtrls, clipbrd, Windows, lclintf, Buttons, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.33';
+  CurrentVersion : String = '0.0.34';
 
 type
 
   { TForm1 }
 
   TForm1 = class(TForm)
-    ButtonHide: TButton;
-    ButtonMenu: TButton;
-    ButtonDownload: TButton;
+    BCButtonFocus1: TBCButtonFocus;
+    BCButtonFocus2: TBCButtonFocus;
+    BCLabel1: TBCLabel;
     ButtonSetDownloadPath: TButton;
     ComboBoxEncoding: TComboBox;
     EditHTTP: TEdit;
@@ -27,10 +28,10 @@ type
     Image1: TImage;
     ImageList1: TImageList;
     ImageList2: TImageList;
-    Label1: TLabel;
     Label2: TLabel;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
     MenuItemHideOnDownload: TMenuItem;
     MenuItemPathDL: TMenuItem;
     MenuItemSkinBlack: TMenuItem;
@@ -102,7 +103,7 @@ type
     function getUserPath:string;
     procedure setFormHeight(h: Integer);
     procedure setFormAtBottomRight;
-    procedure SetSkin(skinIdImage: Integer; skinColor:TColor);
+    procedure SetSkin(skinIdImage: Integer; skinColor, bgColor:TColor);
   private
     { private declarations }
   protected
@@ -444,35 +445,47 @@ begin
 end;
 
 
-procedure TForm1.SetSkin(skinIdImage: Integer; skinColor:TColor);
+procedure TForm1.SetSkin(skinIdImage: Integer; skinColor, bgColor:TColor);
+var a: TControlBorderSpacing;
+  b: TSpacingSize;
 begin
   currentSkin := skinIdImage;
   ImageList1.GetIcon(currentSkin, Image1.Picture.Icon);
   ImageList2.GetIcon(currentSkin, Self.Icon);
   ImageList2.GetIcon(currentSkin, TrayIcon1.Icon);
-  Label1.Font.Color := skinColor;
+
   Label2.Font.Color := skinColor;
-  ButtonDownload.Font.Color := skinColor;
-  ButtonHide.Font.Color := skinColor;
-  ButtonMenu.Font.Color := skinColor;
-  ButtonSetDownloadPath.Font.Color := skinColor;
+
+  BCButtonFocus1.StateNormal.Background.Gradient1.EndColor:= bgColor; //$009C9623;
+  BCButtonFocus2.StateNormal.Background.Gradient1.EndColor:= bgColor;
+
+  BCLabel1.Font.Color := skinColor;
+  BCLabel1.FontEx.Color := skinColor;
+  BCLabel1.FontEx.ShadowColor := bgColor;
+
+  EditHTTP.Font.Color := skinColor; //RGB(117,190,197);
+  EditHTTP.Color := bgColor;
+
+  ComboBoxEncoding.Font.Color := skinColor;
+  ComboBoxEncoding.Color := bgColor;
+
 end;
 
 procedure TForm1.MenuItemSkinBlueClick(Sender: TObject);
 begin
-  SetSkin(0, clWhite);
+  SetSkin(0, clWhite, $009C9623);
   if Sender <> nil then ConfigSave;
 end;
 
 procedure TForm1.MenuItemSkinWhiteClick(Sender: TObject);
 begin
-  SetSkin(1, RGB(80, 70, 70));
+  SetSkin(1, clBlack, $00B7B7B7);
   if Sender <> nil then ConfigSave;
 end;
 
 procedure TForm1.MenuItemSkinBlackClick(Sender: TObject);
 begin
-  SetSkin(2, RGB(200, 200, 200));
+  SetSkin(2, RGB(200, 200, 200), RGB(20, 20, 20));
   if Sender <> nil then ConfigSave;
 end;
 
@@ -549,9 +562,8 @@ end;
 procedure TForm1.setFormAtBottomRight;
 var x,y: Integer;
 begin
-
-  Left := Screen.WorkAreaWidth - Form1.Width  +  Screen.WorkAreaLeft; // - 6;
-  Top := Screen.WorkAreaHeight - Form1.Height + Screen.WorkAreaTop; // - 32;
+  Left := Screen.WorkAreaWidth  - Form1.Width  + Screen.WorkAreaLeft;
+  Top  := Screen.WorkAreaHeight - Form1.Height + Screen.WorkAreaTop;
 end;
 
 procedure TForm1.ButtonPasteClick(Sender: TObject);
@@ -569,8 +581,7 @@ end;
 procedure TForm1.ButtonDownloadClick(Sender: TObject);
 begin
   DoDownload();
-  if MenuItemHideOnDownload.Checked then
-    MenuItemHideClick(nil);
+
 end;
 
 procedure TForm1.ButtonMenuClick(Sender: TObject);
@@ -585,11 +596,14 @@ begin
   ConfigSave;
 end;
 
+
 procedure TForm1.ButtonDownloadKeyPress(Sender: TObject; var Key: char);
 begin
   if ord(Key) = 27 then MenuItemHideClick(nil);
   if ord(Key) = 13 then ButtonDownloadClick(nil);
 end;
+
+
 
 procedure TForm1.SplitStr(const Source, Delimiter: String; var DelimitedList: TStringList);
 var
@@ -670,7 +684,8 @@ begin
       DoDownloadWithYoutubeDl;
   end;
 
-
+  if MenuItemHideOnDownload.Checked then
+    MenuItemHideClick(nil);
 
 end;
 
@@ -763,14 +778,24 @@ begin
   if not url.StartsWith('http', true) then exit;
   MenuItemShowClick(nil);
   ButtonPasteClick(nil);
-  Application.ProcessMessages;
-  Application.Restore;
-  Application.RestoreStayOnTop(True);
-  LCLIntf.SetForegroundWindow(Form1.Handle);
-  LCLIntf.SetFocus(Form1.Handle);
-  Application.ProcessMessages;
-  ButtonDownload.SetFocus;
-
+  {
+  // TODO
+  //Application.ProcessMessages;
+  //Application.Restore;
+  //Application.RestoreStayOnTop(True);
+  //LCLIntf.SetForegroundWindow(Form1.Handle);
+  //LCLIntf.SetFocus(EditHTTP.Handle);
+  //Application.ProcessMessages;
+  //LCLIntf.SetFocus(Application.MainFormHandle);
+  ShowWindow(Form1.Handle,SW_SHOW);
+  Form1.SetFocus;
+  BringWindowToTop(Form1.Handle);
+  SetActiveWindow(Form1.Handle);
+  SetForegroundWindow(Form1.Handle);
+  ComboBoxEncoding.SetFocus;
+  SetForegroundWindow(FindWindowA(nil, Pchar(Caption)));
+  }
+  //Windows.SetFocus(Application.MainFormHandle);
   {
   if Length(url) > 100 then url := url.Substring(0, 100)+'...';
   if url.Contains('https://www.mixcloud.com/') then

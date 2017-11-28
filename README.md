@@ -24,6 +24,10 @@
  
  http://www.lazarus-ide.org/
  
+ Composant Lazarus "BGRAControls" pour le design.
+ 
+ http://wiki.lazarus.freepascal.org/BGRAControls
+ 
  Le Setup avec NSIS
  
  http://nsis.sourceforge.net/Main_Page
@@ -135,3 +139,6 @@ Déplacement de la fenêtre avec la souris
 
 #### 0.0.33
 Bug fix: Alignement de la fenêtre principale sur le bas à droite de l'écran.
+
+#### 0.0.34
+Nouveau design "BGRA"
