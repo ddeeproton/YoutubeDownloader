@@ -132,3 +132,6 @@ Bouton "Esc" masque la fenêtre
 
 #### 0.0.32
 Déplacement de la fenêtre avec la souris
+
+#### 0.0.33
+Bug fix: Alignement de la fenêtre principale sur le bas à droite de l'écran.

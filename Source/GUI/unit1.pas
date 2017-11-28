@@ -10,7 +10,7 @@ uses
   Registry, ShlObj, LCLType;
 
 var
-  CurrentVersion : String = '0.0.32';
+  CurrentVersion : String = '0.0.33';
 
 type
 
@@ -61,7 +61,6 @@ type
     procedure ButtonPasteClick(Sender: TObject);
     procedure ComboBoxEncodingChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure MenuItemHideOnDownloadClick(Sender: TObject);
     procedure MenuItemPathDLClick(Sender: TObject);
     procedure MenuItemAboutClick(Sender: TObject);
@@ -148,13 +147,6 @@ begin
   MenuItemUpdateOnBoot.Checked := isStartWithWindows;
 end;
 
-procedure TForm1.FormMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
-
-begin
-
-end;
-
-
 
 procedure TForm1.MenuItemPathDLClick(Sender: TObject);
 begin
@@ -196,7 +188,7 @@ begin
   ComboBoxEncoding.ItemIndex := XMLConfig1.GetValue('Encoding', 4);
   MenuItemCacheToggle.Checked := XMLConfig1.GetValue('UseCache', True);
   MenuItemUpdateOnBoot.Checked := XMLConfig1.GetValue('UpdateOnBoot', True);
-  EditPath.Text := XMLConfig1.GetValue('Path', String(ExtractFileDir(Application.ExeName)));
+  EditPath.Text := XMLConfig1.GetValue('Path', ExtractFileDir(Application.ExeName));
   currentSkin := XMLConfig1.GetValue('Skin', 0);
   MenuItemCheckClipboard.Checked := XMLConfig1.GetValue('CheckClipboard', True);
   MenuItemHideOnDownload.Checked := XMLConfig1.GetValue('HideOnDownload', False);
@@ -253,6 +245,7 @@ function TForm1.GetWinDir: string;
 var
   dir: array [0..MAX_PATH] of Char;
 begin
+  dir := '';
   GetWindowsDirectory(dir, MAX_PATH);
   Result := StrPas(dir);
 end;
@@ -556,8 +549,8 @@ end;
 procedure TForm1.setFormAtBottomRight;
 var x,y: Integer;
 begin
-  Left := Screen.WorkAreaWidth - Form1.Width; // - 6;
-  Top := Screen.WorkAreaHeight - Form1.Height; // - 32;
+  Left := Screen.WorkAreaWidth  - Form1.Width  + Screen.WorkAreaLeft;
+  Top  := Screen.WorkAreaHeight - Form1.Height + Screen.WorkAreaTop;
 end;
 
 procedure TForm1.ButtonPasteClick(Sender: TObject);
