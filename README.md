@@ -142,3 +142,6 @@ Bug fix: Alignement de la fenêtre principale sur le bas à droite de l'écran.
 
 #### 0.0.34
 Nouveau design "BGRA"
+
+#### 0.0.35
+Bug fix: Système de mise à jour 

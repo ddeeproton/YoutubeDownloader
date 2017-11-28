@@ -10,7 +10,7 @@ uses
   ExtCtrls, clipbrd, Windows, lclintf, Buttons, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.34';
+  CurrentVersion : String = '0.0.35';
 
 type
 
@@ -118,6 +118,7 @@ var
   oldClipboardValue: String = '';
   currentSkin: Integer = 0;
   Config_Dir: String = '';
+  currentDir: String = '';
 implementation
 
 {$R *.lfm}
@@ -134,6 +135,8 @@ begin
   EditPath.Clear;
   EditPath.TabStop := False;
   ButtonSetDownloadPath.TabStop := False;
+
+  currentDir := ExtractFileDir(Application.ExeName) +'\';
 
   Config_Dir := getUserPath + '\YoutubeDownloader\';
   if not DirectoryExists(Config_Dir) then MkDir(Config_Dir);
@@ -376,13 +379,13 @@ end;
 
 procedure TForm1.DownloadFile(http, filename: String; wait, pshow: Boolean);
 begin
-  if not FileExists('wget.exe') then
+  if not FileExists(currentDir + 'wget.exe') then
   begin
     ShowMessage('wget.exe est introuvable. Il doit se trouver à côté de cette application pour fonctionner.');
     exit;
   end;
   if FileExists(filename) then DeleteFile(PChar(filename));
-  ExecuteProcess('wget.exe -O "'+filename+'" "'+http+'" --no-check-certificate', wait, pshow);
+  ExecuteProcess('"' + currentDir + 'wget.exe" -O "'+filename+'" "'+http+'" --no-check-certificate', wait, pshow);
 end;
 
 
@@ -510,21 +513,21 @@ end;
 procedure TForm1.MenuItemUpdateClick(Sender: TObject);
 var lastVersion: String;
 begin
-  if not FileExists('wget.exe') then
+  if not FileExists(currentDir + 'wget.exe') then
   begin
     ShowMessage('Il manque l''application wget.exe à côté de cette application pour la mise à jour. Essayez d''installer l''application manuellement à la place.');
     exit;
   end;
-  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/lastversion.txt','lastversion.txt', True, False);
+  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/lastversion.txt',Config_Dir + 'lastversion.txt', True, False);
 
-  if not FileExists('lastversion.txt') then
+  if not FileExists(Config_Dir + 'lastversion.txt') then
   begin
     ShowMessage('Vous ne semblez pas connecté à Internet');
     exit;
   end;
 
-  lastVersion := ReadFile('lastversion.txt');
-  DeleteFile(PChar('lastversion.txt'));
+  lastVersion := ReadFile(Config_Dir + 'lastversion.txt');
+  DeleteFile(PChar(Config_Dir + 'lastversion.txt'));
 
   if CurrentVersion = lastVersion then
   begin
@@ -532,15 +535,20 @@ begin
     exit;
   end;
 
-  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_'+lastVersion+'.exe','YoutubeDownloaderSetup_'+lastVersion+'.exe', True, True);
+  if FileExists(Config_Dir + 'YoutubeDownloaderSetup.exe') then
+  begin
+    DeleteFile(PChar(Config_Dir + 'YoutubeDownloaderSetup.exe'));
+  end;
 
-  if not FileExists('YoutubeDownloaderSetup_'+lastVersion+'.exe') then
+  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_'+lastVersion+'.exe',Config_Dir + 'YoutubeDownloaderSetup.exe', True, True);
+
+  if not FileExists(Config_Dir + 'YoutubeDownloaderSetup.exe') then
   begin
     ShowMessage('Erreur lors du téléchargement de la mise à jour');
     exit;
   end;
 
-  ExecuteProcess('"YoutubeDownloaderSetup_'+lastVersion+'.exe" /S');
+  ExecuteProcess('"'+ Config_Dir + 'YoutubeDownloaderSetup.exe" /S');
   Application.Terminate;
 
 end;
