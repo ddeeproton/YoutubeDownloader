@@ -10,7 +10,7 @@ uses
   ExtCtrls, clipbrd, Windows, lclintf, Buttons, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.35';
+  CurrentVersion : String = '0.0.36';
 
 type
 
@@ -84,6 +84,8 @@ type
     function GetWinDir: string;
     procedure ExecuteProcess(cmd: String);
     procedure ExecuteProcess(cmd: String; pwait, pshow: Boolean);
+    procedure ExecuteProcess(app, cmd: String; pwait, pshow: Boolean);
+    procedure ExecAndContinue(sExe, sCmd: string; wShowWin: Word);
     function CloseProcess(const windowName: PChar): Boolean;
     function getEncoding(): String;
     procedure ConfigSave;
@@ -296,7 +298,13 @@ begin
   Result:=PostMessage(AppHandle, WM_QUIT, 0, 0);
 end;
 
-
+procedure TForm1.ExecAndContinue(sExe, sCmd: string; wShowWin: Word);
+var
+  h: Cardinal;
+  operation: PChar;
+begin
+  ShellExecute(0, 'open', PChar(sExe), PChar(sCmd), nil,wShowWin);
+end;
 
 procedure TForm1.ExecuteProcess(cmd: String);
 begin
@@ -315,6 +323,17 @@ begin
   if pwait then p.WaitOnExit;
 end;
 
+procedure TForm1.ExecuteProcess(app, cmd: String; pwait, pshow: Boolean);
+var p: TProcess;
+begin
+  p := TProcess.Create(nil);
+  p.ApplicationName:= app;
+  p.CommandLine:= cmd;
+  if not pshow then p.ShowWindow:= swoHIDE;
+  p.Execute;
+  if pwait then p.WaitOnExit;
+end;
+
 
 procedure TForm1.StartWithWindows(doStart: Boolean);
 var
@@ -326,9 +345,9 @@ begin
   if Reg.OpenKey('\Software\Microsoft\Windows\CurrentVersion\Run', True) then
   begin
     if doStart then
-      Reg.WriteString(ExtractFileName(Application.ExeName), '"'+Application.ExeName+'" /background')
+      Reg.WriteString('YoutubeDownloader.exe', '"'+Application.ExeName+'" /background')
     else
-      Reg.DeleteValue(ExtractFileName(Application.ExeName));
+      Reg.DeleteValue('YoutubeDownloader.exe');   // ExtractFileName(Application.ExeName)
     Reg.CloseKey;
   end;
   finally
@@ -346,7 +365,7 @@ begin
   Reg.RootKey := HKEY_CURRENT_USER;
   if Reg.OpenKey('\Software\Microsoft\Windows\CurrentVersion\Run', True) then
   begin
-    result := Reg.ValueExists(ExtractFileName(Application.ExeName));
+    result := Reg.ValueExists('YoutubeDownloader.exe');
     Reg.CloseKey;
   end;
   Reg.Free;
@@ -535,20 +554,22 @@ begin
     exit;
   end;
 
-  if FileExists(Config_Dir + 'YoutubeDownloaderSetup.exe') then
+  if FileExists(currentDir + 'YoutubeDownloaderSetup.exe') then
   begin
-    DeleteFile(PChar(Config_Dir + 'YoutubeDownloaderSetup.exe'));
+    DeleteFile(PChar(currentDir + 'YoutubeDownloaderSetup.exe'));
   end;
 
-  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_'+lastVersion+'.exe',Config_Dir + 'YoutubeDownloaderSetup.exe', True, True);
+  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_'+lastVersion+'.exe',currentDir + 'YoutubeDownloaderSetup.exe', True, True);
 
-  if not FileExists(Config_Dir + 'YoutubeDownloaderSetup.exe') then
+  if not FileExists(currentDir + 'YoutubeDownloaderSetup.exe') then
   begin
     ShowMessage('Erreur lors du téléchargement de la mise à jour');
     exit;
   end;
 
-  ExecuteProcess('"'+ Config_Dir + 'YoutubeDownloaderSetup.exe" /S');
+  //ExecuteProcess(currentDir + 'YoutubeDownloaderSetup.exe', '/S', False, True);
+
+  ExecAndContinue(currentDir + 'YoutubeDownloaderSetup.exe', '/S', SW_SHOW);
   Application.Terminate;
 
 end;

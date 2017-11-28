@@ -145,3 +145,6 @@ Nouveau design "BGRA"
 
 #### 0.0.35
 Bug fix: Système de mise à jour 
+
+#### 0.0.36
+Bug fix: Système de mise à jour sur Vista et +
