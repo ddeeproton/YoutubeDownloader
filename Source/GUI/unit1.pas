@@ -7,10 +7,10 @@ interface
 uses
   Classes, SysUtils, process, XMLConf, FileUtil, BCButtonFocus, BCLabel, BGRACustomDrawn,
   Forms, Controls, Graphics, Dialogs, StdCtrls, Menus,
-  ExtCtrls, clipbrd, Windows, lclintf, Buttons, Registry, ShlObj;
+  ExtCtrls, clipbrd, Windows, lclintf, Buttons, CheckLst, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.37';
+  CurrentVersion : String = '0.0.38';
 
 type
 
@@ -19,8 +19,14 @@ type
   TForm1 = class(TForm)
     BCButtonFocus1: TBCButtonFocus;
     BCButtonFocus2: TBCButtonFocus;
+    BCButtonFocus3: TBCButtonFocus;
+    BCButtonFocus4: TBCButtonFocus;
+    BCButtonFocus5: TBCButtonFocus;
+    BCButtonFocus6: TBCButtonFocus;
+    BCButtonFocus7: TBCButtonFocus;
+    BCButtonFocus8: TBCButtonFocus;
     BCLabel1: TBCLabel;
-    ButtonSetDownloadPath: TButton;
+    CheckListBoxConfig: TCheckListBox;
     ComboBoxEncoding: TComboBox;
     EditHTTP: TEdit;
     EditPath: TEdit;
@@ -28,9 +34,16 @@ type
     ImageList1: TImageList;
     ImageList2: TImageList;
     Label2: TLabel;
+    Label3: TLabel;
     MenuItem1: TMenuItem;
+    MenuItem10: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
+    MenuItem5: TMenuItem;
+    MenuItem6: TMenuItem;
+    MenuItem7: TMenuItem;
+    MenuItem8: TMenuItem;
+    MenuItem9: TMenuItem;
     MenuItemHideOnDownload: TMenuItem;
     MenuItemPathDL: TMenuItem;
     MenuItemSkinBlack: TMenuItem;
@@ -47,6 +60,8 @@ type
     MenuItemCacheClear: TMenuItem;
     MenuItemCacheOpen: TMenuItem;
     MenuItemExit: TMenuItem;
+    PopupMenuSkin: TPopupMenu;
+    PopupMenuHistory: TPopupMenu;
     PopupMenuTray: TPopupMenu;
     Process1: TProcess;
     SelectDirectoryDialog1: TSelectDirectoryDialog;
@@ -54,11 +69,15 @@ type
     TimerClipboard: TTimer;
     TrayIcon1: TTrayIcon;
     XMLConfig1: TXMLConfig;
+    procedure BCButtonFocus1Click(Sender: TObject);
+    procedure BCButtonFocus4Click(Sender: TObject);
+    procedure BCButtonFocus5Click(Sender: TObject);
     procedure ButtonDownloadKeyPress(Sender: TObject; var Key: char);
     procedure ButtonSetDownloadPathClick(Sender: TObject);
     procedure ButtonMenuClick(Sender: TObject);
     procedure ButtonDownloadClick(Sender: TObject);
     procedure ButtonPasteClick(Sender: TObject);
+    procedure CheckListBoxConfigClickCheck(Sender: TObject);
     procedure ComboBoxEncodingChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuItemHideOnDownloadClick(Sender: TObject);
@@ -105,6 +124,7 @@ type
     procedure setFormHeight(h: Integer);
     procedure setFormAtBottomRight;
     procedure SetSkin(skinIdImage: Integer; skinColor, bgColor:TColor);
+    procedure ConfigSaveFromCheckBox;
   private
     { private declarations }
   protected
@@ -136,7 +156,6 @@ begin
   EditHTTP.Clear;
   EditPath.Clear;
   EditPath.TabStop := False;
-  ButtonSetDownloadPath.TabStop := False;
 
   currentDir := ExtractFileDir(Application.ExeName) +'\';
 
@@ -157,7 +176,6 @@ procedure TForm1.MenuItemPathDLClick(Sender: TObject);
 begin
   setFormHeight(110);
   EditPath.TabStop := True;
-  ButtonSetDownloadPath.TabStop := True;
 end;
 
 procedure TForm1.setFormHeight(h: Integer);
@@ -198,8 +216,42 @@ begin
   MenuItemCheckClipboard.Checked := XMLConfig1.GetValue('CheckClipboard', True);
   MenuItemHideOnDownload.Checked := XMLConfig1.GetValue('HideOnDownload', False);
   MenuItemStartOnBoot.Checked:= isStartWithWindows();
+
+  CheckListBoxConfig.Checked[0] := XMLConfig1.GetValue('CheckClipboard', True);
+  CheckListBoxConfig.Checked[1] := XMLConfig1.GetValue('HideOnDownload', False);
+  CheckListBoxConfig.Checked[2] := XMLConfig1.GetValue('UpdateOnBoot', True);
+  CheckListBoxConfig.Checked[3] := isStartWithWindows();
+  CheckListBoxConfig.Checked[4] := XMLConfig1.GetValue('UseCache', True);
+
   XMLConfig1.Free;
 end;
+
+
+procedure TForm1.ConfigSaveFromCheckBox;
+begin
+  XMLConfig1 := TXMLConfig.Create(nil);
+  XMLConfig1.SetValue('CheckClipboard', CheckListBoxConfig.Checked[0]);
+  XMLConfig1.SetValue('HideOnDownload', CheckListBoxConfig.Checked[1]);
+  XMLConfig1.SetValue('UpdateOnBoot', CheckListBoxConfig.Checked[2]);
+
+  if CheckListBoxConfig.Checked[3] then
+  begin
+    if not isStartWithWindows() then MenuItemStartOnBootClick(nil);
+  end else
+  begin
+    if isStartWithWindows() then MenuItemStartOnBootClick(nil);
+  end;
+
+  XMLConfig1.SetValue('UseCache', CheckListBoxConfig.Checked[4]);
+  XMLConfig1.SetValue('Encoding', ComboBoxEncoding.ItemIndex);
+  XMLConfig1.SetValue('Path', EditPath.Text);
+  XMLConfig1.SetValue('Skin', currentSkin);
+
+  XMLConfig1.SaveToFile(Config_Dir+'config.xml');
+  XMLConfig1.Free;
+  ConfigLoad;
+end;
+
 
 procedure TForm1.ConfigSave;
 begin
@@ -213,6 +265,7 @@ begin
   XMLConfig1.SetValue('HideOnDownload', MenuItemHideOnDownload.Checked);
   XMLConfig1.SaveToFile(Config_Dir+'config.xml');
   XMLConfig1.Free;
+  ConfigLoad;
 end;
 
 
@@ -477,9 +530,16 @@ begin
   ImageList2.GetIcon(currentSkin, TrayIcon1.Icon);
 
   Label2.Font.Color := skinColor;
+  Label3.Font.Color := skinColor;
 
   BCButtonFocus1.StateNormal.Background.Gradient1.EndColor:= bgColor; //$009C9623;
   BCButtonFocus2.StateNormal.Background.Gradient1.EndColor:= bgColor;
+  BCButtonFocus3.StateNormal.Background.Gradient1.EndColor:= bgColor;
+  BCButtonFocus4.StateNormal.Background.Gradient1.EndColor:= bgColor;
+  BCButtonFocus5.StateNormal.Background.Gradient1.EndColor:= bgColor;
+  BCButtonFocus6.StateNormal.Background.Gradient1.EndColor:= bgColor;
+  BCButtonFocus7.StateNormal.Background.Gradient1.EndColor:= bgColor;
+  BCButtonFocus8.StateNormal.Background.Gradient1.EndColor:= bgColor;
 
   BCLabel1.Font.Color := skinColor;
   BCLabel1.FontEx.Color := skinColor;
@@ -487,6 +547,12 @@ begin
 
   EditHTTP.Font.Color := skinColor; //RGB(117,190,197);
   EditHTTP.Color := bgColor;
+
+  EditPath.Font.Color := skinColor;
+  EditPath.Color := bgColor;
+
+  CheckListBoxConfig.Font.Color := skinColor;
+  CheckListBoxConfig.Color := bgColor;
 
   ComboBoxEncoding.Font.Color := skinColor;
   ComboBoxEncoding.Color := bgColor;
@@ -601,6 +667,11 @@ begin
   EditHTTP.PasteFromClipboard;
 end;
 
+procedure TForm1.CheckListBoxConfigClickCheck(Sender: TObject);
+begin
+  ConfigSaveFromCheckBox;
+end;
+
 procedure TForm1.ComboBoxEncodingChange(Sender: TObject);
 begin
   ConfigSave;
@@ -630,6 +701,25 @@ procedure TForm1.ButtonDownloadKeyPress(Sender: TObject; var Key: char);
 begin
   if ord(Key) = 27 then MenuItemHideClick(nil);
   if ord(Key) = 13 then ButtonDownloadClick(nil);
+end;
+
+procedure TForm1.BCButtonFocus4Click(Sender: TObject);
+begin
+  PopupMenuHistory.PopUp;
+end;
+
+procedure TForm1.BCButtonFocus1Click(Sender: TObject);
+begin
+  if Height = 255 then
+    setFormHeight(60)
+  else
+    setFormHeight(255);
+  setFormAtBottomRight;
+end;
+
+procedure TForm1.BCButtonFocus5Click(Sender: TObject);
+begin
+  PopupMenuSkin.PopUp;
 end;
 
 

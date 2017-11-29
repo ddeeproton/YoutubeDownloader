@@ -1,5 +1,7 @@
 ![](preview.jpg)
 
+![](preview2.jpg)
+
 # Youtube Downloader
 
 
@@ -151,3 +153,6 @@ Bug fix: Système de mise à jour sur Vista et +
  
 #### 0.0.37
 Bug fix: Démarrage avec Windows
+
+#### 0.0.38
+Nouveau panneau de configuration

@@ -153,3 +153,6 @@ Changements:
   
  0.0.37
   Bug fix: Démarrage avec Windows
+  
+ 0.0.38
+  Nouveau panneau de configuration
