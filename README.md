@@ -148,3 +148,6 @@ Bug fix: Système de mise à jour
 
 #### 0.0.36
 Bug fix: Système de mise à jour sur Vista et +
+ 
+#### 0.0.37
+Bug fix: Démarrage avec Windows

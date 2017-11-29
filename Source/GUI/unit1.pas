@@ -10,7 +10,7 @@ uses
   ExtCtrls, clipbrd, Windows, lclintf, Buttons, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.36';
+  CurrentVersion : String = '0.0.37';
 
 type
 
@@ -197,6 +197,7 @@ begin
   currentSkin := XMLConfig1.GetValue('Skin', 0);
   MenuItemCheckClipboard.Checked := XMLConfig1.GetValue('CheckClipboard', True);
   MenuItemHideOnDownload.Checked := XMLConfig1.GetValue('HideOnDownload', False);
+  MenuItemStartOnBoot.Checked:= isStartWithWindows();
   XMLConfig1.Free;
 end;
 
