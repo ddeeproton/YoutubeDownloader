@@ -10,7 +10,7 @@ uses
   ExtCtrls, clipbrd, Windows, lclintf, Buttons, CheckLst, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.38';
+  CurrentVersion : String = '0.0.39';
 
 type
 
@@ -25,6 +25,7 @@ type
     BCButtonFocus6: TBCButtonFocus;
     BCButtonFocus7: TBCButtonFocus;
     BCButtonFocus8: TBCButtonFocus;
+    BCButtonFocus9: TBCButtonFocus;
     BCLabel1: TBCLabel;
     CheckListBoxConfig: TCheckListBox;
     ComboBoxEncoding: TComboBox;
@@ -540,6 +541,7 @@ begin
   BCButtonFocus6.StateNormal.Background.Gradient1.EndColor:= bgColor;
   BCButtonFocus7.StateNormal.Background.Gradient1.EndColor:= bgColor;
   BCButtonFocus8.StateNormal.Background.Gradient1.EndColor:= bgColor;
+  BCButtonFocus9.StateNormal.Background.Gradient1.EndColor:= bgColor;
 
   BCLabel1.Font.Color := skinColor;
   BCLabel1.FontEx.Color := skinColor;

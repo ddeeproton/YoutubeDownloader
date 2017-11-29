@@ -156,3 +156,6 @@ Bug fix: Démarrage avec Windows
 
 #### 0.0.38
 Nouveau panneau de configuration
+
+#### 0.0.39
+Ajout du bouton "Masquer"
