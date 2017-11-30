@@ -18,6 +18,7 @@ type
 
   TForm1 = class(TForm)
     BCButtonFocus1: TBCButtonFocus;
+    BCButtonFocus10: TBCButtonFocus;
     BCButtonFocus2: TBCButtonFocus;
     BCButtonFocus3: TBCButtonFocus;
     BCButtonFocus4: TBCButtonFocus;
@@ -27,6 +28,9 @@ type
     BCButtonFocus8: TBCButtonFocus;
     BCButtonFocus9: TBCButtonFocus;
     BCLabel1: TBCLabel;
+    BCLabel2: TBCLabel;
+    BCLabel3: TBCLabel;
+    BCLabel4: TBCLabel;
     CheckListBoxConfig: TCheckListBox;
     ComboBoxEncoding: TComboBox;
     EditHTTP: TEdit;
@@ -34,10 +38,9 @@ type
     Image1: TImage;
     ImageList1: TImageList;
     ImageList2: TImageList;
-    Label2: TLabel;
-    Label3: TLabel;
     MenuItem1: TMenuItem;
     MenuItem10: TMenuItem;
+    MenuItemLangFra: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem5: TMenuItem;
@@ -45,6 +48,7 @@ type
     MenuItem7: TMenuItem;
     MenuItem8: TMenuItem;
     MenuItem9: TMenuItem;
+    MenuItemLangEng: TMenuItem;
     MenuItemHideOnDownload: TMenuItem;
     MenuItemPathDL: TMenuItem;
     MenuItemSkinBlack: TMenuItem;
@@ -64,6 +68,7 @@ type
     PopupMenuSkin: TPopupMenu;
     PopupMenuHistory: TPopupMenu;
     PopupMenuTray: TPopupMenu;
+    PopupMenuLang: TPopupMenu;
     Process1: TProcess;
     SelectDirectoryDialog1: TSelectDirectoryDialog;
     TimerAfterLoad: TTimer;
@@ -73,6 +78,7 @@ type
     procedure BCButtonFocus1Click(Sender: TObject);
     procedure BCButtonFocus4Click(Sender: TObject);
     procedure BCButtonFocus5Click(Sender: TObject);
+    procedure BCButtonFocus8Click(Sender: TObject);
     procedure ButtonDownloadKeyPress(Sender: TObject; var Key: char);
     procedure ButtonSetDownloadPathClick(Sender: TObject);
     procedure ButtonMenuClick(Sender: TObject);
@@ -126,6 +132,10 @@ type
     procedure setFormAtBottomRight;
     procedure SetSkin(skinIdImage: Integer; skinColor, bgColor:TColor);
     procedure ConfigSaveFromCheckBox;
+    function LoadLanguage(filename:String):TXMLConfig;
+    procedure getListOfLanguages;
+    function dir(dirname : wideString; Filtre : string = '*.*'; onlyDir: Boolean = False; onlyFiles: Boolean = False; isFullPath: Boolean = True ) : TStringList;
+    procedure MenuItemLangClick(Sender: TObject);
   private
     { private declarations }
   protected
@@ -138,10 +148,15 @@ type
 var
   Form1: TForm1;
   Config_YoutubeDownloader: String = 'youtube-dl.exe';
+  Config_HeightMinimized: Integer = 60;
+  Config_HeightMaximized: Integer = 280;
   oldClipboardValue: String = '';
   currentSkin: Integer = 0;
   Config_Dir: String = '';
   currentDir: String = '';
+  currentLanguage: String = '';
+  xmlLang: TXMLConfig;
+  
 implementation
 
 {$R *.lfm}
@@ -152,7 +167,7 @@ implementation
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  setFormHeight(60);
+  setFormHeight(Config_HeightMinimized);
   Image1.Align:= alClient;
   EditHTTP.Clear;
   EditPath.Clear;
@@ -168,15 +183,21 @@ begin
   if currentSkin = 0 then MenuItemSkinBlueClick(nil);
   if currentSkin = 1 then MenuItemSkinWhiteClick(nil);
   if currentSkin = 2 then MenuItemSkinBlackClick(nil);
+
   TimerClipboard.Enabled := MenuItemCheckClipboard.Checked;
   MenuItemUpdateOnBoot.Checked := isStartWithWindows;
+
+  getListOfLanguages;
 end;
+
 
 
 procedure TForm1.MenuItemPathDLClick(Sender: TObject);
 begin
-  setFormHeight(110);
+  setFormHeight(Config_HeightMaximized);
   EditPath.TabStop := True;
+  EditPath.SetFocus;
+  Show;
 end;
 
 procedure TForm1.setFormHeight(h: Integer);
@@ -224,6 +245,9 @@ begin
   CheckListBoxConfig.Checked[3] := isStartWithWindows();
   CheckListBoxConfig.Checked[4] := XMLConfig1.GetValue('UseCache', True);
 
+  currentLanguage := XMLConfig1.GetValue('language', 'lang_fr.txt');
+  xmlLang := LoadLanguage(currentLanguage);
+
   XMLConfig1.Free;
 end;
 
@@ -247,6 +271,7 @@ begin
   XMLConfig1.SetValue('Encoding', ComboBoxEncoding.ItemIndex);
   XMLConfig1.SetValue('Path', EditPath.Text);
   XMLConfig1.SetValue('Skin', currentSkin);
+  XMLConfig1.SetValue('language', currentLanguage);
 
   XMLConfig1.SaveToFile(Config_Dir+'config.xml');
   XMLConfig1.Free;
@@ -264,11 +289,140 @@ begin
   XMLConfig1.SetValue('Skin', currentSkin);
   XMLConfig1.SetValue('CheckClipboard', MenuItemCheckClipboard.Checked);
   XMLConfig1.SetValue('HideOnDownload', MenuItemHideOnDownload.Checked);
+  XMLConfig1.SetValue('language', currentLanguage);
   XMLConfig1.SaveToFile(Config_Dir+'config.xml');
   XMLConfig1.Free;
   ConfigLoad;
 end;
 
+
+
+function TForm1.dir(dirname : wideString; Filtre : String = '*.*'; onlyDir: Boolean = False; onlyFiles: Boolean = False; isFullPath: Boolean = True ) : TStringList;
+var filename : String;
+    dirHandle  : integer;
+    SearchResult     : TSearchRec;
+    Attributs: Integer;
+begin
+  result := TStringList.Create;
+  Attributs := faDirectory + faHidden + faSysFile+ faVolumeID + faArchive ;
+  dirHandle := FindFirst(dirname+'\'+filtre,Attributs, SearchResult);
+  while dirHandle = 0 do
+  begin
+    if isFullPath then
+      filename := dirname+'\'+SearchResult.Name
+    else
+      filename := SearchResult.Name;
+    if ((SearchResult.Attr and faDirectory) <= 0) then // if is file
+      if not onlyDir then
+        result.Add(filename)
+    else // if is dir
+      if not onlyFiles then
+        result.Add(filename);
+
+    dirHandle := FindNext(SearchResult);
+  end;
+  //FindClose(SearchResult);
+end;
+
+
+
+procedure TForm1.MenuItemLangClick(Sender: TObject);
+begin
+  xmlLang := LoadLanguage(currentDir+TMenuItem(Sender).Hint);
+  ConfigSave;
+end;
+
+procedure TForm1.getListOfLanguages;
+var
+  i: Integer;
+  files: TStringList;
+  xml: TXMLConfig;
+  m: TMenuItem;
+  curLang: String;
+begin
+  PopupMenuLang.Items.Clear;
+  m := TMenuItem.Create(nil);
+  m.Caption:=PChar('Français');
+  m.Hint :=PChar('lang_fr.xml');
+  m.OnClick:= @MenuItemLangClick;
+  PopupMenuLang.Items.Add(m);
+
+  files := dir(ExtractFileDir(Application.ExeName), 'lang_*.xml', False, True, False);
+  for i := 0 to files.Count -1 do
+  begin
+    xml := TXMLConfig.Create(nil);
+    if FileExists(currentDir + files[i]) then
+    begin
+      xml.LoadFromFile(currentDir + files[i]);
+
+      curLang := xml.GetValue('CurrentLanguage', PChar('error'));
+      if curLang <> 'error' then
+      begin
+        m := TMenuItem.Create(nil);
+        m.Caption:=PChar(curLang);
+        m.Hint :=PChar(files[i]);
+        m.OnClick:= @MenuItemLangClick;
+        PopupMenuLang.Items.Add(m);
+      end;
+
+    end;
+  end;
+end;
+
+
+function TForm1.LoadLanguage(filename:String):TXMLConfig;
+begin
+
+  result := TXMLConfig.Create(nil);
+  if FileExists(filename) then
+    result.LoadFromFile(filename);
+
+  currentLanguage :=  filename;
+
+  BCLabel1.Caption := result.GetValue('Title1', PChar('Adresse URL'))+' :';
+  BCLabel2.Caption := result.GetValue('Title2', PChar('Format'))+' :';
+  MenuItemPathDL.Caption:= result.GetValue('Title3', PChar('Chemin de téléchargement'));
+  BCLabel3.Caption := MenuItemPathDL.Caption+' :';
+  BCLabel4.Caption := result.GetValue('Title4', PChar('Configuration'))+' :';
+
+  BCButtonFocus2.Caption := result.GetValue('Button2', PChar('Télécharger'));
+  BCButtonFocus3.Caption := result.GetValue('Button3', PChar('Mise à jour'));
+  BCButtonFocus4.Caption := result.GetValue('Button4', PChar('Historique'));
+  BCButtonFocus5.Caption := result.GetValue('Button5', PChar('Thèmes'));
+  BCButtonFocus6.Caption := result.GetValue('Button6', PChar('A propos'));
+  BCButtonFocus8.Caption := result.GetValue('Button8', PChar('Langues'));
+  BCButtonFocus9.Caption := result.GetValue('Button9', PChar('Masquer'));
+
+  MenuItem1.Caption:= BCButtonFocus4.Caption;
+  MenuItemSkin.Caption:= BCButtonFocus5.Caption;
+  MenuItemAbout.Caption:= BCButtonFocus6.Caption;
+
+
+  MenuItem7.Caption:= result.GetValue('PopSkin1', PChar('Blanc'));
+  MenuItem5.Caption:= result.GetValue('PopSkin2', PChar('Bleu'));
+  MenuItem6.Caption:= result.GetValue('PopSkin3', PChar('Noir'));
+  MenuItem8.Caption:= result.GetValue('PopHistory1', PChar('Voir l''historique'));
+  MenuItem9.Caption:= result.GetValue('PopHistory2', PChar('Effacer l''historique'));
+  MenuItem10.Caption:= result.GetValue('PopHistory3', PChar('C''est quoi?'));
+  MenuItem3.Caption:= result.GetValue('PopTray1', PChar('Masquer'));
+  MenuItem4.Caption:= result.GetValue('PopTray2', PChar('Options'));
+  MenuItemExit.Caption:= result.GetValue('PopTray3', PChar('Quitter'));
+
+
+  CheckListBoxConfig.Items.Clear;
+  CheckListBoxConfig.Items.Add(result.GetValue('Config1', PChar('Surveiller le presse papier')));
+  CheckListBoxConfig.Items.Add(result.GetValue('Config2', PChar('Masquer la fenêtre après clique sur télécharger')));
+  CheckListBoxConfig.Items.Add(result.GetValue('Config3', PChar('Mise à jour au démarrage de l''application')));
+  CheckListBoxConfig.Items.Add(result.GetValue('Config4', PChar('Lancer l''application au démarrage du système')));
+  CheckListBoxConfig.Items.Add(result.GetValue('Config5', PChar('Interdire de télécharger deux fois la même vidéo (mise en historique)')));
+
+  MenuItemCheckClipboard.Caption:= CheckListBoxConfig.Items[0];
+  MenuItemHideOnDownload.Caption:= CheckListBoxConfig.Items[1];
+  MenuItem4.Caption:= BCButtonFocus3.Caption;
+  MenuItemUpdateOnBoot.Caption:= CheckListBoxConfig.Items[2];
+  MenuItemStartOnBoot.Caption:= CheckListBoxConfig.Items[3];
+
+end;
 
 procedure TForm1.WMNCHitTest(var Message: TWMNCHitTest);
 begin
@@ -303,11 +457,11 @@ end;
 
 function TForm1.GetWinDir: string;
 var
-  dir: array [0..MAX_PATH] of Char;
+  dirname: array [0..MAX_PATH] of Char;
 begin
-  dir := '';
-  GetWindowsDirectory(dir, MAX_PATH);
-  Result := StrPas(dir);
+  dirname := '';
+  GetWindowsDirectory(dirname, MAX_PATH);
+  Result := StrPas(dirname);
 end;
 
 
@@ -428,20 +582,17 @@ end;
 
 procedure TForm1.MenuItemCacheClearClick(Sender: TObject);
 begin
-  if MessageDlg('Voulez-vous effacer le cache?',  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
+  if MessageDlg(xmlLang.GetValue('Question1', PChar('Effacer l''historique?')),  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
   DeleteFile('archive.txt');
   if FileExists('archive.txt') then
-    ShowMessage('Il y a eu un problème avec l''effacement du cache. '
-      +'Peut-être le fichier est utilisé. '
-      +'Veuillez fermer tous les programmes et recommencer, '
-      +'ou effacer à la main le fichier "archive.txt"')
+    ShowMessage(xmlLang.GetValue('error', PChar('Erreur')))
   else
-    ShowMessage('Cache effacé :)');
+    ShowMessage(xmlLang.GetValue('erased', PChar('Effacé')));
 end;
 
 procedure TForm1.MenuItemCacheHelpClick(Sender: TObject);
 begin
-  ShowMessage('Ce cache mémorise les vidéos téléchargées pour ne pas les télécharger une seconde fois.');
+  ShowMessage(xmlLang.GetValue('helpcache', PChar('Ce cache mémorise les vidéos téléchargées pour ne pas les télécharger une seconde fois.')));
 end;
 
 procedure TForm1.MenuItemAboutClick(Sender: TObject);
@@ -455,7 +606,7 @@ procedure TForm1.DownloadFile(http, filename: String; wait, pshow: Boolean);
 begin
   if not FileExists(currentDir + 'wget.exe') then
   begin
-    ShowMessage('wget.exe est introuvable. Il doit se trouver à côté de cette application pour fonctionner.');
+    ShowMessage(xmlLang.GetValue('error_wget', PChar('Erreur: wget.exe est introuvable')));
     exit;
   end;
   if FileExists(filename) then DeleteFile(PChar(filename));
@@ -467,7 +618,7 @@ procedure TForm1.DownloadFileToDir(http, dir: String; wait, pshow: Boolean);
 begin
   if not FileExists('wget.exe') then
   begin
-    ShowMessage('wget.exe est introuvable. Il doit se trouver à côté de cette application pour fonctionner.');
+    ShowMessage(xmlLang.GetValue('error_wget', PChar('Erreur: wget.exe est introuvable')));
     exit;
   end;
   if not DirectoryExists(dir) then
@@ -530,8 +681,6 @@ begin
   ImageList2.GetIcon(currentSkin, Self.Icon);
   ImageList2.GetIcon(currentSkin, TrayIcon1.Icon);
 
-  Label2.Font.Color := skinColor;
-  Label3.Font.Color := skinColor;
 
   BCButtonFocus1.StateNormal.Background.Gradient1.EndColor:= bgColor; //$009C9623;
   BCButtonFocus2.StateNormal.Background.Gradient1.EndColor:= bgColor;
@@ -542,10 +691,16 @@ begin
   BCButtonFocus7.StateNormal.Background.Gradient1.EndColor:= bgColor;
   BCButtonFocus8.StateNormal.Background.Gradient1.EndColor:= bgColor;
   BCButtonFocus9.StateNormal.Background.Gradient1.EndColor:= bgColor;
+  BCButtonFocus10.StateNormal.Background.Gradient1.EndColor:= bgColor;
 
-  BCLabel1.Font.Color := skinColor;
   BCLabel1.FontEx.Color := skinColor;
   BCLabel1.FontEx.ShadowColor := bgColor;
+  BCLabel2.FontEx.Color := skinColor;
+  BCLabel2.FontEx.ShadowColor := bgColor;
+  BCLabel3.FontEx.Color := skinColor;
+  BCLabel3.FontEx.ShadowColor := bgColor;
+  BCLabel4.FontEx.Color := skinColor;
+  BCLabel4.FontEx.ShadowColor := bgColor;
 
   EditHTTP.Font.Color := skinColor; //RGB(117,190,197);
   EditHTTP.Color := bgColor;
@@ -594,7 +749,7 @@ begin
   lastVersion := ReadFile('lastversion.txt');
   DeleteFile(PChar('lastversion.txt'));
   if CurrentVersion = lastVersion then exit;
-  if MessageDlg('Une mise à jour est disponible. Télécharger?',  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
+  if MessageDlg(xmlLang.GetValue('update_aviable', PChar('Une mise à jour est disponible. Télécharger?')),  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
   MenuItemUpdateClick(nil);
 end;
 
@@ -603,14 +758,14 @@ var lastVersion: String;
 begin
   if not FileExists(currentDir + 'wget.exe') then
   begin
-    ShowMessage('Il manque l''application wget.exe à côté de cette application pour la mise à jour. Essayez d''installer l''application manuellement à la place.');
+    ShowMessage(xmlLang.GetValue('error_wget', PChar('Erreur: wget.exe est introuvable')));
     exit;
   end;
   DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/lastversion.txt',Config_Dir + 'lastversion.txt', True, False);
 
   if not FileExists(Config_Dir + 'lastversion.txt') then
   begin
-    ShowMessage('Vous ne semblez pas connecté à Internet');
+    ShowMessage(xmlLang.GetValue('error_network', PChar('Vous ne semblez pas connecté à Internet')));
     exit;
   end;
 
@@ -619,7 +774,7 @@ begin
 
   if CurrentVersion = lastVersion then
   begin
-    ShowMessage('Vous êtes à jour :)');
+    ShowMessage(xmlLang.GetValue('already_updated', PChar('Vous êtes à jour :)')));
     exit;
   end;
 
@@ -632,7 +787,7 @@ begin
 
   if not FileExists(currentDir + 'YoutubeDownloaderSetup.exe') then
   begin
-    ShowMessage('Erreur lors du téléchargement de la mise à jour');
+    ShowMessage(xmlLang.GetValue('error_update', PChar('Erreur lors du téléchargement de la mise à jour')));
     exit;
   end;
 
@@ -653,7 +808,7 @@ end;
 procedure TForm1.MenuItemHideClick(Sender: TObject);
 begin
   Hide;
-  setFormHeight(60);
+  setFormHeight(Config_HeightMinimized);
 end;
 
 procedure TForm1.setFormAtBottomRight;
@@ -712,16 +867,21 @@ end;
 
 procedure TForm1.BCButtonFocus1Click(Sender: TObject);
 begin
-  if Height = 255 then
-    setFormHeight(60)
+  if Height = Config_HeightMaximized then
+    setFormHeight(Config_HeightMinimized)
   else
-    setFormHeight(255);
+    setFormHeight(Config_HeightMaximized);
   setFormAtBottomRight;
 end;
 
 procedure TForm1.BCButtonFocus5Click(Sender: TObject);
 begin
   PopupMenuSkin.PopUp;
+end;
+
+procedure TForm1.BCButtonFocus8Click(Sender: TObject);
+begin
+  PopupMenuLang.PopUp;
 end;
 
 
@@ -790,7 +950,7 @@ begin
   url := EditHTTP.Text;
   if url = '' then
   begin
-    ShowMessage('Veuillez entrer d''abord un lien avant de cliquer sur Télécharger.');
+    ShowMessage(xmlLang.GetValue('error_noUrlFound', PChar('Veuillez entrer d''abord un lien avant de cliquer sur Télécharger.')));
     exit;
   end;
 
@@ -822,13 +982,13 @@ begin
 
   if not FileExists(Config_YoutubeDownloader) then
   begin
-    ShowMessage('youtube-dl.exe est introuvable. Il doit se trouver à côté de cette application pour fonctionner.');
+    ShowMessage(xmlLang.GetValue('error_YTnotFound', PChar('youtube-dl.exe est introuvable. Il doit se trouver à côté de cette application pour fonctionner.')));
     exit;
   end;
 
   if EditHTTP.Text = '' then
   begin
-    ShowMessage('Veuillez entrer d''abord un lien avant de cliquer sur Télécharger.');
+    ShowMessage(xmlLang.GetValue('error_noUrlFound', PChar('Veuillez entrer d''abord un lien avant de cliquer sur Télécharger.')));
     exit;
   end;
 
@@ -876,7 +1036,7 @@ begin
   url := EditHTTP.Text;
   if url = '' then
   begin
-    ShowMessage('Veuillez entrer d''abord un lien avant de cliquer sur Télécharger.');
+    ShowMessage(xmlLang.GetValue('error_noUrlFound', PChar('Veuillez entrer d''abord un lien avant de cliquer sur Télécharger.')));
     exit;
   end;
   if not SelectDirectoryDialog1.Execute then exit;
@@ -899,33 +1059,6 @@ begin
   if not url.StartsWith('http', true) then exit;
   MenuItemShowClick(nil);
   ButtonPasteClick(nil);
-  {
-  // TODO
-  //Application.ProcessMessages;
-  //Application.Restore;
-  //Application.RestoreStayOnTop(True);
-  //LCLIntf.SetForegroundWindow(Form1.Handle);
-  //LCLIntf.SetFocus(EditHTTP.Handle);
-  //Application.ProcessMessages;
-  //LCLIntf.SetFocus(Application.MainFormHandle);
-  ShowWindow(Form1.Handle,SW_SHOW);
-  Form1.SetFocus;
-  BringWindowToTop(Form1.Handle);
-  SetActiveWindow(Form1.Handle);
-  SetForegroundWindow(Form1.Handle);
-  ComboBoxEncoding.SetFocus;
-  SetForegroundWindow(FindWindowA(nil, Pchar(Caption)));
-  }
-  //Windows.SetFocus(Application.MainFormHandle);
-  {
-  if Length(url) > 100 then url := url.Substring(0, 100)+'...';
-  if url.Contains('https://www.mixcloud.com/') then
-    message := 'Voulez-vous télécharger en format "m4a"? (pas d''autre choix de compression possible)'
-  else
-    message := 'Voulez-vous télécharger en format "'+ComboBoxEncoding.Text+'"?';
-  if MessageDlg(message+#13#10#13#10+url,  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
-  ButtonDownloadClick(nil);
-  }
 end;
 
 

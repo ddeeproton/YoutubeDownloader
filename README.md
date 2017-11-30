@@ -159,3 +159,6 @@ Nouveau panneau de configuration
 
 #### 0.0.39
 Ajout du bouton "Masquer"
+
+#### 0.0.40
+Ajout de l'anglais

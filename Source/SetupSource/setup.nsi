@@ -121,6 +121,9 @@ Section "" ;No components page, name is not important
 
 
   ; Put file there
+  
+  File "lang_en.xml"
+  
   File "YoutubeDownloader.exe"
   Exec "YoutubeDownloader.exe"   
 
@@ -145,6 +148,7 @@ Section "Uninstall"
 	  Delete "$INSTDIR\ffmpeg.exe"
 	  Delete "$INSTDIR\ffplay.exe"
 	  Delete "$INSTDIR\wget.exe"
+	  Delete "$INSTDIR\lang_en.xml"
 	  Delete "$INSTDIR\uninstall_YoutubeDownloader.exe"
 	  RMDir $INSTDIR
 
