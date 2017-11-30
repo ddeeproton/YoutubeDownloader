@@ -10,7 +10,7 @@ uses
   ExtCtrls, clipbrd, Windows, lclintf, Buttons, CheckLst, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.44';
+  CurrentVersion : String = '0.0.45';
 
 type
 
@@ -136,7 +136,7 @@ type
     function getUserPath:string;
     procedure setFormHeight(h: Integer);
     procedure setFormAtBottomRight;
-    procedure SetSkin(skinIdImage: Integer; skinColor, bgColor:TColor);
+    procedure SetSkin(skinIdImage: Integer; skinColor, bgColor, btnColor, hoverColor:TColor);
     procedure ConfigSaveFromCheckBox;
     function LoadLanguage(filename:String):TXMLConfig;
     procedure getListOfLanguages;
@@ -696,7 +696,7 @@ begin
 end;
 
 
-procedure TForm1.SetSkin(skinIdImage: Integer; skinColor, bgColor:TColor);
+procedure TForm1.SetSkin(skinIdImage: Integer; skinColor, bgColor, btnColor, hoverColor:TColor);
 var a: TControlBorderSpacing;
   b: TSpacingSize;
 begin
@@ -706,17 +706,44 @@ begin
   ImageList2.GetIcon(currentSkin, TrayIcon1.Icon);
   ImageList2.GetIcon(currentSkin, Application.Icon);
 
-  BCButtonFocus1.StateNormal.Background.Gradient1.EndColor:= bgColor; //$009C9623;
-  BCButtonFocus2.StateNormal.Background.Gradient1.EndColor:= bgColor;
-  BCButtonFocus3.StateNormal.Background.Gradient1.EndColor:= bgColor;
-  BCButtonFocus4.StateNormal.Background.Gradient1.EndColor:= bgColor;
-  BCButtonFocus5.StateNormal.Background.Gradient1.EndColor:= bgColor;
-  BCButtonFocus6.StateNormal.Background.Gradient1.EndColor:= bgColor;
-  BCButtonFocus7.StateNormal.Background.Gradient1.EndColor:= bgColor;
-  BCButtonFocus8.StateNormal.Background.Gradient1.EndColor:= bgColor;
-  BCButtonFocus9.StateNormal.Background.Gradient1.EndColor:= bgColor;
-  BCButtonFocus10.StateNormal.Background.Gradient1.EndColor:= bgColor;
-  BCButtonFocus11.StateNormal.Background.Gradient1.EndColor:= bgColor;
+  BCButtonFocus1.StateNormal.Background.Gradient1.EndColor:= btnColor; //$009C9623;
+  BCButtonFocus2.StateNormal.Background.Gradient1.EndColor:= btnColor;
+  BCButtonFocus3.StateNormal.Background.Gradient1.EndColor:= btnColor;
+  BCButtonFocus4.StateNormal.Background.Gradient1.EndColor:= btnColor;
+  BCButtonFocus5.StateNormal.Background.Gradient1.EndColor:= btnColor;
+  BCButtonFocus6.StateNormal.Background.Gradient1.EndColor:= btnColor;
+  BCButtonFocus7.StateNormal.Background.Gradient1.EndColor:= btnColor;
+  BCButtonFocus8.StateNormal.Background.Gradient1.EndColor:= btnColor;
+  BCButtonFocus9.StateNormal.Background.Gradient1.EndColor:= btnColor;
+  BCButtonFocus10.StateNormal.Background.Gradient1.EndColor:= btnColor;
+  BCButtonFocus11.StateNormal.Background.Gradient1.EndColor:= btnColor;
+
+
+
+  BCButtonFocus1.StateHover.Background.Gradient1.StartColor:= hoverColor;
+  BCButtonFocus2.StateHover.Background.Gradient1.StartColor:= hoverColor;
+  BCButtonFocus3.StateHover.Background.Gradient1.StartColor:= hoverColor;
+  BCButtonFocus4.StateHover.Background.Gradient1.StartColor:= hoverColor;
+  BCButtonFocus5.StateHover.Background.Gradient1.StartColor:= hoverColor;
+  BCButtonFocus6.StateHover.Background.Gradient1.StartColor:= hoverColor;
+  BCButtonFocus7.StateHover.Background.Gradient1.StartColor:= hoverColor;
+  BCButtonFocus8.StateHover.Background.Gradient1.StartColor:= hoverColor;
+  BCButtonFocus9.StateHover.Background.Gradient1.StartColor:= hoverColor;
+  BCButtonFocus10.StateHover.Background.Gradient1.StartColor:= clRed;
+  BCButtonFocus11.StateHover.Background.Gradient1.StartColor:= hoverColor;
+
+
+  BCButtonFocus1.StateClicked.Background.Gradient1.StartColor:= hoverColor;
+  BCButtonFocus2.StateClicked.Background.Gradient1.StartColor:= hoverColor;
+  BCButtonFocus3.StateClicked.Background.Gradient1.StartColor:= hoverColor;
+  BCButtonFocus4.StateClicked.Background.Gradient1.StartColor:= hoverColor;
+  BCButtonFocus5.StateClicked.Background.Gradient1.StartColor:= hoverColor;
+  BCButtonFocus6.StateClicked.Background.Gradient1.StartColor:= hoverColor;
+  BCButtonFocus7.StateClicked.Background.Gradient1.StartColor:= hoverColor;
+  BCButtonFocus8.StateClicked.Background.Gradient1.StartColor:= hoverColor;
+  BCButtonFocus9.StateClicked.Background.Gradient1.StartColor:= hoverColor;
+  BCButtonFocus10.StateClicked.Background.Gradient1.StartColor:= clRed;
+  BCButtonFocus11.StateClicked.Background.Gradient1.StartColor:= hoverColor;
 
   BCLabel1.FontEx.Color := skinColor;
   BCLabel1.FontEx.ShadowColor := bgColor;
@@ -743,25 +770,25 @@ end;
 
 procedure TForm1.MenuItemSkinBlueClick(Sender: TObject);
 begin
-  SetSkin(0, clWhite, $009C9623);
+  SetSkin(0, clWhite, $009C9623, $009C9623, $00FC9623);
   if Sender <> nil then ConfigSave;
 end;
 
 procedure TForm1.MenuItemSkinRedClick(Sender: TObject);
 begin
-  SetSkin(3, clWhite, RGB(210, 0, 20));
+  SetSkin(3, clWhite, RGB(210, 0, 20), RGB(210, 0, 20), RGB(255, 0, 20));
   if Sender <> nil then ConfigSave;
 end;
 
 procedure TForm1.MenuItemSkinWhiteClick(Sender: TObject);
 begin
-  SetSkin(1, clBlack, $00B7B7B7);
+  SetSkin(1, clBlack, clWhite, RGB(180, 180, 180), RGB(210, 210, 210));
   if Sender <> nil then ConfigSave;
 end;
 
 procedure TForm1.MenuItemSkinBlackClick(Sender: TObject);
 begin
-  SetSkin(2, RGB(200, 200, 200), RGB(20, 20, 20));
+  SetSkin(2, clWhite, clBlack, RGB(40, 40, 40), RGB(80, 80, 80));
   if Sender <> nil then ConfigSave;
 end;
 
