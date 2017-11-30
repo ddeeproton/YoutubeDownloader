@@ -10,7 +10,7 @@ uses
   ExtCtrls, clipbrd, Windows, lclintf, Buttons, CheckLst, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.46';
+  CurrentVersion : String = '0.0.47';
 
 type
 
@@ -350,7 +350,6 @@ begin
   xmlLang := LoadLanguage(filename);
 
   ConfigLoad;
-  getListOfLanguages;
 end;
 
 procedure TForm1.getListOfLanguages;
@@ -419,10 +418,10 @@ begin
   MenuItemAbout.Caption:= BCButtonFocus6.Caption;
 
 
-  MenuItem7.Caption:= result.GetValue('PopSkin1', PChar(''));
-  MenuItem5.Caption:= result.GetValue('PopSkin2', PChar(''));
-  MenuItem6.Caption:= result.GetValue('PopSkin3', PChar(''));
-  MenuItem11.Caption:= result.GetValue('PopSkin4', PChar(''));
+  MenuItem7.Caption:= result.GetValue('PopSkin1', PChar('Blanc'));
+  MenuItem5.Caption:= result.GetValue('PopSkin2', PChar('Bleu'));
+  MenuItem6.Caption:= result.GetValue('PopSkin3', PChar('Noir'));
+  MenuItem11.Caption:= result.GetValue('PopSkin4', PChar('Rouge'));
 
   MenuItemSkinBlack.Caption := MenuItem7.Caption;
   MenuItemSkinBlue.Caption := MenuItem5.Caption;

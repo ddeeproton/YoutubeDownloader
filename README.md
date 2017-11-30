@@ -212,3 +212,5 @@ Adjust template colors
 #### 0.0.46
 Bug fix: Sauvegarde
 
+#### 0.0.47
+Bug fix: Skin
