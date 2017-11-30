@@ -24,43 +24,56 @@
   https://raw.githubusercontent.com/ddeeproton/YoutubeDownloader/master/Source/GUI/lang_en.xml
 
 
-### Liste des sites supportés:
+### Support / Liste des sites supportés:
  
  https://github.com/rg3/youtube-dl/blob/master/docs/supportedsites.md
 
-### Fonctionnement:
- Ce programme, une fois lancé, surveille votre presse papier. 
- Dès qu'un lien http est copié, le programme vous propose de télécharger l'audio, la vidéo ou le fichier brut.
+### How does it work? / Fonctionnement:
+ This application will check your clipboard if a http link is copied, and ask you if you want to download the video, the audio or a simple file. 
+
+ Ce programme, une fois lancé, surveille votre presse papier. Dès qu'un lien http est copié, le programme vous propose de télécharger l'audio, la vidéo ou le fichier brut.
 
 
-### Autre Documentation:	
+### Other documentation / Autre Doc:	
   https://github.com/rg3/youtube-dl/blob/master/README.md
 
 
 ### Compilation:
  Le GUI est compilé avec Lazarus
  
+ GUI is compiled with Lazarus
+ 
  http://www.lazarus-ide.org/
+ 
+ A Lazarus component "BGRAControls" for the skin.
  
  Composant Lazarus "BGRAControls" pour le design.
  
  http://wiki.lazarus.freepascal.org/BGRAControls
  
+ The Setup is compiled with NSIS
+ 
  Le Setup avec NSIS
  
  http://nsis.sourceforge.net/Main_Page
+ 
+ The application is compiled with Python
  
  L'application avec Python
  
  https://www.python.org/
  
+ (All are free)
+ 
  (Tous sont gratuits)
 
 
-### Système d'exploitation:
+### Operating system / Système d'exploitation:
  Windows
  
- Pour fonctionner sur Linux ou Mac, le code devra d'abord être adapté (chemin en "/" à la place de "\\", etc.)
+ To compile with Linux or Mac, the code must be modified before (path in "/" instead of "\\", ...)
+ 
+ Pour compiler sur Linux ou Mac, le code devra d'abord être adapté (chemin en "/" à la place de "\\", etc.)
 
 ### Changements:
 
