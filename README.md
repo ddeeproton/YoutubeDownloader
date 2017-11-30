@@ -177,7 +177,7 @@ Nouveau panneau de configuration
 Ajout du bouton "Masquer"
 
 #### 0.0.40
-Ajout de l'anglais
+Ajout de l'Anglais
 
 #### 0.0.41
 Ajout skin Rouge
