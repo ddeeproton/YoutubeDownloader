@@ -10,7 +10,7 @@ uses
   ExtCtrls, clipbrd, Windows, lclintf, Buttons, CheckLst, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.45';
+  CurrentVersion : String = '0.0.46';
 
 type
 
