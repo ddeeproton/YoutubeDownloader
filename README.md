@@ -197,3 +197,6 @@ Ajout de l'Anglais
 #### 0.0.41
 Ajout skin Rouge
 
+#### 0.0.42
+Bug fix: Langues
+

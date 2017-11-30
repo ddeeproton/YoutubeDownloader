@@ -10,7 +10,7 @@ uses
   ExtCtrls, clipbrd, Windows, lclintf, Buttons, CheckLst, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.41';
+  CurrentVersion : String = '0.0.42';
 
 type
 
@@ -397,35 +397,35 @@ begin
   BCLabel3.Caption := MenuItemPathDL.Caption+' :';
   BCLabel4.Caption := result.GetValue('Title4', PChar('Configuration'))+' :';
 
-  BCButtonFocus2.Caption := result.GetValue('Button2', PChar(BCButtonFocus2.Caption));
-  BCButtonFocus3.Caption := result.GetValue('Button3', PChar(BCButtonFocus3.Caption));
-  BCButtonFocus4.Caption := result.GetValue('Button4', PChar(BCButtonFocus4.Caption));
-  BCButtonFocus5.Caption := result.GetValue('Button5', PChar(BCButtonFocus5.Caption));
-  BCButtonFocus6.Caption := result.GetValue('Button6', PChar(BCButtonFocus6.Caption));
-  BCButtonFocus8.Caption := result.GetValue('Button8', PChar(BCButtonFocus8.Caption));
-  BCButtonFocus9.Caption := result.GetValue('Button9', PChar(BCButtonFocus9.Caption));
+  BCButtonFocus2.Caption := result.GetValue('Button2', PChar('Télécharger'));
+  BCButtonFocus3.Caption := result.GetValue('Button3', PChar('Mise à jour'));
+  BCButtonFocus4.Caption := result.GetValue('Button4', PChar('Historique'));
+  BCButtonFocus5.Caption := result.GetValue('Button5', PChar('Thèmes'));
+  BCButtonFocus6.Caption := result.GetValue('Button6', PChar('A propos'));
+  BCButtonFocus8.Caption := result.GetValue('Button8', PChar('Langues'));
+  BCButtonFocus9.Caption := result.GetValue('Button9', PChar('Masquer'));
 
   MenuItem1.Caption:= BCButtonFocus4.Caption;
   MenuItemSkin.Caption:= BCButtonFocus5.Caption;
   MenuItemAbout.Caption:= BCButtonFocus6.Caption;
 
 
-  MenuItem7.Caption:= result.GetValue('PopSkin1', MenuItem7.Caption);
-  MenuItem5.Caption:= result.GetValue('PopSkin2', MenuItem5.Caption);
-  MenuItem6.Caption:= result.GetValue('PopSkin3', MenuItem6.Caption);
-  MenuItem11.Caption:= result.GetValue('PopSkin4', MenuItem11.Caption);
+  MenuItem7.Caption:= result.GetValue('PopSkin1', PChar(''));
+  MenuItem5.Caption:= result.GetValue('PopSkin2', PChar(''));
+  MenuItem6.Caption:= result.GetValue('PopSkin3', PChar(''));
+  MenuItem11.Caption:= result.GetValue('PopSkin4', PChar(''));
 
   MenuItemSkinBlack.Caption := MenuItem7.Caption;
   MenuItemSkinBlue.Caption := MenuItem5.Caption;
   MenuItemSkinWhite.Caption := MenuItem6.Caption;
   MenuItem12.Caption := MenuItem11.Caption;
 
-  MenuItem8.Caption:= result.GetValue('PopHistory1', MenuItem8.Caption);
-  MenuItem9.Caption:= result.GetValue('PopHistory2', MenuItem9.Caption);
-  MenuItem10.Caption:= result.GetValue('PopHistory3', MenuItem10.Caption);
-  MenuItem3.Caption:= result.GetValue('PopTray1', MenuItem3.Caption);
-  MenuItem4.Caption:= result.GetValue('PopTray2', MenuItem4.Caption);
-  MenuItemExit.Caption:= result.GetValue('PopTray3', MenuItemExit.Caption);
+  MenuItem8.Caption:= result.GetValue('PopHistory1', PChar('Voir l''historique'));
+  MenuItem9.Caption:= result.GetValue('PopHistory2', PChar('Effacer l''historique'));
+  MenuItem10.Caption:= result.GetValue('PopHistory3', PChar('C''est quoi?'));
+  MenuItem3.Caption:= result.GetValue('PopTray1', PChar('Masquer'));
+  MenuItem4.Caption:= result.GetValue('PopTray2', PChar('Options'));
+  MenuItemExit.Caption:= result.GetValue('PopTray3', PChar('Quitter'));
 
 
   CheckListBoxConfig.Items.Clear;
