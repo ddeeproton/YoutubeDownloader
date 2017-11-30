@@ -53,9 +53,9 @@
  
  http://wiki.lazarus.freepascal.org/BGRAControls
  
- The Setup is compiled with NSIS
+ The Setup is compiled with NSIS (Windows only)
  
- Le Setup avec NSIS
+ Le Setup avec NSIS (seulement sur Windows)
  
  http://nsis.sourceforge.net/Main_Page
  
