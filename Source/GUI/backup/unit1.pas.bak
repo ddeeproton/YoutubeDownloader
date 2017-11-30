@@ -10,7 +10,7 @@ uses
   ExtCtrls, clipbrd, Windows, lclintf, Buttons, CheckLst, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.45';
+  CurrentVersion : String = '0.0.46';
 
 type
 
@@ -88,11 +88,12 @@ type
     procedure ButtonMenuClick(Sender: TObject);
     procedure ButtonDownloadClick(Sender: TObject);
     procedure ButtonPasteClick(Sender: TObject);
-    procedure CheckListBoxConfigClick(Sender: TObject);
     procedure CheckListBoxConfigClickCheck(Sender: TObject);
     procedure ComboBoxEncodingChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuItemHideOnDownloadClick(Sender: TObject);
+    procedure MenuItemLangEngClick(Sender: TObject);
+    procedure MenuItemLangFraClick(Sender: TObject);
     procedure MenuItemPathDLClick(Sender: TObject);
     procedure MenuItemAboutClick(Sender: TObject);
     procedure MenuItemCacheClearClick(Sender: TObject);
@@ -258,17 +259,12 @@ begin
 
 
 
-  XMLConfig1.Free;
+  //XMLConfig1.Free;
 end;
 
 
 procedure TForm1.ConfigSaveFromCheckBox;
 begin
-  XMLConfig1 := TXMLConfig.Create(nil);
-  XMLConfig1.SetValue('CheckClipboard', CheckListBoxConfig.Checked[0]);
-  XMLConfig1.SetValue('HideOnDownload', CheckListBoxConfig.Checked[1]);
-  XMLConfig1.SetValue('UpdateOnBoot', CheckListBoxConfig.Checked[2]);
-
   if CheckListBoxConfig.Checked[3] then
   begin
     if not isStartWithWindows() then MenuItemStartOnBootClick(MenuItemStartOnBoot);
@@ -276,7 +272,10 @@ begin
   begin
     if isStartWithWindows() then MenuItemStartOnBootClick(MenuItemStartOnBoot);
   end;
-
+  XMLConfig1 := TXMLConfig.Create(nil);
+  XMLConfig1.SetValue('CheckClipboard', CheckListBoxConfig.Checked[0]);
+  XMLConfig1.SetValue('HideOnDownload', CheckListBoxConfig.Checked[1]);
+  XMLConfig1.SetValue('UpdateOnBoot', CheckListBoxConfig.Checked[2]);
   XMLConfig1.SetValue('UseCache', CheckListBoxConfig.Checked[4]);
   XMLConfig1.SetValue('AskBeforeExit', CheckListBoxConfig.Checked[5]);
   XMLConfig1.SetValue('Encoding', ComboBoxEncoding.ItemIndex);
@@ -286,6 +285,9 @@ begin
 
   XMLConfig1.SaveToFile(Config_Dir+'config.xml');
   XMLConfig1.Free;
+
+
+
   ConfigLoad;
 end;
 
@@ -339,9 +341,15 @@ end;
 
 
 procedure TForm1.MenuItemLangClick(Sender: TObject);
+var filename: String;
 begin
-  xmlLang := LoadLanguage(TMenuItem(Sender).Hint);
+  filename := TMenuItem(Sender).Hint;
+  currentLanguage :=  filename;
   ConfigSave;
+
+  xmlLang := LoadLanguage(filename);
+
+  ConfigLoad;
 end;
 
 procedure TForm1.getListOfLanguages;
@@ -679,6 +687,16 @@ begin
   ConfigSave;
 end;
 
+procedure TForm1.MenuItemLangEngClick(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.MenuItemLangFraClick(Sender: TObject);
+begin
+
+end;
+
 procedure TForm1.MenuItemExitClick(Sender: TObject);
 begin
   if CheckListBoxConfig.Checked[5] then
@@ -882,19 +900,14 @@ begin
   EditHTTP.PasteFromClipboard;
 end;
 
-procedure TForm1.CheckListBoxConfigClick(Sender: TObject);
-var i: Integer;
-begin
-  i := CheckListBoxConfig.ItemIndex;
-  if i = -1 then exit;
-  CheckListBoxConfig.Checked[i] := not CheckListBoxConfig.Checked[i];
-  ConfigSaveFromCheckBox;
-end;
+
 
 procedure TForm1.CheckListBoxConfigClickCheck(Sender: TObject);
 begin
   ConfigSaveFromCheckBox;
 end;
+
+
 
 procedure TForm1.ComboBoxEncodingChange(Sender: TObject);
 begin

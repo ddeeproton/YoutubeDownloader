@@ -208,3 +208,7 @@ Bug fix
 
 #### 0.0.45
 Adjust template colors
+
+#### 0.0.46
+Bug fix: Sauvegarde
+
