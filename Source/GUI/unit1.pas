@@ -10,7 +10,7 @@ uses
   ExtCtrls, clipbrd, Windows, lclintf, Buttons, CheckLst, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.42';
+  CurrentVersion : String = '0.0.43';
 
 type
 
@@ -702,9 +702,9 @@ var a: TControlBorderSpacing;
 begin
   currentSkin := skinIdImage;
   ImageList1.GetIcon(currentSkin, Image1.Picture.Icon);
-  ImageList2.GetIcon(currentSkin, Self.Icon);
+  ImageList2.GetIcon(currentSkin, Form1.Icon);
   ImageList2.GetIcon(currentSkin, TrayIcon1.Icon);
-
+  ImageList2.GetIcon(currentSkin, Application.Icon);
 
   BCButtonFocus1.StateNormal.Background.Gradient1.EndColor:= bgColor; //$009C9623;
   BCButtonFocus2.StateNormal.Background.Gradient1.EndColor:= bgColor;
