@@ -41,9 +41,9 @@
 
 
 ### Compilation:
- Le GUI est compilé avec Lazarus
+ Le GUI est compilé avec Lazarus (Free Pascal)
  
- GUI is compiled with Lazarus
+ GUI is compiled with Lazarus (Free Pascal)
  
  http://www.lazarus-ide.org/
  
