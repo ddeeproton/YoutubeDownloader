@@ -37,4 +37,5 @@ already_updated="You are updated :)"
 error_update="Error on update"
 error_noUrlFound="Please enter an URL before download"
 error_YTnotFound="Error: youtube-dl.exe is not found"
+QuestionExit="Do you want to close the application?"
 />

@@ -10,7 +10,7 @@ uses
   ExtCtrls, clipbrd, Windows, lclintf, Buttons, CheckLst, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.39';
+  CurrentVersion : String = '0.0.40';
 
 type
 
@@ -19,6 +19,7 @@ type
   TForm1 = class(TForm)
     BCButtonFocus1: TBCButtonFocus;
     BCButtonFocus10: TBCButtonFocus;
+    BCButtonFocus11: TBCButtonFocus;
     BCButtonFocus2: TBCButtonFocus;
     BCButtonFocus3: TBCButtonFocus;
     BCButtonFocus4: TBCButtonFocus;
@@ -75,6 +76,7 @@ type
     TimerClipboard: TTimer;
     TrayIcon1: TTrayIcon;
     XMLConfig1: TXMLConfig;
+    procedure BCButtonFocus10Click(Sender: TObject);
     procedure BCButtonFocus1Click(Sender: TObject);
     procedure BCButtonFocus4Click(Sender: TObject);
     procedure BCButtonFocus5Click(Sender: TObject);
@@ -328,7 +330,7 @@ end;
 
 procedure TForm1.MenuItemLangClick(Sender: TObject);
 begin
-  xmlLang := LoadLanguage(currentDir+TMenuItem(Sender).Hint);
+  xmlLang := LoadLanguage(TMenuItem(Sender).Hint);
   ConfigSave;
 end;
 
@@ -374,8 +376,8 @@ function TForm1.LoadLanguage(filename:String):TXMLConfig;
 begin
 
   result := TXMLConfig.Create(nil);
-  if FileExists(filename) then
-    result.LoadFromFile(filename);
+  if FileExists(currentDir+filename) then
+    result.LoadFromFile(currentDir+filename);
 
   currentLanguage :=  filename;
 
@@ -692,6 +694,7 @@ begin
   BCButtonFocus8.StateNormal.Background.Gradient1.EndColor:= bgColor;
   BCButtonFocus9.StateNormal.Background.Gradient1.EndColor:= bgColor;
   BCButtonFocus10.StateNormal.Background.Gradient1.EndColor:= bgColor;
+  BCButtonFocus11.StateNormal.Background.Gradient1.EndColor:= bgColor;
 
   BCLabel1.FontEx.Color := skinColor;
   BCLabel1.FontEx.ShadowColor := bgColor;
@@ -872,6 +875,11 @@ begin
   else
     setFormHeight(Config_HeightMaximized);
   setFormAtBottomRight;
+end;
+
+procedure TForm1.BCButtonFocus10Click(Sender: TObject);
+begin
+  MenuItemExitClick(nil);
 end;
 
 procedure TForm1.BCButtonFocus5Click(Sender: TObject);
