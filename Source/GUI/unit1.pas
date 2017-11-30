@@ -10,7 +10,7 @@ uses
   ExtCtrls, clipbrd, Windows, lclintf, Buttons, CheckLst, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.40';
+  CurrentVersion : String = '0.0.41';
 
 type
 
@@ -41,6 +41,8 @@ type
     ImageList2: TImageList;
     MenuItem1: TMenuItem;
     MenuItem10: TMenuItem;
+    MenuItem11: TMenuItem;
+    MenuItem12: TMenuItem;
     MenuItemLangFra: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
@@ -103,6 +105,7 @@ type
     procedure MenuItemShowClick(Sender: TObject);
     procedure MenuItemSkinBlackClick(Sender: TObject);
     procedure MenuItemSkinBlueClick(Sender: TObject);
+    procedure MenuItemSkinRedClick(Sender: TObject);
     procedure MenuItemSkinWhiteClick(Sender: TObject);
     procedure MenuItemStartOnBootClick(Sender: TObject);
     procedure MenuItemUpdateClick(Sender: TObject);
@@ -186,6 +189,7 @@ begin
   if currentSkin = 0 then MenuItemSkinBlueClick(nil);
   if currentSkin = 1 then MenuItemSkinWhiteClick(nil);
   if currentSkin = 2 then MenuItemSkinBlackClick(nil);
+  if currentSkin = 3 then MenuItemSkinRedClick(nil);
 
   TimerClipboard.Enabled := MenuItemCheckClipboard.Checked;
   MenuItemUpdateOnBoot.Checked := isStartWithWindows;
@@ -409,6 +413,13 @@ begin
   MenuItem7.Caption:= result.GetValue('PopSkin1', MenuItem7.Caption);
   MenuItem5.Caption:= result.GetValue('PopSkin2', MenuItem5.Caption);
   MenuItem6.Caption:= result.GetValue('PopSkin3', MenuItem6.Caption);
+  MenuItem11.Caption:= result.GetValue('PopSkin4', MenuItem11.Caption);
+
+  MenuItemSkinBlack.Caption := MenuItem7.Caption;
+  MenuItemSkinBlue.Caption := MenuItem5.Caption;
+  MenuItemSkinWhite.Caption := MenuItem6.Caption;
+  MenuItem12.Caption := MenuItem11.Caption;
+
   MenuItem8.Caption:= result.GetValue('PopHistory1', MenuItem8.Caption);
   MenuItem9.Caption:= result.GetValue('PopHistory2', MenuItem9.Caption);
   MenuItem10.Caption:= result.GetValue('PopHistory3', MenuItem10.Caption);
@@ -736,6 +747,12 @@ begin
   if Sender <> nil then ConfigSave;
 end;
 
+procedure TForm1.MenuItemSkinRedClick(Sender: TObject);
+begin
+  SetSkin(3, clWhite, RGB(210, 0, 20));
+  if Sender <> nil then ConfigSave;
+end;
+
 procedure TForm1.MenuItemSkinWhiteClick(Sender: TObject);
 begin
   SetSkin(1, clBlack, $00B7B7B7);
@@ -842,6 +859,7 @@ procedure TForm1.CheckListBoxConfigClick(Sender: TObject);
 var i: Integer;
 begin
   i := CheckListBoxConfig.ItemIndex;
+  if i = -1 then exit;
   CheckListBoxConfig.Checked[i] := not CheckListBoxConfig.Checked[i];
   ConfigSaveFromCheckBox;
 end;
