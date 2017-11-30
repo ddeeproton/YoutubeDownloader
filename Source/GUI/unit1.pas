@@ -86,6 +86,7 @@ type
     procedure ButtonMenuClick(Sender: TObject);
     procedure ButtonDownloadClick(Sender: TObject);
     procedure ButtonPasteClick(Sender: TObject);
+    procedure CheckListBoxConfigClick(Sender: TObject);
     procedure CheckListBoxConfigClickCheck(Sender: TObject);
     procedure ComboBoxEncodingChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -241,14 +242,17 @@ begin
   MenuItemHideOnDownload.Checked := XMLConfig1.GetValue('HideOnDownload', False);
   MenuItemStartOnBoot.Checked:= isStartWithWindows();
 
+  currentLanguage := XMLConfig1.GetValue('language', 'lang_fr.txt');
+  xmlLang := LoadLanguage(currentLanguage);
+
   CheckListBoxConfig.Checked[0] := XMLConfig1.GetValue('CheckClipboard', True);
   CheckListBoxConfig.Checked[1] := XMLConfig1.GetValue('HideOnDownload', False);
   CheckListBoxConfig.Checked[2] := XMLConfig1.GetValue('UpdateOnBoot', True);
   CheckListBoxConfig.Checked[3] := isStartWithWindows();
   CheckListBoxConfig.Checked[4] := XMLConfig1.GetValue('UseCache', True);
+  CheckListBoxConfig.Checked[5] := XMLConfig1.GetValue('AskBeforeExit', True);
 
-  currentLanguage := XMLConfig1.GetValue('language', 'lang_fr.txt');
-  xmlLang := LoadLanguage(currentLanguage);
+
 
   XMLConfig1.Free;
 end;
@@ -263,13 +267,14 @@ begin
 
   if CheckListBoxConfig.Checked[3] then
   begin
-    if not isStartWithWindows() then MenuItemStartOnBootClick(nil);
+    if not isStartWithWindows() then MenuItemStartOnBootClick(MenuItemStartOnBoot);
   end else
   begin
-    if isStartWithWindows() then MenuItemStartOnBootClick(nil);
+    if isStartWithWindows() then MenuItemStartOnBootClick(MenuItemStartOnBoot);
   end;
 
   XMLConfig1.SetValue('UseCache', CheckListBoxConfig.Checked[4]);
+  XMLConfig1.SetValue('AskBeforeExit', CheckListBoxConfig.Checked[5]);
   XMLConfig1.SetValue('Encoding', ComboBoxEncoding.ItemIndex);
   XMLConfig1.SetValue('Path', EditPath.Text);
   XMLConfig1.SetValue('Skin', currentSkin);
@@ -291,6 +296,7 @@ begin
   XMLConfig1.SetValue('Skin', currentSkin);
   XMLConfig1.SetValue('CheckClipboard', MenuItemCheckClipboard.Checked);
   XMLConfig1.SetValue('HideOnDownload', MenuItemHideOnDownload.Checked);
+  XMLConfig1.SetValue('AskBeforeExit', CheckListBoxConfig.Checked[5]);
   XMLConfig1.SetValue('language', currentLanguage);
   XMLConfig1.SaveToFile(Config_Dir+'config.xml');
   XMLConfig1.Free;
@@ -387,28 +393,28 @@ begin
   BCLabel3.Caption := MenuItemPathDL.Caption+' :';
   BCLabel4.Caption := result.GetValue('Title4', PChar('Configuration'))+' :';
 
-  BCButtonFocus2.Caption := result.GetValue('Button2', PChar('Télécharger'));
-  BCButtonFocus3.Caption := result.GetValue('Button3', PChar('Mise à jour'));
-  BCButtonFocus4.Caption := result.GetValue('Button4', PChar('Historique'));
-  BCButtonFocus5.Caption := result.GetValue('Button5', PChar('Thèmes'));
-  BCButtonFocus6.Caption := result.GetValue('Button6', PChar('A propos'));
-  BCButtonFocus8.Caption := result.GetValue('Button8', PChar('Langues'));
-  BCButtonFocus9.Caption := result.GetValue('Button9', PChar('Masquer'));
+  BCButtonFocus2.Caption := result.GetValue('Button2', PChar(BCButtonFocus2.Caption));
+  BCButtonFocus3.Caption := result.GetValue('Button3', PChar(BCButtonFocus3.Caption));
+  BCButtonFocus4.Caption := result.GetValue('Button4', PChar(BCButtonFocus4.Caption));
+  BCButtonFocus5.Caption := result.GetValue('Button5', PChar(BCButtonFocus5.Caption));
+  BCButtonFocus6.Caption := result.GetValue('Button6', PChar(BCButtonFocus6.Caption));
+  BCButtonFocus8.Caption := result.GetValue('Button8', PChar(BCButtonFocus8.Caption));
+  BCButtonFocus9.Caption := result.GetValue('Button9', PChar(BCButtonFocus9.Caption));
 
   MenuItem1.Caption:= BCButtonFocus4.Caption;
   MenuItemSkin.Caption:= BCButtonFocus5.Caption;
   MenuItemAbout.Caption:= BCButtonFocus6.Caption;
 
 
-  MenuItem7.Caption:= result.GetValue('PopSkin1', PChar('Blanc'));
-  MenuItem5.Caption:= result.GetValue('PopSkin2', PChar('Bleu'));
-  MenuItem6.Caption:= result.GetValue('PopSkin3', PChar('Noir'));
-  MenuItem8.Caption:= result.GetValue('PopHistory1', PChar('Voir l''historique'));
-  MenuItem9.Caption:= result.GetValue('PopHistory2', PChar('Effacer l''historique'));
-  MenuItem10.Caption:= result.GetValue('PopHistory3', PChar('C''est quoi?'));
-  MenuItem3.Caption:= result.GetValue('PopTray1', PChar('Masquer'));
-  MenuItem4.Caption:= result.GetValue('PopTray2', PChar('Options'));
-  MenuItemExit.Caption:= result.GetValue('PopTray3', PChar('Quitter'));
+  MenuItem7.Caption:= result.GetValue('PopSkin1', MenuItem7.Caption);
+  MenuItem5.Caption:= result.GetValue('PopSkin2', MenuItem5.Caption);
+  MenuItem6.Caption:= result.GetValue('PopSkin3', MenuItem6.Caption);
+  MenuItem8.Caption:= result.GetValue('PopHistory1', MenuItem8.Caption);
+  MenuItem9.Caption:= result.GetValue('PopHistory2', MenuItem9.Caption);
+  MenuItem10.Caption:= result.GetValue('PopHistory3', MenuItem10.Caption);
+  MenuItem3.Caption:= result.GetValue('PopTray1', MenuItem3.Caption);
+  MenuItem4.Caption:= result.GetValue('PopTray2', MenuItem4.Caption);
+  MenuItemExit.Caption:= result.GetValue('PopTray3', MenuItemExit.Caption);
 
 
   CheckListBoxConfig.Items.Clear;
@@ -417,6 +423,7 @@ begin
   CheckListBoxConfig.Items.Add(result.GetValue('Config3', PChar('Mise à jour au démarrage de l''application')));
   CheckListBoxConfig.Items.Add(result.GetValue('Config4', PChar('Lancer l''application au démarrage du système')));
   CheckListBoxConfig.Items.Add(result.GetValue('Config5', PChar('Interdire de télécharger deux fois la même vidéo (mise en historique)')));
+  CheckListBoxConfig.Items.Add(result.GetValue('Config6', PChar('Demander confirmation pour quitter')));
 
   MenuItemCheckClipboard.Caption:= CheckListBoxConfig.Items[0];
   MenuItemHideOnDownload.Caption:= CheckListBoxConfig.Items[1];
@@ -663,6 +670,10 @@ end;
 
 procedure TForm1.MenuItemExitClick(Sender: TObject);
 begin
+  if CheckListBoxConfig.Checked[5] then
+  begin
+    if MessageDlg(xmlLang.GetValue('QuestionExit', PChar('Voulez-vous fermer l''application?')),  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
+  end;
   Application.Terminate;
 end;
 
@@ -827,6 +838,14 @@ begin
   EditHTTP.PasteFromClipboard;
 end;
 
+procedure TForm1.CheckListBoxConfigClick(Sender: TObject);
+var i: Integer;
+begin
+  i := CheckListBoxConfig.ItemIndex;
+  CheckListBoxConfig.Checked[i] := not CheckListBoxConfig.Checked[i];
+  ConfigSaveFromCheckBox;
+end;
+
 procedure TForm1.CheckListBoxConfigClickCheck(Sender: TObject);
 begin
   ConfigSaveFromCheckBox;
@@ -868,6 +887,11 @@ begin
   PopupMenuHistory.PopUp;
 end;
 
+procedure TForm1.BCButtonFocus10Click(Sender: TObject);
+begin
+
+end;
+
 procedure TForm1.BCButtonFocus1Click(Sender: TObject);
 begin
   if Height = Config_HeightMaximized then
@@ -877,11 +901,7 @@ begin
   setFormAtBottomRight;
 end;
 
-procedure TForm1.BCButtonFocus10Click(Sender: TObject);
-begin
-  if MessageDlg(xmlLang.GetValue('QuestionExit', PChar('Voulez-vous fermer l''application?')),  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
-  MenuItemExitClick(nil);
-end;
+
 
 procedure TForm1.BCButtonFocus5Click(Sender: TObject);
 begin
