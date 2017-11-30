@@ -12,6 +12,16 @@
  
  Ce programme télécharge l'audio des vidéos de Youtube, Dailymotion et autres.
 
+### Langages:
+  English
+  
+  Français
+  
+  Can be translated with a XML file. Check "lang_en.xml" for eg.
+  
+  Peut-être traduit depuis un fichier XML. Voir "lang_en.xml" pour l'exemple.
+
+
 ### Liste des sites supportés:
  
  https://github.com/rg3/youtube-dl/blob/master/docs/supportedsites.md
