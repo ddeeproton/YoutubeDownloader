@@ -35,6 +35,8 @@
 
 
 ### Other documentation / Autre Doc:	
+  https://github.com/rg3/youtube-dl/
+  
   https://github.com/rg3/youtube-dl/blob/master/README.md
 
 
