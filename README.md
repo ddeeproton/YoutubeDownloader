@@ -20,6 +20,8 @@
   Can be translated with a XML file. Check "lang_en.xml" for eg.
   
   Peut-être traduit depuis un fichier XML. Voir "lang_en.xml" pour l'exemple.
+  
+  https://raw.githubusercontent.com/ddeeproton/YoutubeDownloader/master/Source/GUI/lang_en.xml
 
 
 ### Liste des sites supportés:
