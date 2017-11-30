@@ -170,4 +170,7 @@ Changements:
   Bug fix: Langues
 
  0.0.43
-  Bug fix: icon
+  Bug fix
+
+ 0.0.44
+  Bug fix

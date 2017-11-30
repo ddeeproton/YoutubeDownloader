@@ -200,3 +200,8 @@ Ajout skin Rouge
 #### 0.0.42
 Bug fix: Langues
 
+#### 0.0.43
+Bug fix
+
+#### 0.0.44
+Bug fix

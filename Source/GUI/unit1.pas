@@ -10,7 +10,7 @@ uses
   ExtCtrls, clipbrd, Windows, lclintf, Buttons, CheckLst, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.43';
+  CurrentVersion : String = '0.0.44';
 
 type
 
@@ -1068,8 +1068,8 @@ begin
   // Mémorise les dimensions de la fenêtre du volume
   VolumeWidth := WindRect.Right - WindRect.Left;
   VolumeHeight := WindRect.Bottom - WindRect.Top;
-  VolumeTop := Screen.WorkAreaHeight - VolumeHeight;
-  VolumeLeft := Screen.WorkAreaWidth - VolumeWidth;
+  VolumeTop := Screen.WorkAreaHeight - VolumeHeight + Screen.WorkAreaTop;
+  VolumeLeft := Screen.WorkAreaWidth - VolumeWidth + Screen.WorkAreaLeft;
   // Déplace la fenêtre en bas de l'écran
   MoveWindow(CmdHandle, VolumeLeft, VolumeTop, VolumeWidth, VolumeHeight, true);
 end;
