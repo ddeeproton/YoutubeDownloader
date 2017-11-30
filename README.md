@@ -29,7 +29,7 @@
  https://github.com/rg3/youtube-dl/blob/master/docs/supportedsites.md
 
 ### How does it work? / Fonctionnement:
- This application will check your clipboard if a http link is copied, and ask you if you want to download the video, the audio or a simple file. 
+ This application will check your clipboard. If a http link is copied, then it will ask if you want to download the video, the audio or just a file. 
 
  Ce programme, une fois lancé, surveille votre presse papier. Dès qu'un lien http est copié, le programme vous propose de télécharger l'audio, la vidéo ou le fichier brut.
 
