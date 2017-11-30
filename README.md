@@ -8,6 +8,8 @@
 
 
 ### Description:
+ This is a video downloader for Youtube, Dailymotion and others.
+ 
  Ce programme télécharge l'audio des vidéos de Youtube, Dailymotion et autres.
 
 ### Liste des sites supportés:
