@@ -98,6 +98,7 @@ Section "" ;No components page, name is not important
 
   SetOverwrite off
   File "youtube-dl.exe"  
+  File "msvcr100.dll"  
   File "ffprobe.exe"  
   File "ffmpeg.exe"  
   File "ffplay.exe"  
@@ -143,6 +144,7 @@ Section "Uninstall"
 	  RMDir /r "$SMPROGRAMS\YoutubeDownloader"
 
 	  Delete "$INSTDIR\youtube-dl.exe"
+	  Delete "$INSTDIR\msvcr100.dll"
 	  Delete "$INSTDIR\YoutubeDownloader.exe"
 	  Delete "$INSTDIR\ffprobe.exe"
 	  Delete "$INSTDIR\ffmpeg.exe"

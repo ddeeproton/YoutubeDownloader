@@ -219,3 +219,8 @@ Bug fix: Skin
 Add: Max Speed Download
 
 Add: Proxy
+
+#### 0.0.49
+Fix bug: Max Speed Download
+
+Compatibility Windows 2008 Server

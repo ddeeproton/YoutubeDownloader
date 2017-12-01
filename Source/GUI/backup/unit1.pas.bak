@@ -10,7 +10,7 @@ uses
   ExtCtrls, clipbrd, Windows, lclintf, Buttons, CheckLst, Spin, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.48';
+  CurrentVersion : String = '0.0.49';
 
 type
 
@@ -162,7 +162,7 @@ var
   Form1: TForm1;
   Config_YoutubeDownloader: String = 'youtube-dl.exe';
   Config_HeightMinimized: Integer = 60;
-  Config_HeightMaximized: Integer = 396;
+  Config_HeightMaximized: Integer = 380;
   oldClipboardValue: String = '';
   currentSkin: Integer = 0;
   Config_Dir: String = '';
