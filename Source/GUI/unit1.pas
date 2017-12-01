@@ -5,12 +5,12 @@ unit Unit1;
 interface
 
 uses
-  Classes, SysUtils, process, XMLConf, FileUtil, BCButtonFocus, BCLabel, BGRACustomDrawn,
-  Forms, Controls, Graphics, Dialogs, StdCtrls, Menus,
-  ExtCtrls, clipbrd, Windows, lclintf, Buttons, CheckLst, Registry, ShlObj;
+  Classes, SysUtils, process, XMLConf, FileUtil, BCButtonFocus, BCLabel,
+  BGRACustomDrawn, Forms, Controls, Graphics, Dialogs, StdCtrls, Menus,
+  ExtCtrls, clipbrd, Windows, lclintf, Buttons, CheckLst, Spin, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.47';
+  CurrentVersion : String = '0.0.48';
 
 type
 
@@ -24,7 +24,6 @@ type
     BCButtonFocus3: TBCButtonFocus;
     BCButtonFocus4: TBCButtonFocus;
     BCButtonFocus5: TBCButtonFocus;
-    BCButtonFocus6: TBCButtonFocus;
     BCButtonFocus7: TBCButtonFocus;
     BCButtonFocus8: TBCButtonFocus;
     BCButtonFocus9: TBCButtonFocus;
@@ -32,10 +31,13 @@ type
     BCLabel2: TBCLabel;
     BCLabel3: TBCLabel;
     BCLabel4: TBCLabel;
+    BCLabel5: TBCLabel;
+    BCLabel6: TBCLabel;
     CheckListBoxConfig: TCheckListBox;
     ComboBoxEncoding: TComboBox;
     EditHTTP: TEdit;
     EditPath: TEdit;
+    EditProxy: TEdit;
     Image1: TImage;
     ImageList1: TImageList;
     ImageList2: TImageList;
@@ -74,6 +76,8 @@ type
     PopupMenuLang: TPopupMenu;
     Process1: TProcess;
     SelectDirectoryDialog1: TSelectDirectoryDialog;
+    SpinEditMaxSpeed: TSpinEdit;
+    TimerConfigSave: TTimer;
     TimerAfterLoad: TTimer;
     TimerClipboard: TTimer;
     TrayIcon1: TTrayIcon;
@@ -90,6 +94,7 @@ type
     procedure ButtonPasteClick(Sender: TObject);
     procedure CheckListBoxConfigClickCheck(Sender: TObject);
     procedure ComboBoxEncodingChange(Sender: TObject);
+    procedure EditChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuItemHideOnDownloadClick(Sender: TObject);
     procedure MenuItemLangEngClick(Sender: TObject);
@@ -123,6 +128,7 @@ type
     function getEncoding(): String;
     procedure ConfigSave;
     procedure ConfigLoad;
+    procedure TimerConfigSaveTimer(Sender: TObject);
     procedure WriteFile(Filename, Content : String);
     function ReadFile(Filename: String):String;
     procedure DownloadFile(http, filename: String; wait, pshow: Boolean);
@@ -156,7 +162,7 @@ var
   Form1: TForm1;
   Config_YoutubeDownloader: String = 'youtube-dl.exe';
   Config_HeightMinimized: Integer = 60;
-  Config_HeightMaximized: Integer = 280;
+  Config_HeightMaximized: Integer = 380;
   oldClipboardValue: String = '';
   currentSkin: Integer = 0;
   Config_Dir: String = '';
@@ -179,6 +185,9 @@ begin
   EditHTTP.Clear;
   EditPath.Clear;
   EditPath.TabStop := False;
+  //SpinEditMaxSpeed.Text := '0';
+  SpinEditMaxSpeed.Value := 0;
+  EditProxy.Clear;
 
   currentDir := ExtractFileDir(Application.ExeName) +'\';
 
@@ -256,8 +265,10 @@ begin
   CheckListBoxConfig.Checked[3] := isStartWithWindows();
   CheckListBoxConfig.Checked[4] := XMLConfig1.GetValue('UseCache', True);
   CheckListBoxConfig.Checked[5] := XMLConfig1.GetValue('AskBeforeExit', True);
-
-
+  CheckListBoxConfig.Checked[6] := XMLConfig1.GetValue('NoSpecialChar', True);
+  SpinEditMaxSpeed.Value := XMLConfig1.GetValue('MaxSpeed', 0);
+  EditHTTP.Text := XMLConfig1.GetValue('LastURL', '');
+  EditProxy.Text := XMLConfig1.GetValue('Proxy', '');
 
   //XMLConfig1.Free;
 end;
@@ -278,10 +289,14 @@ begin
   XMLConfig1.SetValue('UpdateOnBoot', CheckListBoxConfig.Checked[2]);
   XMLConfig1.SetValue('UseCache', CheckListBoxConfig.Checked[4]);
   XMLConfig1.SetValue('AskBeforeExit', CheckListBoxConfig.Checked[5]);
+  XMLConfig1.SetValue('NoSpecialChar', CheckListBoxConfig.Checked[6]);
   XMLConfig1.SetValue('Encoding', ComboBoxEncoding.ItemIndex);
   XMLConfig1.SetValue('Path', EditPath.Text);
   XMLConfig1.SetValue('Skin', currentSkin);
   XMLConfig1.SetValue('language', currentLanguage);
+  XMLConfig1.SetValue('MaxSpeed', SpinEditMaxSpeed.Value);
+  XMLConfig1.SetValue('LastURL', EditHTTP.Text);
+  XMLConfig1.SetValue('Proxy', EditProxy.Text);
 
   XMLConfig1.SaveToFile(Config_Dir+'config.xml');
   XMLConfig1.Free;
@@ -303,6 +318,11 @@ begin
   XMLConfig1.SetValue('CheckClipboard', MenuItemCheckClipboard.Checked);
   XMLConfig1.SetValue('HideOnDownload', MenuItemHideOnDownload.Checked);
   XMLConfig1.SetValue('AskBeforeExit', CheckListBoxConfig.Checked[5]);
+  XMLConfig1.SetValue('NoSpecialChar', CheckListBoxConfig.Checked[6]);
+  XMLConfig1.SetValue('MaxSpeed', SpinEditMaxSpeed.Value);
+  XMLConfig1.SetValue('LastURL', EditHTTP.Text);
+  XMLConfig1.SetValue('Proxy', EditProxy.Text);
+
   XMLConfig1.SetValue('language', currentLanguage);
   XMLConfig1.SaveToFile(Config_Dir+'config.xml');
   XMLConfig1.Free;
@@ -404,18 +424,18 @@ begin
   MenuItemPathDL.Caption:= result.GetValue('Title3', PChar('Chemin de téléchargement'));
   BCLabel3.Caption := MenuItemPathDL.Caption+' :';
   BCLabel4.Caption := result.GetValue('Title4', PChar('Configuration'))+' :';
+  BCLabel5.Caption := result.GetValue('Title5', PChar('Vitesse max [Ko/s] (0 = illimité)'))+' :';
+  BCLabel6.Caption := result.GetValue('Title6', PChar('Proxy'))+' :';
 
   BCButtonFocus2.Caption := result.GetValue('Button2', PChar('Télécharger'));
   BCButtonFocus3.Caption := result.GetValue('Button3', PChar('Mise à jour'));
   BCButtonFocus4.Caption := result.GetValue('Button4', PChar('Historique'));
   BCButtonFocus5.Caption := result.GetValue('Button5', PChar('Thèmes'));
-  BCButtonFocus6.Caption := result.GetValue('Button6', PChar('A propos'));
   BCButtonFocus8.Caption := result.GetValue('Button8', PChar('Langues'));
   BCButtonFocus9.Caption := result.GetValue('Button9', PChar('Masquer'));
 
   MenuItem1.Caption:= BCButtonFocus4.Caption;
   MenuItemSkin.Caption:= BCButtonFocus5.Caption;
-  MenuItemAbout.Caption:= BCButtonFocus6.Caption;
 
 
   MenuItem7.Caption:= result.GetValue('PopSkin1', PChar('Blanc'));
@@ -443,6 +463,7 @@ begin
   CheckListBoxConfig.Items.Add(result.GetValue('Config4', PChar('Lancer l''application au démarrage du système')));
   CheckListBoxConfig.Items.Add(result.GetValue('Config5', PChar('Interdire de télécharger deux fois la même vidéo (mise en historique)')));
   CheckListBoxConfig.Items.Add(result.GetValue('Config6', PChar('Demander confirmation pour quitter')));
+  CheckListBoxConfig.Items.Add(result.GetValue('Config7', PChar('Nom du fichier sans caractères spéciaux')));
 
   MenuItemCheckClipboard.Caption:= CheckListBoxConfig.Items[0];
   MenuItemHideOnDownload.Caption:= CheckListBoxConfig.Items[1];
@@ -729,7 +750,6 @@ begin
   BCButtonFocus3.StateNormal.Background.Gradient1.EndColor:= btnColor;
   BCButtonFocus4.StateNormal.Background.Gradient1.EndColor:= btnColor;
   BCButtonFocus5.StateNormal.Background.Gradient1.EndColor:= btnColor;
-  BCButtonFocus6.StateNormal.Background.Gradient1.EndColor:= btnColor;
   BCButtonFocus7.StateNormal.Background.Gradient1.EndColor:= btnColor;
   BCButtonFocus8.StateNormal.Background.Gradient1.EndColor:= btnColor;
   BCButtonFocus9.StateNormal.Background.Gradient1.EndColor:= btnColor;
@@ -743,7 +763,6 @@ begin
   BCButtonFocus3.StateHover.Background.Gradient1.StartColor:= hoverColor;
   BCButtonFocus4.StateHover.Background.Gradient1.StartColor:= hoverColor;
   BCButtonFocus5.StateHover.Background.Gradient1.StartColor:= hoverColor;
-  BCButtonFocus6.StateHover.Background.Gradient1.StartColor:= hoverColor;
   BCButtonFocus7.StateHover.Background.Gradient1.StartColor:= hoverColor;
   BCButtonFocus8.StateHover.Background.Gradient1.StartColor:= hoverColor;
   BCButtonFocus9.StateHover.Background.Gradient1.StartColor:= hoverColor;
@@ -756,7 +775,6 @@ begin
   BCButtonFocus3.StateClicked.Background.Gradient1.StartColor:= hoverColor;
   BCButtonFocus4.StateClicked.Background.Gradient1.StartColor:= hoverColor;
   BCButtonFocus5.StateClicked.Background.Gradient1.StartColor:= hoverColor;
-  BCButtonFocus6.StateClicked.Background.Gradient1.StartColor:= hoverColor;
   BCButtonFocus7.StateClicked.Background.Gradient1.StartColor:= hoverColor;
   BCButtonFocus8.StateClicked.Background.Gradient1.StartColor:= hoverColor;
   BCButtonFocus9.StateClicked.Background.Gradient1.StartColor:= hoverColor;
@@ -771,6 +789,10 @@ begin
   BCLabel3.FontEx.ShadowColor := bgColor;
   BCLabel4.FontEx.Color := skinColor;
   BCLabel4.FontEx.ShadowColor := bgColor;
+  BCLabel5.FontEx.Color := skinColor;
+  BCLabel5.FontEx.ShadowColor := bgColor;
+  BCLabel6.FontEx.Color := skinColor;
+  BCLabel6.FontEx.ShadowColor := bgColor;
 
   EditHTTP.Font.Color := skinColor; //RGB(117,190,197);
   EditHTTP.Color := bgColor;
@@ -783,6 +805,12 @@ begin
 
   ComboBoxEncoding.Font.Color := skinColor;
   ComboBoxEncoding.Color := bgColor;
+
+  SpinEditMaxSpeed.Font.Color := skinColor;
+  SpinEditMaxSpeed.Color := bgColor;
+
+  EditProxy.Font.Color := skinColor;
+  EditProxy.Color := bgColor;
 
 end;
 
@@ -800,7 +828,7 @@ end;
 
 procedure TForm1.MenuItemSkinWhiteClick(Sender: TObject);
 begin
-  SetSkin(1, clBlack, clWhite, RGB(180, 180, 180), RGB(210, 210, 210));
+  SetSkin(1, clBlack, clWhite, RGB(110, 110, 120), RGB(140, 140, 150));
   if Sender <> nil then ConfigSave;
 end;
 
@@ -912,6 +940,13 @@ end;
 procedure TForm1.ComboBoxEncodingChange(Sender: TObject);
 begin
   ConfigSave;
+end;
+
+procedure TForm1.EditChange(Sender: TObject);
+begin
+  TimerConfigSave.Enabled:=False;
+  Application.ProcessMessages;
+  TimerConfigSave.Enabled:=True;
 end;
 
 
@@ -1061,7 +1096,7 @@ end;
 
 procedure TForm1.DoDownloadWithYoutubeDl();
 var
-  UseCache: String;
+  c: String;
   WindRect: TRect;
   CmdHandle: Handle;
   VolumeWidth, VolumeHeight, VolumeTop, VolumeLeft: Integer;
@@ -1086,16 +1121,20 @@ begin
     ConfigSave;
   end;
 
-  UseCache := '';
-  if MenuItemCacheToggle.Checked then
-    UseCache := '--download-archive "archive.txt"';
 
   Process1.ApplicationName := Config_YoutubeDownloader;
-  Process1.CommandLine := ' '+UseCache
-                       +' --ignore-errors '
-                       +getEncoding()
-                       +' --restrict-filenames -o "'+EditPath.Text+'\%(title)s.%(ext)s" '
-                       +'"'+EditHTTP.Text+'"';
+
+  c := ' ';
+  if MenuItemCacheToggle.Checked then c := c + ' --download-archive "archive.txt" ';
+  c := c + ' --ignore-errors ';
+  c := c + getEncoding;
+  if not (SpinEditMaxSpeed.Value = 0) then c := c + ' --limit-rate "' + IntToStr(SpinEditMaxSpeed.Value * 1000)+ '" ';
+  if String(EditProxy.Text).Contains(':') then c := c + ' --proxy "' + EditProxy.Text + '" ';
+  if CheckListBoxConfig.Checked[6] then c := c + ' --restrict-filenames ';
+  c := c + ' -o "'+EditPath.Text+'\%(title)s.%(ext)s" ';
+  c := c + '"'+EditHTTP.Text+'"';
+
+  Process1.CommandLine := c;
 
   Process1.Execute;
   Application.ProcessMessages;
@@ -1146,6 +1185,13 @@ begin
   if not url.StartsWith('http', true) then exit;
   MenuItemShowClick(nil);
   ButtonPasteClick(nil);
+end;
+
+
+procedure TForm1.TimerConfigSaveTimer(Sender: TObject);
+begin
+  TTimer(Sender).Enabled:= False;
+  ConfigSave;
 end;
 
 

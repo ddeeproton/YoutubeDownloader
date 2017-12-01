@@ -214,3 +214,8 @@ Bug fix: Sauvegarde
 
 #### 0.0.47
 Bug fix: Skin
+
+#### 0.0.48
+Add: Max Speed Download
+
+Add: Proxy
