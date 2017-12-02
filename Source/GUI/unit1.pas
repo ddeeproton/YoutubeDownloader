@@ -10,7 +10,7 @@ uses
   ExtCtrls, clipbrd, Windows, lclintf, Buttons, CheckLst, Spin, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '0.0.50';
+  CurrentVersion : String = '1.0.0';
 
 type
 
@@ -274,6 +274,7 @@ begin
   CheckListBoxConfig.Checked[4] := XMLConfig1.GetValue('UseCache', True);
   CheckListBoxConfig.Checked[5] := XMLConfig1.GetValue('AskBeforeExit', True);
   CheckListBoxConfig.Checked[6] := XMLConfig1.GetValue('NoSpecialChar', True);
+
   SpinEditMaxSpeed.Value := XMLConfig1.GetValue('MaxSpeed', 0);
   EditHTTP.Text := XMLConfig1.GetValue('LastURL', '');
   EditProxy.Text := XMLConfig1.GetValue('Proxy', '');
@@ -330,7 +331,6 @@ begin
   XMLConfig1.SetValue('MaxSpeed', SpinEditMaxSpeed.Value);
   XMLConfig1.SetValue('LastURL', EditHTTP.Text);
   XMLConfig1.SetValue('Proxy', EditProxy.Text);
-
   XMLConfig1.SetValue('language', currentLanguage);
   XMLConfig1.SaveToFile(Config_Dir+'config.xml');
   XMLConfig1.Free;
@@ -379,6 +379,8 @@ begin
 
   ConfigLoad;
 end;
+
+
 
 procedure TForm1.getListOfLanguages;
 var
