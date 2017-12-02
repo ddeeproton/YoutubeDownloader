@@ -29,7 +29,7 @@ ShowUninstDetails show
 ; Set to silent mode
 ;SilentInstall silent
 ; Request application privileges for Windows Vista
-RequestExecutionLevel admin
+;RequestExecutionLevel admin
 
 
 BGGradient 000000 000080 FFFFFF 

@@ -10,7 +10,7 @@ uses
   ExtCtrls, clipbrd, Windows, lclintf, Buttons, CheckLst, Spin, Registry, ShlObj;
 
 var
-  CurrentVersion : String = '1.0.0';
+  CurrentVersion : String = '1.0.1';
 
 type
 
@@ -666,7 +666,6 @@ end;
 
 
 procedure TForm1.DownloadFile(http, filename: String; wait, pshow: Boolean);
-var proxy: String;
 begin
   if not FileExists(currentDir + 'wget.exe') then
   begin
@@ -674,18 +673,13 @@ begin
     exit;
   end;
 
-  proxy := '';
-  if String(EditProxy.Text).Contains(':') then
-    proxy := 'http_proxy="'+EditProxy.Text+'"';
-
 
   if FileExists(filename) then DeleteFile(PChar(filename));
-  ExecuteProcess('"' + currentDir + 'wget.exe" -O "'+filename+'" "'+http+'" --no-check-certificate '+proxy+' ', wait, pshow);
+  ExecuteProcess('"' + currentDir + 'wget.exe" -O "'+filename+'" '+http+' --no-check-certificate --no-cache ', wait, pshow);
 end;
 
 
 procedure TForm1.DownloadFileToDir(http, dir: String; wait, pshow: Boolean);
-var proxy: String;
 begin
   if not FileExists('wget.exe') then
   begin
@@ -700,12 +694,8 @@ begin
     dir := EditPath.Text;
   end;
 
-  proxy := '';
-  if String(EditProxy.Text).Contains(':') then
-    proxy := 'http_proxy="'+EditProxy.Text+'"';
-
   SetCurrentDirectory(PChar(dir));
-  ExecuteProcess(ExtractFileDir(Application.Exename)+'\wget.exe "'+http+'" --no-check-certificate '+proxy+' ', wait, pshow);
+  ExecuteProcess(ExtractFileDir(Application.Exename)+'\wget.exe '+http+' --no-check-certificate --no-cache ', wait, pshow);
   SetCurrentDirectory(PChar(ExtractFileDir(Application.Exename)));
 end;
 
@@ -890,11 +880,11 @@ end;
 procedure TForm1.CheckUpdate();
 var lastVersion: String;
 begin
-  if not FileExists('wget.exe') then exit;
-  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/lastversion.txt','lastversion.txt', True, False);
-  if not FileExists('lastversion.txt') then exit;
-  lastVersion := ReadFile('lastversion.txt');
-  DeleteFile(PChar('lastversion.txt'));
+  if not FileExists(currentDir+'wget.exe') then exit;
+  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/lastversion.txt',Config_Dir+'lastversion.txt', True, False);
+  if not FileExists(Config_Dir+'lastversion.txt') then exit;
+  lastVersion := ReadFile(Config_Dir+'lastversion.txt');
+  DeleteFile(PChar(Config_Dir+'lastversion.txt'));
   if CurrentVersion = lastVersion then exit;
   if MessageDlg(xmlLang.GetValue('update_aviable', PChar('Une mise à jour est disponible. Télécharger?')),  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
   MenuItemUpdateClick(nil);
