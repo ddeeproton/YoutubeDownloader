@@ -224,3 +224,9 @@ Add: Proxy
 Fix bug: Max Speed Download
 
 Compatibility Windows 2008 Server
+
+#### 0.0.50
+New design: Green and Yellow
+
+Add proxy also for wget
+
