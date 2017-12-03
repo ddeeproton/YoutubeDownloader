@@ -7,10 +7,11 @@ interface
 uses
   Classes, SysUtils, process, XMLConf, FileUtil, BCButtonFocus, BCLabel,
   BGRACustomDrawn, Forms, Controls, Graphics, Dialogs, StdCtrls, Menus,
-  ExtCtrls, clipbrd, Windows, lclintf, Buttons, CheckLst, Spin, Registry, ShlObj;
+  ExtCtrls, clipbrd, Windows, lclintf, Buttons, CheckLst, Spin, Registry, ShlObj,
+  WinINet;
 
 var
-  CurrentVersion : String = '1.0.1';
+  CurrentVersion : String = '1.0.2';
 
 type
 
@@ -155,6 +156,7 @@ type
     procedure getListOfLanguages;
     function dir(dirname : wideString; Filtre : string = '*.*'; onlyDir: Boolean = False; onlyFiles: Boolean = False; isFullPath: Boolean = True ) : TStringList;
     procedure MenuItemLangClick(Sender: TObject);
+    function Download(URL, User, Pass, FileName: String): Boolean;
   private
     { private declarations }
   protected
@@ -679,6 +681,44 @@ begin
 end;
 
 
+
+function  TForm1.Download(URL, User, Pass, FileName: String): Boolean;
+const
+ BufferSize = 1024;
+var
+ hSession, hURL: HInternet;
+ Buffer: array[1..BufferSize] of Byte;
+ BufferLen: DWORD;
+ F: File;
+begin
+ Result := False;
+ hSession := InternetOpen('', INTERNET_OPEN_TYPE_PRECONFIG, nil, nil, 0);
+ InternetConnect(hSession, PChar(URL), INTERNET_DEFAULT_HTTPS_PORT,
+ PChar(User), PChar(Pass), INTERNET_SERVICE_HTTP, 0, 0);
+ try
+ hURL := InternetOpenURL(hSession, PChar(URL), nil, 0, 0, 0);
+ try
+ // Nem kell feltétlenül file-ba menteni mert a Bufferrel is lehet
+ // dolgozni, csak a példa kedvéért van
+ AssignFile(F, FileName);
+ Rewrite(F, 1);
+ try
+ //repeat // Nem mentjük le csak az elejét mert most minek
+ InternetReadFile(hURL, @Buffer, SizeOf(Buffer), BufferLen);
+ BlockWrite(F, Buffer, BufferLen);
+ //until BufferLen = 0;
+ finally
+ CloseFile(F) ;
+ Result := True;
+ end;
+ finally
+ InternetCloseHandle(hURL)
+ end
+ finally
+ InternetCloseHandle(hSession)
+ end;
+end;
+
 procedure TForm1.DownloadFileToDir(http, dir: String; wait, pshow: Boolean);
 begin
   if not FileExists('wget.exe') then
@@ -882,6 +922,7 @@ var lastVersion: String;
 begin
   if not FileExists(currentDir+'wget.exe') then exit;
   DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/lastversion.txt',Config_Dir+'lastversion.txt', True, False);
+  //Download('https://github.com/ddeeproton/YoutubeDownloader/raw/master/lastversion.txt','','',Config_Dir+'lastversion.txt');
   if not FileExists(Config_Dir+'lastversion.txt') then exit;
   lastVersion := ReadFile(Config_Dir+'lastversion.txt');
   DeleteFile(PChar(Config_Dir+'lastversion.txt'));
@@ -924,13 +965,8 @@ begin
 
   if not FileExists(currentDir + 'YoutubeDownloaderSetup.exe') then
   begin
-      DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup.exe',currentDir + 'YoutubeDownloaderSetup.exe', True, True);
-
-      if not FileExists(currentDir + 'YoutubeDownloaderSetup.exe') then
-      begin
-        ShowMessage(xmlLang.GetValue('error_update', PChar('Erreur lors du téléchargement de la mise à jour')));
-        exit;
-      end;
+    ShowMessage(xmlLang.GetValue('error_update', PChar('Erreur lors du téléchargement de la mise à jour')));
+    exit;
   end;
 
   //ExecuteProcess(currentDir + 'YoutubeDownloaderSetup.exe', '/S', False, True);
@@ -1114,8 +1150,8 @@ begin
     ShowMessage(xmlLang.GetValue('error_noUrlFound', PChar('Veuillez entrer d''abord un lien avant de cliquer sur Télécharger.')));
     exit;
   end;
-
-  if ComboBoxEncoding.Text = 'fichier brut' then
+  //ShowMessage(ComboBoxEncoding.Text);
+  if ComboBoxEncoding.Text = 'simple file' then
   begin
     DownloadFileToDir(url, EditPath.Text, False, True);
   end else
