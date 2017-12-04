@@ -11,7 +11,7 @@ uses
   WinINet;
 
 var
-  CurrentVersion : String = '1.0.2';
+  CurrentVersion : String = '1.0.3';
 
 type
 
@@ -157,6 +157,7 @@ type
     function dir(dirname : wideString; Filtre : string = '*.*'; onlyDir: Boolean = False; onlyFiles: Boolean = False; isFullPath: Boolean = True ) : TStringList;
     procedure MenuItemLangClick(Sender: TObject);
     function Download(URL, User, Pass, FileName: String): Boolean;
+    function wgetSpeedLimit : String;
   private
     { private declarations }
   protected
@@ -665,6 +666,12 @@ begin
   'Source: https://github.com/ddeeproton/YoutubeDownloader');
 end;
 
+function TForm1.wgetSpeedLimit : String;
+begin
+  result := '';
+  if SpinEditMaxSpeed.Value = 0 then exit;
+  result := ' --limit-rate='+SpinEditMaxSpeed.Value.ToString+' ';
+end;
 
 procedure TForm1.DownloadFile(http, filename: String; wait, pshow: Boolean);
 begin
@@ -673,10 +680,9 @@ begin
     ShowMessage(xmlLang.GetValue('error_wget', PChar('Erreur: wget.exe est introuvable')));
     exit;
   end;
-
-
   if FileExists(filename) then DeleteFile(PChar(filename));
-  ExecuteProcess('"' + currentDir + 'wget.exe" -O "'+filename+'" '+http+' --no-check-certificate --no-cache ', wait, pshow);
+
+  ExecuteProcess('"' + currentDir + 'wget.exe" -O "'+filename+'" '+http+' --no-check-certificate --no-cache '+wgetSpeedLimit, wait, pshow);
 end;
 
 
@@ -734,7 +740,7 @@ begin
   end;
 
   SetCurrentDirectory(PChar(dir));
-  ExecuteProcess(ExtractFileDir(Application.Exename)+'\wget.exe '+http+' --no-check-certificate --no-cache ', wait, pshow);
+  ExecuteProcess(ExtractFileDir(Application.Exename)+'\wget.exe '+http+' --no-check-certificate --no-cache '+wgetSpeedLimit, wait, pshow);
   SetCurrentDirectory(PChar(ExtractFileDir(Application.Exename)));
 end;
 
