@@ -11,7 +11,7 @@ uses
   WinINet;
 
 var
-  CurrentVersion : String = '1.0.4';
+  CurrentVersion : String = '1.0.5';
 
 type
 
@@ -667,10 +667,13 @@ begin
 end;
 
 function TForm1.wgetSpeedLimit : String;
+var
+  Bytes: Integer;
 begin
   result := '';
   if SpinEditMaxSpeed.Value = 0 then exit;
-  result := ' --limit-rate='+SpinEditMaxSpeed.Value.ToString+' ';
+  Bytes := SpinEditMaxSpeed.Value * 1000;
+  result := ' --limit-rate='+Bytes.ToString+' ';
 end;
 
 procedure TForm1.DownloadFile(http, filename: String; wait, pshow: Boolean);
