@@ -11,7 +11,7 @@ uses
   WinINet;
 
 var
-  CurrentVersion : String = '1.0.2';
+  CurrentVersion : String = '1.0.3';
 
 type
 
@@ -211,9 +211,6 @@ begin
   if currentSkin = 4 then MenuItemYellowClick(nil);
   if currentSkin = 5 then MenuItemSkinGreenClick(nil);
 
-  TimerClipboard.Enabled := MenuItemCheckClipboard.Checked;
-  MenuItemUpdateOnBoot.Checked := isStartWithWindows;
-
   getListOfLanguages;
 end;
 
@@ -281,6 +278,8 @@ begin
   EditHTTP.Text := XMLConfig1.GetValue('LastURL', '');
   EditProxy.Text := XMLConfig1.GetValue('Proxy', '');
 
+  TimerClipboard.Enabled := MenuItemCheckClipboard.Checked;
+  MenuItemUpdateOnBoot.Checked := isStartWithWindows;
   //XMLConfig1.Free;
 end;
 

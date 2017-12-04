@@ -211,9 +211,6 @@ begin
   if currentSkin = 4 then MenuItemYellowClick(nil);
   if currentSkin = 5 then MenuItemSkinGreenClick(nil);
 
-  TimerClipboard.Enabled := MenuItemCheckClipboard.Checked;
-  MenuItemUpdateOnBoot.Checked := isStartWithWindows;
-
   getListOfLanguages;
 end;
 
@@ -281,6 +278,8 @@ begin
   EditHTTP.Text := XMLConfig1.GetValue('LastURL', '');
   EditProxy.Text := XMLConfig1.GetValue('Proxy', '');
 
+  TimerClipboard.Enabled := MenuItemCheckClipboard.Checked;
+  MenuItemUpdateOnBoot.Checked := isStartWithWindows;
   //XMLConfig1.Free;
 end;
 
@@ -1150,7 +1149,7 @@ begin
     ShowMessage(xmlLang.GetValue('error_noUrlFound', PChar('Veuillez entrer d''abord un lien avant de cliquer sur Télécharger.')));
     exit;
   end;
-  //ShowMessage(ComboBoxEncoding.Text);
+
   if ComboBoxEncoding.Text = 'simple file' then
   begin
     DownloadFileToDir(url, EditPath.Text, False, True);
