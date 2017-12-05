@@ -9,9 +9,9 @@
         <Filename Value="YoutubeDownloader.lpr"/>
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="27" Y="18"/>
         <UsageCount Value="223"/>
-        <Loaded Value="True"/>
       </Unit0>
       <Unit1>
         <Filename Value="unit1.pas"/>
@@ -55,6 +55,9 @@
         <DefaultSyntaxHighlighter Value="None"/>
       </Unit5>
     </Units>
+    <General>
+      <ActiveWindowIndexAtStart Value="-1"/>
+    </General>
     <JumpHistory HistoryIndex="-1"/>
   </ProjectSession>
 </CONFIG>
