@@ -11,7 +11,7 @@ uses
   WinINet;
 
 var
-  CurrentVersion : String = '1.0.5';
+  CurrentVersion : String = '1.0.6';
 
 type
 
@@ -237,7 +237,6 @@ procedure TForm1.TimerAfterLoadTimer(Sender: TObject);
 var i: integer;
 begin
   TimerAfterLoad.Enabled := False;
-  if MenuItemUpdateOnBoot.Checked then CheckUpdate();
 
   for i:=0 to ParamCount() do
   begin
@@ -248,6 +247,7 @@ begin
       Application.Terminate;
     end;
   end;
+  if MenuItemUpdateOnBoot.Checked then CheckUpdate();
 
 end;
 
@@ -935,6 +935,7 @@ begin
   lastVersion := ReadFile(Config_Dir+'lastversion.txt');
   DeleteFile(PChar(Config_Dir+'lastversion.txt'));
   if CurrentVersion = lastVersion then exit;
+  if CurrentVersion = '' then exit;
   if MessageDlg(xmlLang.GetValue('update_aviable', PChar('Une mise à jour est disponible. Télécharger?')),  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
   MenuItemUpdateClick(nil);
 end;
