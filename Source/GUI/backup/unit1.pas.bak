@@ -11,7 +11,7 @@ uses
   WinINet;
 
 var
-  CurrentVersion : String = '1.0.9';
+  CurrentVersion : String = '1.0.11';
 
 type
 
@@ -936,7 +936,9 @@ begin
   lastVersion := ReadFile(Config_Dir+'lastversion.txt');
   DeleteFile(PChar(Config_Dir+'lastversion.txt'));
   if CurrentVersion = lastVersion then exit;
-  if CurrentVersion.Replace(' ','') = '' then exit;
+  CurrentVersion := CurrentVersion.Replace(' ','');
+  if CurrentVersion = '' then exit;
+  if strlen(CurrentVersion) < 6 then exit;
   if MessageDlg(xmlLang.GetValue('update_aviable', PChar('Une mise à jour est disponible. Télécharger? -> "'+lastVersion+'"')),  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
   MenuItemUpdateClick(nil);
 end;
