@@ -11,7 +11,7 @@ uses
   WinINet;
 
 var
-  CurrentVersion : String = '1.0.9';
+  CurrentVersion : String = '1.0.10';
 
 type
 
@@ -189,6 +189,7 @@ implementation
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  SetCurrentDirectory(PChar(ExtractFileDir(Application.Exename)));
   setFormHeight(Config_HeightMinimized);
   Image1.Align:= alClient;
   EditHTTP.Clear;
