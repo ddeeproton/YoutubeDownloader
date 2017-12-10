@@ -575,16 +575,26 @@ end;
 
 
 function TForm1.isProcessRunning(const windowName: PChar): Boolean;
-var AppHandle: THandle;
+var
+  AppHandle: THandle;
+  title: String;
 begin
+  title := PChar(Self.Caption);
+  Self.Caption := 'ytdl';
   result := FindWindow(Nil, windowName) > 0;
+  Self.Caption := title;
 end;
 
 function TForm1.CloseProcess(const windowName: PChar): Boolean;
-var AppHandle: THandle;
+var
+  AppHandle: THandle;
+  title: String;
 begin
+  title := PChar(Self.Caption);
+  Self.Caption := 'ytdl';
   AppHandle:=FindWindow(Nil, windowName);
   Result:=PostMessage(AppHandle, WM_CLOSE, 0, 0);
+  Self.Caption := title;
 end;
 
 procedure TForm1.ExecAndContinue(sExe, sCmd: string; wShowWin: Word);
