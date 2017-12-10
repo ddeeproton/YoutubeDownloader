@@ -162,7 +162,8 @@ Function "CloseProcessYoutube"
     ClearErrors
     File "libgcc_s_dw2-1.dll" 
     File "kill.exe" 
-    Exec "kill.exe k $\"youtube downloader$\"" 
+    #Exec "kill.exe k $\"youtube downloader$\"" 
+    ExecShell "open" "kill.exe" "k $\"youtube downloader$\"" SW_HIDE
     Sleep 2000
 FunctionEnd
 

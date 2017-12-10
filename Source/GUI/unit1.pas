@@ -11,7 +11,7 @@ uses
   WinINet;
 
 var
-  CurrentVersion : String = '1.0.13';
+  CurrentVersion : String = '1.0.14';
 
 type
 
