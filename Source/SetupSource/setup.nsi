@@ -95,7 +95,8 @@ Section "" ;No components page, name is not important
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
   
-
+  Call CloseProcessYoutube
+  
   SetOverwrite off
   File "youtube-dl.exe"  
   File "msvcr100.dll"  
@@ -159,6 +160,15 @@ SectionEnd
 
 Function "CloseProcessYoutube"
     ClearErrors
+    File "libgcc_s_dw2-1.dll" 
+    File "kill.exe" 
+    Exec "kill.exe k $\"youtube downloader$\"" 
+    Sleep 2000
+FunctionEnd
+
+/*
+Function "CloseProcessYoutubeOLD"
+    ClearErrors
     FileOpen $0 "closeYoutube.vbs" w
     IfErrors FSkip
     FileWrite $0 "const ProcessusATuer = $\"YoutubeDownloader.exe$\"$\r$\n   const TempsPauseEntreChaquesVerifs = 200$\r$\n   const NbrMaximumVerifications = 2000$\r$\n  strComputer = $\".$\"$\r$\n  Set objWMIService = GetObject($\"winmgmts:$\" & $\"{impersonationLevel=impersonate}!\\$\" & strComputer & $\"\root\cimv2$\")$\r$\n  Set colProcessList = objWMIService.ExecQuery($\"Select * from Win32_Process Where Name = '$\" & ProcessusATuer & $\"'$\")$\r$\n  dim i$\r$\n  i = 0$\r$\n  do while i <= NbrMaximumVerifications$\r$\n    i = i + 1$\r$\n    For Each objProcess in colProcessList$\r$\n       objProcess.Terminate()$\r$\n       wscript.quit$\r$\n    Next$\r$\n    wscript.sleep TempsPauseEntreChaquesVerifs$\r$\n  loop"
@@ -168,12 +178,12 @@ Function "CloseProcessYoutube"
     Delete "closeYoutube.vbs"
     FSkip:
 FunctionEnd
-
+*/
 Function .onInit
 
   !insertmacro MUI_LANGDLL_DISPLAY
 
-  Call CloseProcessYoutube
+ 
   
     IfFileExists "$PROGRAMFILES\YoutubeDownloader\uninstall_YoutubeDownloader.exe" 0 +3
       MessageBox MB_OK "Avant d'installer, il est conseillé de désinstaller la version courante."
