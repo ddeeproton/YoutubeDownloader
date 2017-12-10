@@ -11,7 +11,7 @@ uses
   WinINet;
 
 var
-  CurrentVersion : String = '1.0.14';
+  CurrentVersion : String = '1.0.15';
 
 type
 
@@ -132,6 +132,7 @@ type
     procedure ExecuteProcess(app, cmd: String; pwait, pshow: Boolean);
     procedure ExecAndContinue(sExe, sCmd: string; wShowWin: Word);
     function CloseProcess(const windowName: PChar): Boolean;
+    function isProcessRunning(const windowName: PChar): Boolean;
     function getEncoding(): String;
     procedure ConfigSave;
     procedure ConfigLoad;
@@ -248,6 +249,13 @@ begin
       Application.Terminate;
     end;
   end;
+
+  if isProcessRunning(PChar(Self.Caption)) then
+  begin
+    //if MessageDlg(xmlLang.GetValue('Question1', PChar('Effacer l''historique?')),  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
+    CloseProcess(PChar(Self.Caption));
+  end;
+
   if MenuItemUpdateOnBoot.Checked then CheckUpdate();
 
 end;
@@ -566,11 +574,17 @@ end;
 
 
 
+function TForm1.isProcessRunning(const windowName: PChar): Boolean;
+var AppHandle: THandle;
+begin
+  result := FindWindow(Nil, windowName) > 0;
+end;
+
 function TForm1.CloseProcess(const windowName: PChar): Boolean;
 var AppHandle: THandle;
 begin
   AppHandle:=FindWindow(Nil, windowName);
-  Result:=PostMessage(AppHandle, WM_QUIT, 0, 0);
+  Result:=PostMessage(AppHandle, WM_CLOSE, 0, 0);
 end;
 
 procedure TForm1.ExecAndContinue(sExe, sCmd: string; wShowWin: Word);
