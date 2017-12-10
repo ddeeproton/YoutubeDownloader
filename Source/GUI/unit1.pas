@@ -11,7 +11,7 @@ uses
   WinINet;
 
 var
-  CurrentVersion : String = '1.0.15';
+  CurrentVersion : String = '1.0.16';
 
 type
 
@@ -139,7 +139,8 @@ type
     procedure TimerConfigSaveTimer(Sender: TObject);
     procedure WriteFile(Filename, Content : String);
     function ReadFile(Filename: String):String;
-    procedure DownloadFile(http, filename: String; wait, pshow: Boolean);
+
+    function DownloadFile(http, filename: String; wait, pshow: Boolean):Boolean;
     procedure DownloadFileToDir(http, dir: String; wait, pshow: Boolean);
     procedure CheckUpdate();
     procedure DoDownloadWithMixcloud();
@@ -701,7 +702,7 @@ begin
   result := ' --limit-rate='+Bytes.ToString+' ';
 end;
 
-procedure TForm1.DownloadFile(http, filename: String; wait, pshow: Boolean);
+function TForm1.DownloadFile(http, filename: String; wait, pshow: Boolean):Boolean;
 begin
   if not FileExists(currentDir + 'wget.exe') then
   begin
@@ -710,7 +711,22 @@ begin
   end;
   if FileExists(filename) then DeleteFile(PChar(filename));
 
-  ExecuteProcess('"' + currentDir + 'wget.exe" -O "'+filename+'" '+http+' --no-check-certificate --no-cache '+wgetSpeedLimit, wait, pshow);
+  if FileExists(currentDir + 'wget.bat') then DeleteFile(PChar(currentDir + 'wget.bat'));
+  if FileExists(currentDir + 'wget.done') then DeleteFile(PChar(currentDir + 'wget.done'));
+  WriteFile(
+            currentDir + 'wget.bat',
+            '"' + currentDir + 'wget.exe" -O "'+filename+'" "'+http+'" '
+            +'--no-check-certificate --no-cache '+wgetSpeedLimit
+            +#13#10
+            +' echo done > "' + currentDir + 'wget.done"'
+  );
+  //ExecuteProcess('"' + currentDir + 'wget.exe" -O "'+filename+'" '+http+' --no-check-certificate --no-cache '+wgetSpeedLimit, wait, pshow);
+  ExecuteProcess(currentDir + 'wget.bat', wait, pshow);
+  result := FileExists(currentDir + 'wget.done');
+  if result = False then DeleteFile(PChar(filename));
+  if FileExists(currentDir + 'wget.bat') then DeleteFile(PChar(currentDir + 'wget.bat'));
+  if FileExists(currentDir + 'wget.done') then DeleteFile(PChar(currentDir + 'wget.done'));
+
 end;
 
 
@@ -954,7 +970,7 @@ procedure TForm1.CheckUpdate();
 var lastVersion: String;
 begin
   if not FileExists(currentDir+'wget.exe') then exit;
-  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/lastversion.txt',Config_Dir+'lastversion.txt', True, False);
+  if not DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/lastversion.txt',Config_Dir+'lastversion.txt', True, False) then exit;
   //Download('https://github.com/ddeeproton/YoutubeDownloader/raw/master/lastversion.txt','','',Config_Dir+'lastversion.txt');
   if not FileExists(Config_Dir+'lastversion.txt') then exit;
   lastVersion := ReadFile(Config_Dir+'lastversion.txt');
@@ -975,7 +991,12 @@ begin
     ShowMessage(xmlLang.GetValue('error_wget', PChar('Erreur: wget.exe est introuvable')));
     exit;
   end;
-  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/lastversion.txt',Config_Dir + 'lastversion.txt', True, False);
+
+  if not DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/lastversion.txt',Config_Dir + 'lastversion.txt', True, False) then
+  begin
+    ShowMessage(xmlLang.GetValue('error_network', PChar('Vous ne semblez pas connecté à Internet')));
+    exit;
+  end;
 
   if not FileExists(Config_Dir + 'lastversion.txt') then
   begin
@@ -997,7 +1018,11 @@ begin
     DeleteFile(PChar(currentDir + 'YoutubeDownloaderSetup.exe'));
   end;
 
-  DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_'+lastVersion+'.exe',currentDir + 'YoutubeDownloaderSetup.exe', True, True);
+  if not DownloadFile('https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup installation/YoutubeDownloaderSetup_'+lastVersion+'.exe',currentDir + 'YoutubeDownloaderSetup.exe', True, True) then
+  begin
+    ShowMessage(xmlLang.GetValue('error_update', PChar('Erreur lors du téléchargement de la mise à jour')));
+    exit;
+  end;
 
   if not FileExists(currentDir + 'YoutubeDownloaderSetup.exe') then
   begin
@@ -1005,10 +1030,17 @@ begin
     exit;
   end;
 
+  if FileSize(currentDir + 'YoutubeDownloaderSetup.exe') = 0 then
+  begin
+    DeleteFile(PChar(currentDir + 'YoutubeDownloaderSetup.exe'));
+    ShowMessage(xmlLang.GetValue('error_update', PChar('Erreur lors du téléchargement de la mise à jour')));
+    exit;
+  end;
+
   //ExecuteProcess(currentDir + 'YoutubeDownloaderSetup.exe', '/S', False, True);
 
   ExecAndContinue(currentDir + 'YoutubeDownloaderSetup.exe', '/S', SW_SHOW);
-  Application.Terminate;
+  //Application.Terminate;
 
 end;
 
