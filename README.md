@@ -50,11 +50,35 @@
  
  http://www.lazarus-ide.org/
  
- A Lazarus component "BGRAControls" for the skin.
+ ### Add-ons for Lazarus / 
  
- Composant Lazarus "BGRAControls" pour le design.
+ Download and install this packets in Lazarus.
  
+ Télécharger et installer ces paquets dans Lazarus.
+  
+ ![](help1.jpg)
+  
+  "Compile" and "Use / Install". Finally, click "ok" and "yes".
+ 
+ "Compiler" puis "Utiliser / Installer". Pour finir, clique "ok" et "oui".
+  
+  ![](help2.jpg)
+ 
+ -Download / Télécharger "BGRABitmap" (must be installed first / dois être installé en premier)
+ https://github.com/bgrabitmap/bgrabitmap
+  
+ And install "bglcontrols.lpk"
+  
+ -Download / Télécharger "BGRAControls" 
  http://wiki.lazarus.freepascal.org/BGRAControls
+ 
+ ### If broken links / Si les liens ne fonctionnent plus
+ 
+ For both packets, a copy is aviable in "other" folder. 
+ 
+ Pour ces deux paquets, une copie est disponible dans le dossier "other".
+ 
+ ### How to create setup installation / Comment créer le setup d'installation
  
  The Setup is compiled with NSIS (Windows only)
  
@@ -62,16 +86,6 @@
  
  http://nsis.sourceforge.net/Main_Page
  
- The application is compiled with Python
- 
- L'application avec Python
- 
- https://www.python.org/
- 
- (All are free)
- 
- (Tous sont gratuits)
-
 
 ### Operating system / Système d'exploitation:
  Windows
