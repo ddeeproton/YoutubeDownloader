@@ -102,7 +102,7 @@ https://github.com/ddeeproton/YoutubeDownloader/tree/master/Source/other
  
 <hr>
  
- ### How to create setup installation / Comment créer le setup d'installation
+ ### How to create setup installation? / Comment créer le setup d'installation?
  
  The Setup is compiled with NSIS (Windows only)
  
