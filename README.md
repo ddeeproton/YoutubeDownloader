@@ -16,7 +16,7 @@
 
  Un programme de téléchargement de vidéos Youtube, Dailymotion et autres.
  
- Est capable de télécharge toutes les vidéos d'une playliste Youtube.
+ Est capable de télécharger toutes les vidéos d'une playliste Youtube.
 
 ### Download / Télécharger:
  https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_1.0.17.exe
