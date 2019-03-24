@@ -86,6 +86,11 @@
 
  (Ouvrir, compiler et installer "bgracontrols.lpk")
  
+ -3. Open and Compile "YoutubeDownloader" / Ouvrir et Compiler "YoutubeDownloader" 
+ 
+  ![](help3.jpg)
+  
+  ![](help4.jpg)
  
  ### If broken links / Si les liens ne fonctionnent plus
  
