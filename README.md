@@ -10,7 +10,7 @@
 ### Description (english):
  A video downloader for Youtube, Dailymotion and others.
  
- Can download, with one click, all videos in a playlist Youtube.
+ Can download, with one click, all videos in Youtube playlist.
  
 ### Description (français):
 
