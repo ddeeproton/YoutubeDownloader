@@ -96,7 +96,9 @@ https://github.com/ddeeproton/YoutubeDownloader/tree/master/Source/other
  After required packets installed, we can compile the GUI.
  
   Project / Open Project / Select "YoutubeDownloader.lpi"
-  
+
+ Après avoir installé les paquets requis, nous pouvons compiler le GUI.  
+ 
   Projet / Ouvrir un Project / Selectionner "YoutubeDownloader.lpi"
  
   ![](help3.jpg)
