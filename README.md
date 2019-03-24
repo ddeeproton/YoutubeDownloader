@@ -21,6 +21,10 @@
 ### Download / Télécharger:
  https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_1.0.17.exe
  
+### Websites compatible / Sites Web compatibles:
+ 
+ https://github.com/rg3/youtube-dl/blob/master/docs/supportedsites.md
+ 
 ### Langages:
   English
   
@@ -31,11 +35,6 @@
   Peut-être traduit depuis un fichier XML. Voir "lang_en.xml" pour l'exemple.
   
   https://raw.githubusercontent.com/ddeeproton/YoutubeDownloader/master/Source/GUI/lang_en.xml
-
-
-### Support / Liste des sites supportés:
- 
- https://github.com/rg3/youtube-dl/blob/master/docs/supportedsites.md
 
 ### How does it work? / Fonctionnement:
  This application will check your clipboard. If a http link is copied, then it will ask if you want to download the video, the audio or just a file. 
