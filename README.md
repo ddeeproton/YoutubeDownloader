@@ -42,11 +42,6 @@
  Ce programme, une fois lancé, surveille votre presse papier. Dès qu'un lien http est copié, le programme vous propose de télécharger l'audio, la vidéo ou le fichier brut.
 
 
-### Other documentation / Autre Doc:	
-  https://github.com/rg3/youtube-dl/
-  
-  https://github.com/rg3/youtube-dl/blob/master/README.md
-
 <hr>
 
 ### Compilation:
@@ -139,6 +134,14 @@ https://github.com/ddeeproton/YoutubeDownloader/tree/master/Source/other
  
  Pour compiler sur Linux ou Mac, le code devra d'abord être adapté (chemin en "/" à la place de "\\", etc.)
 
+<hr>
+ 
+### Other documentation / Autre Doc:	
+  https://github.com/rg3/youtube-dl/
+  
+  https://github.com/rg3/youtube-dl/blob/master/README.md
+
+  
 <hr>
 
 ### Changes / Changements:
