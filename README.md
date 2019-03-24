@@ -130,6 +130,7 @@ https://github.com/ddeeproton/YoutubeDownloader/tree/master/Source/other
  
  Double cliquer sur "Compile Setup.bat" et attendre 5 minutes
 
+<hr>
 
 ### Operating system / Système d'exploitation:
  Windows
