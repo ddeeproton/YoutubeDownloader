@@ -86,7 +86,7 @@
   
   ![](help2.jpg)
  
- -3. Open and Compile "YoutubeDownloader" / Ouvrir et Compiler "YoutubeDownloader" 
+ ###  Compile "YoutubeDownloader" / Compiler "YoutubeDownloader" 
  
   ![](help3.jpg)
   
