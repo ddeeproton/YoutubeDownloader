@@ -116,9 +116,13 @@ https://github.com/ddeeproton/YoutubeDownloader/tree/master/Source/other
  http://nsis.sourceforge.net/Main_Page
 
  #### Step 2 / Etape 2
- Set version in "Unit1.pas". Compile "YoutubeDownloader.exe" with Lazarus and copy this file in "SetupSource" folder
+ Set version in "Unit1.pas". 
  
- Définir la version dans "Unit1.pas". Compiler "YoutubeDownloader.exe" avec Lazarus et copier ce fichier dans le dossier "SetupSource" 
+ Compile "YoutubeDownloader.exe" with Lazarus and copy this file in "SetupSource" folder
+ 
+ Définir la version dans "Unit1.pas". 
+ 
+ Compiler "YoutubeDownloader.exe" avec Lazarus et copier ce fichier dans le dossier "SetupSource" 
 
  #### Step 3 / Etape 3
  Set version in "version.txt" (in "SetupSource" folder)
