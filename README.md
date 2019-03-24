@@ -58,9 +58,9 @@
  
  ### Packets required for Lazarus / Paquets requis pour Lazarus
  
- Download and install this packets in Lazarus.
+ Download and install this 2 packets below in Lazarus.
  
- Télécharger et installer ces paquets dans Lazarus.
+ Télécharger et installer ces 2 paquets ci-dessous dans Lazarus.
   
  ![](help1.jpg)
   
