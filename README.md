@@ -64,13 +64,19 @@
   
   ![](help2.jpg)
  
- -Download / Télécharger "BGRABitmap" (must be installed first / dois être installé en premier)
+ -1. Download / Télécharger "BGRABitmap" (must be installed first / dois être installé en premier)
  https://github.com/bgrabitmap/bgrabitmap
   
- And install "bglcontrols.lpk"
+ (Open, compile and install "bglcontrols.lpk")
+ (Ouvrir, compiler et installer "bglcontrols.lpk")
   
- -Download / Télécharger "BGRAControls" 
+ -2. Download / Télécharger "BGRAControls" 
  http://wiki.lazarus.freepascal.org/BGRAControls
+ 
+ (Open, compile and install "bgracontrols.lpk")
+ (Ouvrir, compiler et installer "bgracontrols.lpk")
+ 
+ 
  
  ### If broken links / Si les liens ne fonctionnent plus
  
@@ -102,3 +108,6 @@ Stable version
 #### 1.0.17
 Youtube-dl.exe - Add last version in setup installation
 
+#### 1.0.18
+New documentation
+Set new version in "YoutubeDownloader.exe"
