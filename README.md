@@ -148,4 +148,5 @@ Youtube-dl.exe - Add last version in setup installation
 
 #### 1.0.18
 New documentation
+
 Set new version in "YoutubeDownloader.exe"
