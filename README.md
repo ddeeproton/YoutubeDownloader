@@ -66,6 +66,7 @@
   ![](help2.jpg)
  
  -1. Download / Télécharger "BGRABitmap" (must be installed first / dois être installé en premier)
+ 
  https://github.com/bgrabitmap/bgrabitmap
   
  (Open, compile and install "bglcontrols.lpk")
@@ -73,6 +74,7 @@
  (Ouvrir, compiler et installer "bglcontrols.lpk")
   
  -2. Download / Télécharger "BGRAControls" 
+ 
  http://wiki.lazarus.freepascal.org/BGRAControls
  
  (Open, compile and install "bgracontrols.lpk")
