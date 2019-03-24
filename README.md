@@ -150,7 +150,7 @@ Stable version
 Youtube-dl.exe - Add last version in setup installation
 
 #### 1.0.18
-Set new version in "YoutubeDownloader.exe"
+Fix issue version in "YoutubeDownloader.exe"
 
 #### 1.0.19
 Fix issue with toggle button
