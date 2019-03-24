@@ -11,7 +11,7 @@ uses
   WinINet;
 
 var
-  CurrentVersion : String = '1.0.18';
+  CurrentVersion : String = '1.0.20';
 
 type
 
@@ -44,6 +44,7 @@ type
     ImageList1: TImageList;
     ImageList2: TImageList;
     Label1: TLabel;
+    BCLabel7: TBCLabel;
     MenuItem1: TMenuItem;
     MenuItem10: TMenuItem;
     MenuItem11: TMenuItem;
@@ -194,7 +195,7 @@ implementation
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   SetCurrentDirectory(PChar(ExtractFileDir(Application.Exename)));
-
+  BCLabel7.Caption:= 'Version '+CurrentVersion;
   Image1.Align:= alClient;
   EditHTTP.Clear;
   EditPath.Clear;
@@ -209,6 +210,8 @@ begin
   if not DirectoryExists(Config_Dir) then MkDir(Config_Dir);
 
   ConfigLoad;
+
+
 
   if currentSkin = 0 then MenuItemSkinBlueClick(nil);
   if currentSkin = 1 then MenuItemSkinWhiteClick(nil);
@@ -909,6 +912,8 @@ begin
   BCLabel5.FontEx.ShadowColor := bgColor;
   BCLabel6.FontEx.Color := skinColor;
   BCLabel6.FontEx.ShadowColor := bgColor;
+  BCLabel7.FontEx.Color := skinColor;
+  BCLabel7.FontEx.ShadowColor := bgColor;
   LabelPath.FontEx.Color := skinColor;
   LabelPath.FontEx.ShadowColor := bgColor;
 
@@ -1118,6 +1123,7 @@ end;
 
 procedure TForm1.ButtonSetDownloadPathClick(Sender: TObject);
 begin
+  if DirectoryExists(EditPath.Text) then SelectDirectoryDialog1.InitialDir := EditPath.Text;
   if not SelectDirectoryDialog1.Execute then exit;
   EditPath.Text := SelectDirectoryDialog1.FileName;
   ConfigSave;

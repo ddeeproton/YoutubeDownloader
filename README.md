@@ -159,3 +159,6 @@ Set new version in "YoutubeDownloader.exe"
 Fix issue with toggle button
 
 Add download path in small view
+
+#### 1.0.20
+Fix issue in browse folder button
