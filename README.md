@@ -103,7 +103,7 @@ https://github.com/ddeeproton/YoutubeDownloader/tree/master/Source/other
  
   ![](help3.jpg)
 
-  Project / Compile Project
+  Project / Compile
   
   ![](help4.jpg)
  
