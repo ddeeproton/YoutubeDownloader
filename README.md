@@ -98,14 +98,14 @@
  http://nsis.sourceforge.net/Main_Page
 
  #### Step 2 / Etape 2
- Compile "YoutubeDownloader.exe" with Lazarus and copy this file in "SetupSource" folder
+ Set version in "Unit1.pas". Compile "YoutubeDownloader.exe" with Lazarus and copy this file in "SetupSource" folder
  
- Compiler "YoutubeDownloader.exe" avec Lazarus et copier ce fichier dans le dossier "SetupSource" 
+ Définir la version dans "Unit1.pas". Compiler "YoutubeDownloader.exe" avec Lazarus et copier ce fichier dans le dossier "SetupSource" 
 
  #### Step 3 / Etape 3
- Set version in "version.txt"
+ Set version in "version.txt" (in "SetupSource" folder)
  
- Définir la version dans "version.txt"
+ Définir la version dans "version.txt" (dans le dossier "SetupSource")
 
  #### Step 4 / Etape 4
  Double click on "Compile Setup.bat" and wait 5 minutes
