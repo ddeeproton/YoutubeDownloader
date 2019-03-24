@@ -155,11 +155,11 @@ https://github.com/ddeeproton/YoutubeDownloader/tree/master/Source/other
  
  To compile with Linux or Mac, the code must be modified before (path in "/" instead of "\\", ...)
  
- (No tested)
+ (Not tested on Linux and Mac)
  
  Pour compiler sur Linux ou Mac, le code devra d'abord être adapté (chemin en "/" à la place de "\\", etc.)
  
- (Pas testé)
+ (Pas testé sur Linux et Mac)
  
 <hr>
 
