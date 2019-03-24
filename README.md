@@ -10,13 +10,22 @@
 ### Description (english):
  A video downloader for Youtube, Dailymotion and others.
  
- Can download all videos in Youtube playlist.
+ Can download all videos in Youtube playlist. And more.
+ 
+ For more informations
+ 
+ https://github.com/rg3/youtube-dl/
+
  
 ### Description (français):
 
  Un programme de téléchargement de vidéos Youtube, Dailymotion et autres.
  
- Est capable de télécharger toutes les vidéos d'une playliste Youtube.
+ Est capable de télécharger toutes les vidéos d'une playliste Youtube. Et plus encore.
+ 
+ Pour plus d'informations
+ 
+ https://github.com/rg3/youtube-dl/
 
 ### Download / Télécharger:
  https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_1.0.17.exe
@@ -133,15 +142,7 @@ https://github.com/ddeeproton/YoutubeDownloader/tree/master/Source/other
  To compile with Linux or Mac, the code must be modified before (path in "/" instead of "\\", ...)
  
  Pour compiler sur Linux ou Mac, le code devra d'abord être adapté (chemin en "/" à la place de "\\", etc.)
-
-<hr>
  
-### Other documentation / Autre Doc:	
-  https://github.com/rg3/youtube-dl/
-  
-  https://github.com/rg3/youtube-dl/blob/master/README.md
-
-  
 <hr>
 
 ### Changes / Changements:
