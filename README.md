@@ -90,23 +90,23 @@
  
  Le Setup avec NSIS (seulement sur Windows)
  
-1) Download and Install NSIS 
-
-1) Télécharger et installer NSIS
+ #### Step 1
+ Download and Install NSIS 
+ Télécharger et installer NSIS
  
  http://nsis.sourceforge.net/Main_Page
 
-2) Compile "YoutubeDownloader.exe" with Lazarus and copy this file in "SetupSource" folder 
+ #### Step 2
+ Compile "YoutubeDownloader.exe" with Lazarus and copy this file in "SetupSource" folder 
+ Compiler "YoutubeDownloader.exe" avec Lazarus et copier ce fichier dans le dossier "SetupSource" 
 
-2) Compiler "YoutubeDownloader.exe" avec Lazarus et copier ce fichier dans le dossier "SetupSource" 
+ #### Step 3
+ Set version in "version.txt"
+ Définir la version dans "version.txt"
 
-3) Set version in "version.txt"
-
-3) Définir la version dans "version.txt"
-
-4) Double click on "Compile Setup.bat" and wait 5 minutes
-
-4) Double cliquer sur "Compile Setup.bat" et attendre 5 minutes
+ #### Step 4
+ Double click on "Compile Setup.bat" and wait 5 minutes
+ Double cliquer sur "Compile Setup.bat" et attendre 5 minutes
 
 
 ### Operating system / Système d'exploitation:
