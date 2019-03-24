@@ -42,6 +42,7 @@
   
   https://github.com/rg3/youtube-dl/blob/master/README.md
 
+<hr>
 
 ### Compilation:
  GUI is compiled with Lazarus (Free Pascal)
