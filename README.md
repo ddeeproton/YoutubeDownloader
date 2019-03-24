@@ -7,11 +7,13 @@
 # Youtube Downloader
 
 
-### Description:
+### Description (english):
  A video downloader for Youtube, Dailymotion and others.
  
  Can download, with one click, all videos in a playlist Youtube.
  
+### Description (français):
+
  Un programme de téléchargement de vidéos Youtube, Dailymotion et autres.
  
  Est capable de télécharger, avec un clique, toutes les vidéos d'une playliste Youtube.
