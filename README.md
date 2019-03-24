@@ -91,7 +91,7 @@
 
 https://github.com/ddeeproton/YoutubeDownloader/tree/master/Source/other  
  
- ###  Compile "YoutubeDownloader" / Compiler "YoutubeDownloader" 
+ ###  Compile "YoutubeDownloader GUI" / Compiler "YoutubeDownloader GUI" 
  
  After required packets installed, we can compile the GUI.
  
