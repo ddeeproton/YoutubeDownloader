@@ -88,6 +88,8 @@
  
  Pour ces deux paquets, une copie est disponible dans le dossier "other".
 
+https://github.com/ddeeproton/YoutubeDownloader/tree/master/Source/other
+ 
 <hr>
  
  ### How to create setup installation / Comment créer le setup d'installation
