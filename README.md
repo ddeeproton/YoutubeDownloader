@@ -13,7 +13,7 @@
  Ce programme télécharge l'audio des vidéos de Youtube, Dailymotion et autres.
 
 ### Download:
- https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_1.0.16.exe
+ https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_1.0.17.exe
  
 ### Langages:
   English
@@ -84,4 +84,7 @@
 
 #### 1.0.0
 Stable version
+
+#### 1.0.17
+Youtube-dl.exe - Add last version in setup installation
 
