@@ -16,7 +16,7 @@
  
  Est capable de télécharger, avec un clique, toutes les vidéos d'une playliste Youtube.
 
-### Download:
+### Download / Télécharger:
  https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_1.0.17.exe
  
 ### Langages:
