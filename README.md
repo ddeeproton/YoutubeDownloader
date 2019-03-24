@@ -62,7 +62,7 @@
  
  Télécharger et installer ces 2 paquets ci-dessous dans Lazarus.
   
- -1. Download / Télécharger "BGRABitmap" (must be installed first / dois être installé en premier)
+ #### 1. Download / Télécharger "BGRABitmap" (must be installed first / dois être installé en premier)
  
  https://github.com/bgrabitmap/bgrabitmap
   
@@ -70,7 +70,7 @@
 
  (Ouvrir, compiler et installer "bglcontrols.lpk")
   
- -2. Download / Télécharger "BGRAControls" 
+ #### 2. Download / Télécharger "BGRAControls" 
  
  http://wiki.lazarus.freepascal.org/BGRAControls
  
