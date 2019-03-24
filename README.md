@@ -106,7 +106,7 @@ https://github.com/ddeeproton/YoutubeDownloader/tree/master/Source/other
  
  The Setup is compiled with NSIS (Windows only)
  
- Le Setup est compilé avec NSIS (seulement sur Windows)
+ Le Setup est compilé avec NSIS (Windows seulement)
  
  #### Step 1 / Etape 1
  Download and Install NSIS 
