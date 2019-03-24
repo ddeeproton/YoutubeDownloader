@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CONFIG>
-  <Compiler Value="C:\lazarus2\fpc\3.0.4\bin\i386-win32\fpc.exe" Date="1313026517"/>
-  <Params Value=" -MObjFPC -Scghi -CX -O3 -OoREGVAR -l -vewnhibq -FuC:\Share\Programmation\Lazarus\YoutubeDownloader\github\trunk\Source\other\bgracontrols-master\bgracontrols-master\mouseandkeyinput -FuC:\lazarus2\packager\units\i386-win32 -FuC:\lazarus2\components\lazutils\lib\i386-win32 -FuC:\lazarus2\lcl\units\i386-win32 -FuC:\lazarus2\lcl\units\i386-win32\win32 -FuC:\Share\Programmation\Lazarus\YoutubeDownloader\github\trunk\Source\other\bgrabitmap-master\bgrabitmap-master\bgrabitmap\lib\i386-win32\3.0.4 -FuC:\lazarus2\components\lazcontrols\lib\i386-win32\win32 -FuC:\lazarus2\components\ideintf\units\i386-win32\win32 -FuC:\Share\Programmation\Lazarus\YoutubeDownloader\github\trunk\Source\other\bgracontrols-master\bgracontrols-master\ -FUC:\Share\Programmation\Lazarus\YoutubeDownloader\github\trunk\Source\other\bgracontrols-master\bgracontrols-master\lib\i386-win32\3.0.4\ -dLCL -dLCLwin32 bgracontrols.pas"/>
-</CONFIG>
