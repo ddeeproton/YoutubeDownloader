@@ -85,6 +85,15 @@
  "Compiler" puis "Utiliser / Installer". Pour finir, clique "ok" et "oui".
   
   ![](help2.jpg)
+  
+
+ ### If broken links / Si les liens ne fonctionnent plus
+ 
+ For both packets, a copy is aviable in "other" folder. 
+ 
+ Pour ces deux paquets, une copie est disponible dans le dossier "other".
+
+https://github.com/ddeeproton/YoutubeDownloader/tree/master/Source/other  
  
  ###  Compile "YoutubeDownloader" / Compiler "YoutubeDownloader" 
  
@@ -92,13 +101,6 @@
   
   ![](help4.jpg)
  
- ### If broken links / Si les liens ne fonctionnent plus
- 
- For both packets, a copy is aviable in "other" folder. 
- 
- Pour ces deux paquets, une copie est disponible dans le dossier "other".
-
-https://github.com/ddeeproton/YoutubeDownloader/tree/master/Source/other
  
 <hr>
  
