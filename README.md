@@ -69,14 +69,15 @@
  https://github.com/bgrabitmap/bgrabitmap
   
  (Open, compile and install "bglcontrols.lpk")
+
  (Ouvrir, compiler et installer "bglcontrols.lpk")
   
  -2. Download / Télécharger "BGRAControls" 
  http://wiki.lazarus.freepascal.org/BGRAControls
  
  (Open, compile and install "bgracontrols.lpk")
+
  (Ouvrir, compiler et installer "bgracontrols.lpk")
- 
  
  
  ### If broken links / Si les liens ne fonctionnent plus
@@ -84,6 +85,8 @@
  For both packets, a copy is aviable in "other" folder. 
  
  Pour ces deux paquets, une copie est disponible dans le dossier "other".
+
+<hr>
  
  ### How to create setup installation / Comment créer le setup d'installation
  
