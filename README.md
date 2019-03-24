@@ -139,6 +139,8 @@ https://github.com/ddeeproton/YoutubeDownloader/tree/master/Source/other
  
  Pour compiler sur Linux ou Mac, le code devra d'abord être adapté (chemin en "/" à la place de "\\", etc.)
 
+<hr>
+
 ### Changes / Changements:
 
 #### 1.0.0
