@@ -66,21 +66,17 @@
  
  https://github.com/bgrabitmap/bgrabitmap
   
- (Open, compile and install "bglcontrols.lpk")
-
- (Ouvrir, compiler et installer "bglcontrols.lpk")
+ Open / Ouvrir: "bglcontrols.lpk"
   
  #### 2. Download / Télécharger "BGRAControls" 
  
  http://wiki.lazarus.freepascal.org/BGRAControls
  
- (Open, compile and install "bgracontrols.lpk")
-
- (Ouvrir, compiler et installer "bgracontrols.lpk")
- 
+ Open / Ouvrir: "bgracontrols.lpk"
+  
   ![](help1.jpg)
   
-  "Compile" and "Use / Install". Finally, click "ok" and "yes".
+ "Compile" and "Use / Install". Finally, click "ok" and "yes".
  
  "Compiler" puis "Utiliser / Installer". Pour finir, clique "ok" et "oui".
   
