@@ -88,7 +88,7 @@
  
  The Setup is compiled with NSIS (Windows only)
  
- Le Setup avec NSIS (seulement sur Windows)
+ Le Setup est compilé avec NSIS (seulement sur Windows)
  
  #### Step 1 / Etape 1
  Download and Install NSIS 
