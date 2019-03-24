@@ -11,7 +11,7 @@ uses
   WinINet;
 
 var
-  CurrentVersion : String = '1.0.18';
+  CurrentVersion : String = '1.0.19';
 
 type
 
@@ -34,6 +34,7 @@ type
     BCLabel4: TBCLabel;
     BCLabel5: TBCLabel;
     BCLabel6: TBCLabel;
+    LabelPath: TBCLabel;
     CheckListBoxConfig: TCheckListBox;
     ComboBoxEncoding: TComboBox;
     EditHTTP: TEdit;
@@ -42,6 +43,7 @@ type
     Image1: TImage;
     ImageList1: TImageList;
     ImageList2: TImageList;
+    Label1: TLabel;
     MenuItem1: TMenuItem;
     MenuItem10: TMenuItem;
     MenuItem11: TMenuItem;
@@ -172,7 +174,7 @@ type
 var
   Form1: TForm1;
   Config_YoutubeDownloader: String = 'youtube-dl.exe';
-  Config_HeightMinimized: Integer = 60;
+  Config_HeightMinimized: Integer = 68;
   Config_HeightMaximized: Integer = 380;
   oldClipboardValue: String = '';
   currentSkin: Integer = 0;
@@ -192,7 +194,7 @@ implementation
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   SetCurrentDirectory(PChar(ExtractFileDir(Application.Exename)));
-  setFormHeight(Config_HeightMinimized);
+
   Image1.Align:= alClient;
   EditHTTP.Clear;
   EditPath.Clear;
@@ -216,6 +218,7 @@ begin
   if currentSkin = 5 then MenuItemSkinGreenClick(nil);
 
   getListOfLanguages;
+  setFormHeight(Config_HeightMinimized);
 end;
 
 
@@ -229,11 +232,18 @@ begin
 end;
 
 procedure TForm1.setFormHeight(h: Integer);
-begin
-  Self.Height:= h;
+begin                        
   Self.Constraints.MaxHeight := h;
   Self.Constraints.MinHeight:= h;
+  Self.Height:= h;
   setFormAtBottomRight;
+  if Self.Height = Config_HeightMaximized then
+  begin                               
+    LabelPath.Caption := '';
+  end
+  else begin
+    LabelPath.Caption := MenuItemPathDL.Caption+': '+EditPath.Text;
+  end;
 end;
 
 procedure TForm1.TimerAfterLoadTimer(Sender: TObject);
@@ -899,6 +909,8 @@ begin
   BCLabel5.FontEx.ShadowColor := bgColor;
   BCLabel6.FontEx.Color := skinColor;
   BCLabel6.FontEx.ShadowColor := bgColor;
+  LabelPath.FontEx.Color := skinColor;
+  LabelPath.FontEx.ShadowColor := bgColor;
 
 
   EditHTTP.Font.Color := skinColor; //RGB(117,190,197);
@@ -1130,7 +1142,7 @@ end;
 
 procedure TForm1.BCButtonFocus1Click(Sender: TObject);
 begin
-  if Height = Config_HeightMaximized then
+  if Self.Height = Config_HeightMaximized then
     setFormHeight(Config_HeightMinimized)
   else
     setFormHeight(Config_HeightMaximized);
