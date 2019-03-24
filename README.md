@@ -90,8 +90,20 @@
  
  Le Setup avec NSIS (seulement sur Windows)
  
- http://nsis.sourceforge.net/Main_Page
+1. Download and Install NSIS 
+1. Télécharger et installer NSIS
  
+ http://nsis.sourceforge.net/Main_Page
+
+2. Compile "YoutubeDownloader.exe" and copy this file in "SetupSource" folder 
+2. Compiler "YoutubeDownloader.exe" et copier ce fichier dans le dossier "SetupSource" 
+
+3. Set version in "version.txt"
+3. Définir la version dans "version.txt"
+
+4. Double click on "Compile Setup.bat" and wait 5 minutes
+4. Double cliquer sur "Compile Setup.bat" et attendre 5 minutes
+
 
 ### Operating system / Système d'exploitation:
  Windows
