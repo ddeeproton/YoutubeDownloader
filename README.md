@@ -50,7 +50,7 @@
  
  http://www.lazarus-ide.org/
  
- ### Add-ons for Lazarus / 
+ ### Packets required for Lazarus / Paquets requis pour Lazarus
  
  Download and install this packets in Lazarus.
  
