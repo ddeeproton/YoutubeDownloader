@@ -62,14 +62,6 @@
  
  Télécharger et installer ces 2 paquets ci-dessous dans Lazarus.
   
- ![](help1.jpg)
-  
-  "Compile" and "Use / Install". Finally, click "ok" and "yes".
- 
- "Compiler" puis "Utiliser / Installer". Pour finir, clique "ok" et "oui".
-  
-  ![](help2.jpg)
- 
  -1. Download / Télécharger "BGRABitmap" (must be installed first / dois être installé en premier)
  
  https://github.com/bgrabitmap/bgrabitmap
@@ -85,6 +77,14 @@
  (Open, compile and install "bgracontrols.lpk")
 
  (Ouvrir, compiler et installer "bgracontrols.lpk")
+ 
+  ![](help1.jpg)
+  
+  "Compile" and "Use / Install". Finally, click "ok" and "yes".
+ 
+ "Compiler" puis "Utiliser / Installer". Pour finir, clique "ok" et "oui".
+  
+  ![](help2.jpg)
  
  -3. Open and Compile "YoutubeDownloader" / Ouvrir et Compiler "YoutubeDownloader" 
  
