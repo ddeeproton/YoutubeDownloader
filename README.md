@@ -12,9 +12,7 @@
  
  Can download all videos in Youtube playlist. And more.
  
- For more informations
- 
- https://github.com/rg3/youtube-dl/
+ For more informations: https://github.com/rg3/youtube-dl/
 
  
 ### Description (français):
@@ -23,9 +21,7 @@
  
  Est capable de télécharger toutes les vidéos d'une playliste Youtube. Et plus encore.
  
- Pour plus d'informations
- 
- https://github.com/rg3/youtube-dl/
+ Pour plus d'informations: https://github.com/rg3/youtube-dl/
 
 ### Download / Télécharger:
  https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_1.0.17.exe
