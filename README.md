@@ -8,9 +8,13 @@
 
 
 ### Description:
- This is a video downloader for Youtube, Dailymotion and others.
+ A video downloader for Youtube, Dailymotion and others.
  
- Ce programme télécharge l'audio des vidéos de Youtube, Dailymotion et autres.
+ Can download, with one click, all videos in a playlist Youtube.
+ 
+ Un programme de téléchargement de vidéos Youtube, Dailymotion et autres.
+ 
+ Est capable de télécharger, avec un clique, toutes les vidéos d'une playliste Youtube.
 
 ### Download:
  https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_1.0.17.exe
