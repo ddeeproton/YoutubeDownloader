@@ -95,8 +95,8 @@
  
  http://nsis.sourceforge.net/Main_Page
 
-2. Compile "YoutubeDownloader.exe" and copy this file in "SetupSource" folder 
-2. Compiler "YoutubeDownloader.exe" et copier ce fichier dans le dossier "SetupSource" 
+2. Compile "YoutubeDownloader.exe" with Lazarus and copy this file in "SetupSource" folder 
+2. Compiler "YoutubeDownloader.exe" avec Lazarus et copier ce fichier dans le dossier "SetupSource" 
 
 3. Set version in "version.txt"
 3. Définir la version dans "version.txt"
