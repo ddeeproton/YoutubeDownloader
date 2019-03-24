@@ -24,7 +24,7 @@
  Pour plus d'informations: https://github.com/rg3/youtube-dl/
 
 ### Download / Télécharger:
- https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_1.0.17.exe
+ https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_1.0.20.exe
  
 ### Websites compatible:
  
