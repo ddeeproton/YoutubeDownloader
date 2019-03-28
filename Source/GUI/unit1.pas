@@ -11,7 +11,7 @@ uses
   WinINet;
 
 var
-  CurrentVersion : String = '1.0.21';
+  CurrentVersion : String = '1.0.22';
 
 type
 
@@ -34,10 +34,11 @@ type
     BCLabel4: TBCLabel;
     BCLabel5: TBCLabel;
     BCLabel6: TBCLabel;
+    ComboBox1: TComboBox;
     LabelPath: TBCLabel;
     CheckListBoxConfig: TCheckListBox;
     ComboBoxEncoding: TComboBox;
-    EditHTTP: TEdit;
+    ComboBoxHTTP: TComboBox;
     EditPath: TEdit;
     EditProxy: TEdit;
     Image1: TImage;
@@ -197,7 +198,7 @@ begin
   SetCurrentDirectory(PChar(ExtractFileDir(Application.Exename)));
   BCLabel7.Caption:= 'Version '+CurrentVersion;
   Image1.Align:= alClient;
-  EditHTTP.Clear;
+  ComboBoxHTTP.Clear;
   EditPath.Clear;
   EditPath.TabStop := False;
   //SpinEditMaxSpeed.Text := '0';
@@ -275,7 +276,8 @@ begin
 end;
 
 procedure TForm1.ConfigLoad;
-begin
+begin                                        
+  if FileExists(Config_Dir + 'ArchiveLinks.txt') then ComboBoxHTTP.Items.LoadFromFile(Config_Dir + 'ArchiveLinks.txt');
   XMLConfig1 := TXMLConfig.Create(nil);
   if FileExists(Config_Dir+'config.xml') then XMLConfig1.LoadFromFile(Config_Dir+'config.xml');
   ComboBoxEncoding.ItemIndex := XMLConfig1.GetValue('Encoding', 4);
@@ -299,7 +301,7 @@ begin
   CheckListBoxConfig.Checked[6] := XMLConfig1.GetValue('NoSpecialChar', True);
 
   SpinEditMaxSpeed.Value := XMLConfig1.GetValue('MaxSpeed', 0);
-  EditHTTP.Text := XMLConfig1.GetValue('LastURL', '');
+  ComboBoxHTTP.Text := XMLConfig1.GetValue('LastURL', '');
   EditProxy.Text := XMLConfig1.GetValue('Proxy', '');
 
   TimerClipboard.Enabled := MenuItemCheckClipboard.Checked;
@@ -329,7 +331,7 @@ begin
   XMLConfig1.SetValue('Skin', currentSkin);
   XMLConfig1.SetValue('language', currentLanguage);
   XMLConfig1.SetValue('MaxSpeed', SpinEditMaxSpeed.Value);
-  XMLConfig1.SetValue('LastURL', EditHTTP.Text);
+  XMLConfig1.SetValue('LastURL', ComboBoxHTTP.Text);
   XMLConfig1.SetValue('Proxy', EditProxy.Text);
 
   XMLConfig1.SaveToFile(Config_Dir+'config.xml');
@@ -354,7 +356,7 @@ begin
   XMLConfig1.SetValue('AskBeforeExit', CheckListBoxConfig.Checked[5]);
   XMLConfig1.SetValue('NoSpecialChar', CheckListBoxConfig.Checked[6]);
   XMLConfig1.SetValue('MaxSpeed', SpinEditMaxSpeed.Value);
-  XMLConfig1.SetValue('LastURL', EditHTTP.Text);
+  XMLConfig1.SetValue('LastURL', ComboBoxHTTP.Text);
   XMLConfig1.SetValue('Proxy', EditProxy.Text);
   XMLConfig1.SetValue('language', currentLanguage);
   XMLConfig1.SaveToFile(Config_Dir+'config.xml');
@@ -687,8 +689,12 @@ end;
 procedure TForm1.MenuItemCacheClearClick(Sender: TObject);
 begin
   if MessageDlg(xmlLang.GetValue('Question1', PChar('Effacer l''historique?')),  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
-  DeleteFile('archive.txt');
-  if FileExists('archive.txt') then
+  DeleteFile(PChar(Config_Dir + 'archive.txt'));
+  DeleteFile(PChar(Config_Dir + 'ArchiveLinks.txt'));
+  ComboBoxHTTP.Clear;
+  ComboBoxHTTP.Items.Clear;
+  if FileExists(Config_Dir + 'archive.txt')
+  or FileExists(Config_Dir + 'ArchiveLinks.txt') then
     ShowMessage(xmlLang.GetValue('error', PChar('Erreur')))
   else
     ShowMessage(xmlLang.GetValue('erased', PChar('Effacé')));
@@ -918,8 +924,8 @@ begin
   LabelPath.FontEx.ShadowColor := bgColor;
 
 
-  EditHTTP.Font.Color := skinColor; //RGB(117,190,197);
-  EditHTTP.Color := bgColor;
+  ComboBoxHTTP.Font.Color := skinColor; //RGB(117,190,197);
+  ComboBoxHTTP.Color := bgColor;
 
   EditPath.Font.Color := skinColor;
   EditPath.Color := bgColor;
@@ -1084,8 +1090,7 @@ end;
 
 procedure TForm1.ButtonPasteClick(Sender: TObject);
 begin
-  EditHTTP.Clear;
-  EditHTTP.PasteFromClipboard;
+  ComboBoxHTTP.Text:=Clipboard.AsText;
 end;
 
 
@@ -1110,11 +1115,6 @@ begin
 end;
 
 
-procedure TForm1.ButtonDownloadClick(Sender: TObject);
-begin
-  DoDownload();
-
-end;
 
 procedure TForm1.ButtonMenuClick(Sender: TObject);
 begin
@@ -1227,10 +1227,23 @@ begin
 
 end;
 
-procedure TForm1.DoDownload();
-var url: String;
+
+procedure TForm1.ButtonDownloadClick(Sender: TObject);
 begin
-  url := EditHTTP.Text;
+  DoDownload();
+end;
+
+procedure TForm1.DoDownload();
+var
+  i: Integer;
+  url: String;
+begin
+  url := ComboBoxHTTP.Text;
+  i := ComboBoxHTTP.Items.IndexOf(url);
+  if i >-1 then ComboBoxHTTP.Items.Delete(i);
+  ComboBoxHTTP.Items.Insert(0, url);
+  ComboBoxHTTP.Items.SaveToFile(Config_Dir + 'ArchiveLinks.txt');
+
   if url = '' then
   begin
     ShowMessage(xmlLang.GetValue('error_noUrlFound', PChar('Veuillez entrer d''abord un lien avant de cliquer sur Télécharger.')));
@@ -1269,7 +1282,7 @@ begin
     exit;
   end;
 
-  if EditHTTP.Text = '' then
+  if ComboBoxHTTP.Text = '' then
   begin
     ShowMessage(xmlLang.GetValue('error_noUrlFound', PChar('Veuillez entrer d''abord un lien avant de cliquer sur Télécharger.')));
     exit;
@@ -1293,7 +1306,7 @@ begin
   if String(EditProxy.Text).Contains(':') then c := c + ' --proxy "' + EditProxy.Text + '" ';
   if CheckListBoxConfig.Checked[6] then c := c + ' --restrict-filenames ';
   c := c + ' -o "'+EditPath.Text+'\%(title)s.%(ext)s" ';
-  c := c + '"'+EditHTTP.Text+'"';
+  c := c + '"'+ComboBoxHTTP.Text+'"';
 
   Process1.CommandLine := c;
 
@@ -1320,7 +1333,7 @@ var
   url, filename: String;
   i: Integer;
 begin
-  url := EditHTTP.Text;
+  url := ComboBoxHTTP.Text;
   if url = '' then
   begin
     ShowMessage(xmlLang.GetValue('error_noUrlFound', PChar('Veuillez entrer d''abord un lien avant de cliquer sur Télécharger.')));

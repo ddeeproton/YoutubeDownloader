@@ -24,7 +24,7 @@
  Pour plus d'informations: https://github.com/rg3/youtube-dl/
 
 ### Download / Télécharger:
- https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_1.0.21.exe
+ https://github.com/ddeeproton/YoutubeDownloader/raw/master/Setup%20installation/YoutubeDownloaderSetup_1.0.22.exe
  
 ### Websites compatible:
  
@@ -182,3 +182,9 @@ Fix issue in browse folder button
 
 #### 1.0.21
 Fix issue on download speed limit
+
+#### 1.0.22
+
+Fix issue on update (on kill process)
+
+Add history for links
