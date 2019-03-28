@@ -166,8 +166,13 @@ Function "CloseProcessYoutube"
     #File "libgcc_s_dw2-1.dll" 
     #File "kill.exe" 
     #ExecShell "open" "kill.exe" "k $\"youtube downloader$\"" SW_SHOW
-    #=== v3 (current test) ====
+    #=== v3 (bug) ====
     ExecShell "open" "taskkill.exe" " /f /t /im YoutubeDownloader.exe" SW_HIDE
+    #=== v4 (current test) ====
+    ExecShell "open" "taskkill.exe" " /f /t /im kill.exe" SW_HIDE
+    File "libgcc_s_dw2-1.dll" 
+    File "kill.exe" 
+    ExecShell "open" "kill.exe" "k $\"youtube downloader$\"" SW_SHOW
     Sleep 2000
 FunctionEnd
 
