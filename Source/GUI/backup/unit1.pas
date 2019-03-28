@@ -1289,7 +1289,7 @@ begin
   if MenuItemCacheToggle.Checked then c := c + ' --download-archive "archive.txt" ';
   c := c + ' --ignore-errors ';
   c := c + getEncoding;
-  if not (SpinEditMaxSpeed.Value = 0) then c := c + ' --limit-rate "' + IntToStr(SpinEditMaxSpeed.Value * 1000)+ 'K" ';
+  if not (SpinEditMaxSpeed.Value = 0) then c := c + ' --limit-rate ' + IntToStr(SpinEditMaxSpeed.Value)+ 'K ';
   if String(EditProxy.Text).Contains(':') then c := c + ' --proxy "' + EditProxy.Text + '" ';
   if CheckListBoxConfig.Checked[6] then c := c + ' --restrict-filenames ';
   c := c + ' -o "'+EditPath.Text+'\%(title)s.%(ext)s" ';

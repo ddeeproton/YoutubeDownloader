@@ -179,3 +179,6 @@ Add download path in small view
 
 #### 1.0.20
 Fix issue in browse folder button
+
+#### 1.0.21
+Fix issue on download speed limit
