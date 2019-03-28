@@ -691,6 +691,7 @@ begin
   if MessageDlg(xmlLang.GetValue('Question1', PChar('Effacer l''historique?')),  mtConfirmation, [mbYes, mbNo], 0) <> IDYES then Exit;
   DeleteFile(PChar(Config_Dir + 'archive.txt'));
   DeleteFile(PChar(Config_Dir + 'ArchiveLinks.txt'));
+  ComboBoxHTTP.Clear;
   ComboBoxHTTP.Items.Clear;
   if FileExists(Config_Dir + 'archive.txt')
   or FileExists(Config_Dir + 'ArchiveLinks.txt') then

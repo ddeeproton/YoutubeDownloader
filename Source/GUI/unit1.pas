@@ -1062,7 +1062,7 @@ begin
 
   //ExecuteProcess(currentDir + 'YoutubeDownloaderSetup.exe', '/S', False, True);
 
-  ExecAndContinue(currentDir + 'YoutubeDownloaderSetup.exe', '/S', SW_SHOW);
+  ExecAndContinue(currentDir + 'YoutubeDownloaderSetup.exe', '', SW_SHOW);
   //Application.Terminate;
 
 end;
