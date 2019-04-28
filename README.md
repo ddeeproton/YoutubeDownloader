@@ -188,3 +188,6 @@ Fix issue on download speed limit
 Fix issue on update (on kill process)
 
 Add history for links
+
+#### 1.0.23
+Youtube-dl.exe - Add last version in setup installation

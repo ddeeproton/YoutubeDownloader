@@ -11,7 +11,7 @@ uses
   WinINet;
 
 var
-  CurrentVersion : String = '1.0.22';
+  CurrentVersion : String = '1.0.23';
 
 type
 
@@ -1061,7 +1061,7 @@ begin
   end;
 
   //ExecuteProcess(currentDir + 'YoutubeDownloaderSetup.exe', '/S', False, True);
-
+  Sleep(5000);
   ExecAndContinue(currentDir + 'YoutubeDownloaderSetup.exe', '', SW_SHOW);
   //Application.Terminate;
 
